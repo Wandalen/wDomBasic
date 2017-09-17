@@ -1,5 +1,5 @@
 {
-  "name": "//>-->//package.name//<--<//",
+  "name": "wdombase",
   "version": "0.3.2",
   "description": "",
   "author": "Kostiantyn Wandalen <wtory.net@domainsbyproxy.com>",
@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wandalen///>-->//package.name//<--<//.git"
+    "url": "https://github.com/Wandalen/wDomBase.git"
   },
   "bugs": {
-    "url": "https://github.com/Wandalen///>-->//package.name//<--<///issues"
+    "url": "https://github.com/Wandalen/wDomBase/issues"
   },
   "dependencies": {
     "wTools": ""
