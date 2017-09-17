@@ -4,13 +4,13 @@
   "description": "",
   "author": "Kostiantyn Wandalen <wtory.net@domainsbyproxy.com>",
   "license": "MIT",
-  "main": "staging/dwtools/amid/file/FileMid.s",
+  "main": "staging/dwtools/abase/rbrowser/DomBase.js",
   "files": [
-    "staging/dwtools/amid",
+    "staging/dwtools/abase/rbrowser/DomBase.js",
     "production"
   ],
   "scripts": {
-    "test": "node ./staging/dwtools/amid/z.test/Test.s",
+    "test": "wtest staging",
     "make_doc": "./doc.sh"
   },
   "repository": {
@@ -24,7 +24,8 @@
     "wTools": ""
   },
   "devDependencies": {
-    "wTesting": ""
+    "wTesting" : "",
+    "wdombase" : "."
   },
   "keywords": [
     "wTools"
