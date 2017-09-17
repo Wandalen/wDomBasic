@@ -1,4 +1,4 @@
-(function _Dom_js_() {
+(function _DomBase_js_() {
 
 'use strict';
 
@@ -377,7 +377,7 @@ function domTextGet( o )
     },
   });
 
-  debugger;
+  // debugger;
   if( o.strippingEmptyLines )
   result = _.strStripEmptyLines( result );
 
@@ -1899,7 +1899,6 @@ var Proto =
   domFullScreen : domFullScreen,
 
   domLoad : domLoad,
-
 
 
   // event
