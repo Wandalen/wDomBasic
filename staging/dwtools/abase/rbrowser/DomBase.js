@@ -166,16 +166,17 @@ function domsVal( dom,vals )
   result = _.domEach
   ({
     recursive : true,
-    context : Object.create( null ),
+    result : Object.create( null ),
     dom : dom,
-    onUp : function( dom,context )
+    onUp : function( dom,result )
     {
 
       var text = '';
       var val = _.domVal( dom );
 
       if( val === undefined )
-      return context;
+      return;
+      // return result;
 
       var val = _.domVal( dom );
 
@@ -184,9 +185,9 @@ function domsVal( dom,vals )
 
       var selector = dom.name;
 
-      _.entitySelectSet( context,selector,val );
+      _.entitySelectSet( result,selector,val );
 
-      return context;
+      // return result;
     },
   });
 
@@ -1106,19 +1107,22 @@ var domFullScreen = ( function domFullScreen()
 function domLoad( o )
 {
 
-  var consequence = new wConsequence();
-  var parentDom = $( o.parentDom );
-
   _.routineOptions( domLoad,o );
-  _.assert( _.strIsNotEmpty( o.url ), 'expects ( o.url )' );
 
-  var targetDom = parentDom.find( '.' + o.targetClass );
+  o.once = new wConsequence();
+  o.ready = new wConsequence();
+
+  // var consequence = new wConsequence();
+  o.parentDom = $( o.parentDom );
+  var targetDom = o.parentDom;
+  if( o.targetClass )
+  targetDom = o.parentDom.find( '.' + o.targetClass ).addBack( '.' + o.targetClass );
 
   if( !targetDom.length )
   if( o.replacing )
-  targetDom = parentDom;
+  targetDom = o.parentDom;
   else
-  targetDom = $( '<div>' ).prependTo( parentDom );
+  targetDom = $( '<div>' ).prependTo( o.parentDom );
 
   /* */
 
@@ -1127,7 +1131,7 @@ function domLoad( o )
 
     if( o.showing )
     {
-      parentDom.show();
+      o.parentDom.show();
       targetDom.show();
     }
 
@@ -1139,7 +1143,8 @@ function domLoad( o )
   if( targetDom.hasClass( o.targetClass ) )
   {
     show();
-    return consequence.give( targetDom );
+    o.ready.give( targetDom );
+    return o;
   }
 
   if( o.targetClass )
@@ -1149,15 +1154,10 @@ function domLoad( o )
 
   _.assert( _.mapIs( o ) );
   _.assert( arguments.length === 1 );
-  _.assert( _.strIs( o.targetClass ) || o.replacing );
-  _.assert( _.strIs( o.url ) );
-  _.assert( parentDom.length,'parent DOM needed' );
-
-  if( o.targetClass )
-  {
-    // debugger;
-    // throw _.err( 'not tested' );
-  }
+  // _.assert( _.strIs( o.targetClass ) || o.replacing );
+  _.assert( _.strIsNotEmpty( o.url ), 'expects ( o.url )' );
+  _.assert( o.parentDom.length,'expects { o.parentDom }' );
+  _.assert( targetDom.length,'expects { targetDom }' );
 
   /* */
 
@@ -1188,7 +1188,9 @@ function domLoad( o )
       var html = 'Error ' + reason;
       targetDom.html( html );
       var err = _.errLogOnce( reason );
-      return consequence.error( err );
+      o.ready.error( err );
+      o.once.error( err );
+      return;
     }
 
     if( o.replacing )
@@ -1205,14 +1207,14 @@ function domLoad( o )
       _.domAttrs( targetDom,attrs,1 );
       if( o.preservingClasses )
       _.domClasses( targetDom,classes,1 );
-
     }
 
-    parentDom.attr( 'dom-loaded',1 );
+    o.parentDom.attr( 'dom-loaded',1 );
 
     show();
 
-    consequence.give( targetDom )
+    o.ready.give( targetDom );
+    o.once.give( targetDom );
 
   }
 
@@ -1225,14 +1227,14 @@ function domLoad( o )
   else
   targetDom.load( o.url,handleLoaded );
 
-  return consequence;
+  return o;
 }
 
 domLoad.defaults =
 {
   url : null,
   targetClass : null,
-  parentDom : null,
+  parentDom : 'body',
   showing : 0,
   replacing : 1,
   preservingClasses : 1,
