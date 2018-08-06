@@ -2,6 +2,14 @@
 
 'use strict';
 
+/**
+  @module Tools/base/DomBase - Collection of routines for a browser to operate DOM elements and its events. No matter whatever problem in a browser you are trying to solve several routines of DomBase would help you to solve it faster. It has something in common with Jquery, but no significant overlap. Use the module to get access to shortcuts for a browser.
+*/
+
+/**
+ * @file DomBase.js.
+ */
+
 var _ = wTools;
 var $ = jQuery;
 var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
@@ -1842,7 +1850,6 @@ function eventFire2( targetDom, event )
 var Proto =
 {
 
-
   // dom
 
   domCaretSelect : domCaretSelect,
@@ -1901,7 +1908,6 @@ var Proto =
   domFullScreen : domFullScreen,
 
   domLoad : domLoad,
-
 
   // event
 
