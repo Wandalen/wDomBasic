@@ -7,7 +7,7 @@
   "main": "proto/dwtools/abase/rbrowser/DomBase.js",
   "files": [
     "proto/dwtools/abase/rbrowser/DomBase.js",
-    "production"
+    "proto/dwtools/Tools.s", "production"
   ],
   "scripts": {
     "test": "wtest staging",
