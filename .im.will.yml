@@ -1,9 +1,6 @@
 
-submodule :
 
-  # Tools : git+https:///github.com/Wandalen/wTools.git/#master
-  # Tools : ./module/Tools
-  # PathFundamentals : ./module/PathFundamentals
+submodule :
 
 path :
 
@@ -61,8 +58,8 @@ build :
       debug : 1
       raw : 1
     steps :
-      # - step::reflect.proto.*=1
-      - step::reflect.submodules*=1
+      - step::reflect.proto.*=1
+      # - step::reflect.submodules*=1
 
   debug.compiled :
     criterion :
@@ -89,3 +86,4 @@ build :
     steps :
       - build::debug.raw
       - build::release.compiled
+
