@@ -167,8 +167,8 @@ reflector:
       ./dwtools/abase/rbrowser/.DS_Store: true
       ./dwtools/abase/rbrowser/DomBase.js: true
     srcFilter:
-      basePath: ./proto
-      prefixPath: .
+      basePath: .
+      prefixPath: proto
     dstFilter:
       basePath: .
       prefixPath: .
