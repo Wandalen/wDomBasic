@@ -7,7 +7,7 @@ about:
     routines of DomBase would help you to solve it faster. It has something in
     common with Jquery, but no significant overlap. Use the module to get access
     to shortcuts for a browser.
-  version: 0.3.22
+  version: 0.3.25
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -47,6 +47,7 @@ path:
       proto: 1
       export: 1
       tar: 1
+      public: 1
   baseDir:
     path: ..
   exportedFiles.0:
@@ -68,6 +69,7 @@ path:
       proto: 1
       export: 1
       tar: 1
+      public: 1
   exportedTerminals.0:
     path:
       - ./dwtools/Tools.s
@@ -81,6 +83,7 @@ path:
       proto: 1
       export: 1
       tar: 1
+      public: 1
 submodule: {}
 reflector:
   reflect.proto.0:
@@ -96,7 +99,6 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.hg$/
           - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
           - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
-          - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
           - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
           - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
           - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
@@ -121,9 +123,6 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
           - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
           - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
-          - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
-          - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
-          - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
       prefixPath: .
     dstFilter:
       prefixPath: .
@@ -143,9 +142,6 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
           - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
           - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
-          - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
-          - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
-          - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
       prefixPath: .
     dstFilter:
       prefixPath: .
@@ -268,12 +264,13 @@ build:
       proto: 1
       export: 1
       tar: 1
+      public: 1
     steps:
       - 'build::debug.raw'
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.3.22
+    version: 0.3.25
     criterion:
       default: 1
       debug: 1
@@ -281,6 +278,7 @@ exported:
       proto: 1
       export: 1
       tar: 1
+      public: 1
     exportedReflector: 'reflector::exported.0'
     exportedFilesReflector: 'reflector::exportedFiles.0'
     exportedDirPath: 'path::exportedDir.0'
@@ -298,3 +296,4 @@ exported:
         proto: 1
         export: 1
         tar: 1
+        public: 1
