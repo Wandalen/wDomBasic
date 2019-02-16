@@ -7,7 +7,7 @@ about:
     routines of DomBase would help you to solve it faster. It has something in
     common with Jquery, but no significant overlap. Use the module to get access
     to shortcuts for a browser.
-  version: 0.3.34
+  version: 0.3.35
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -20,10 +20,10 @@ execution:
     test: wtest staging
     docgen: wdocgen staging
 path:
-  proto:
-    path: ./proto
   in:
     path: .
+  temp:
+    path: out
   out:
     path: out
   out.debug:
@@ -34,6 +34,8 @@ path:
     path: ./out/release
     criterion:
       debug: 0
+  proto:
+    path: ./proto
   repository:
     path: 'git+https://github.com/Wandalen/wDomBase.git'
   bugs:
@@ -69,9 +71,9 @@ path:
 submodule: {}
 reflector:
   reflect.proto.:
-    srcFilter:
+    src:
       filePath:
-        ./proto: ./out/release
+        proto: out/release
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -90,9 +92,9 @@ reflector:
     inherit:
       - predefined.*
   reflect.proto.debug:
-    srcFilter:
+    src:
       filePath:
-        ./proto: ./out/debug
+        proto: out/debug
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -109,7 +111,7 @@ reflector:
     inherit:
       - predefined.*
   reflect.submodules:
-    srcFilter:
+    src:
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -126,9 +128,9 @@ reflector:
     inherit:
       - predefined.*
   exported.proto.export:
-    srcFilter:
+    src:
       filePath:
-        ./proto: true
+        proto: true
       prefixPath: .
     criterion:
       default: 1
@@ -140,7 +142,7 @@ reflector:
       public: 1
   exportedFiles.proto.export:
     recursive: 0
-    srcFilter:
+    src:
       filePath:
         .: true
         dwtools: true
@@ -280,7 +282,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.3.34
+    version: 0.3.35
     criterion:
       default: 1
       debug: 1
