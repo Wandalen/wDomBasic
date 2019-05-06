@@ -21,8 +21,8 @@ execution :
 
 path :
 
-  repository : git+https://github.com/Wandalen/wDomBase.git
-  bugs : https://github.com/Wandalen/wDomBase/issues
+  repository : git+https:///github.com/Wandalen/wDomBase.git
+  bugs : https:///github.com/Wandalen/wDomBase/issues
 
 step :
 
