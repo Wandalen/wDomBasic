@@ -1,6 +1,6 @@
 format: willfile-1.0.0
 about:
-  name: wDomBase
+  name: wDomBasic
   description: >-
     Collection of routines for a browser to operate DOM elements and its events.
     No matter whatever problem in a browser you are trying to solve several
@@ -10,7 +10,7 @@ about:
   enabled: 1
   version: 0.3.36
   interpreters: &ref_0
-    - nodejs >= 6.0.0
+    - nodejs >= 8.0.0
     - chrome >= 60.0.0
     - firefox >= 60.0.0
   keywords: &ref_1
@@ -19,11 +19,11 @@ path:
   module.willfiles:
     criterion:
       predefined: 1
-    path: wDomBase.out.will.yml
+    path: wDomBasic.out.will.yml
   module.common:
     criterion:
       predefined: 1
-    path: wDomBase.out
+    path: wDomBasic.out
   module.original.willfiles:
     criterion:
       predefined: 1
@@ -57,9 +57,9 @@ path:
   proto:
     path: ../proto
   repository:
-    path: 'git+https:///github.com/Wandalen/wDomBase.git'
+    path: 'git+https:///github.com/Wandalen/wDomBasic.git'
   bugs:
-    path: 'https:///github.com/Wandalen/wDomBase/issues'
+    path: 'https:///github.com/Wandalen/wDomBasic/issues'
   exported.dir.proto.export:
     criterion:
       default: 1
@@ -292,7 +292,7 @@ exported:
 module:
   ../:
     about:
-      name: wDomBase
+      name: wDomBasic
       description: >-
         Collection of routines for a browser to operate DOM elements and its
         events. No matter whatever problem in a browser you are trying to solve
@@ -347,9 +347,9 @@ module:
       proto:
         path: ./proto
       repository:
-        path: 'git+https:///github.com/Wandalen/wDomBase.git'
+        path: 'git+https:///github.com/Wandalen/wDomBasic.git'
       bugs:
-        path: 'https:///github.com/Wandalen/wDomBase/issues'
+        path: 'https:///github.com/Wandalen/wDomBasic/issues'
       exported.dir.proto.export:
         criterion:
           default: 1
@@ -579,4 +579,4 @@ module:
           export: 1
           tar: 1
           public: 1
-  wDomBase.out: root
+  wDomBasic.out: root
