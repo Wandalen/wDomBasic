@@ -22,13 +22,16 @@ about :
 path :
 
   repository : git+https:///github.com/Wandalen/wDomBasic.git
+  remotes :
+   - git+https:///github.com/Wandalen/wDomBasic.git
+   - npm:///wdombasic
   bugs : https:///github.com/Wandalen/wDomBasic/issues
 
 step :
 
   export.proto :
     inherit : module.export
-    export : path::proto
+    export : path::export
     tar : 0
     criterion :
       debug : 1
