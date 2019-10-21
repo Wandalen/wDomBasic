@@ -22,7 +22,7 @@ about :
 path :
 
   repository : git+https:///github.com/Wandalen/wDomBasic.git
-  remotes :
+  origins :
    - git+https:///github.com/Wandalen/wDomBasic.git
    - npm:///wdombasic
   bugs : https:///github.com/Wandalen/wDomBasic/issues
