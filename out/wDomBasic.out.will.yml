@@ -1,298 +1,21 @@
-format: willfile-1.0.0
-about:
-  name: wDomBasic
-  description: >-
-    Collection of routines for a browser to operate DOM elements and its events.
-    No matter whatever problem in a browser you are trying to solve several
-    routines of DomBase would help you to solve it faster. It has something in
-    common with Jquery, but no significant overlap. Use the module to get access
-    to shortcuts for a browser.
-  enabled: 1
-  version: 0.3.36
-  interpreters: &ref_0
-    - nodejs >= 8.0.0
-    - chrome >= 60.0.0
-    - firefox >= 60.0.0
-  keywords: &ref_1
-    - wTools
-path:
-  module.willfiles:
-    criterion:
-      predefined: 1
-    path: wDomBasic.out.will.yml
-  module.common:
-    criterion:
-      predefined: 1
-    path: wDomBasic.out
-  module.original.willfiles:
-    criterion:
-      predefined: 1
-    path:
-      - ../.im.will.yml
-      - ../.ex.will.yml
-  local:
-    criterion:
-      predefined: 1
-  remote:
-    criterion:
-      predefined: 1
-  in:
-    criterion:
-      predefined: 0
-    path: .
-  temp:
-    path: .
-  out:
-    criterion:
-      predefined: 0
-    path: .
-  out.debug:
-    criterion:
-      debug: 1
-    path: debug
-  out.release:
-    criterion:
-      debug: 0
-    path: release
-  proto:
-    path: ../proto
-  repository:
-    path: 'git+https:///github.com/Wandalen/wDomBasic.git'
-  bugs:
-    path: 'https:///github.com/Wandalen/wDomBasic/issues'
-  exported.dir.proto.export:
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      proto: 1
-      export: 1
-      tar: 1
-      public: 1
-    path: ../proto
-  exported.files.proto.export:
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      proto: 1
-      export: 1
-      tar: 1
-      public: 1
-    path:
-      - ../proto
-      - ../proto/dwtools
-      - ../proto/dwtools/Tools.s
-      - ../proto/dwtools/abase
-      - ../proto/dwtools/abase/.DS_Store
-      - ../proto/dwtools/abase/rbrowser
-      - ../proto/dwtools/abase/rbrowser/.DS_Store
-      - ../proto/dwtools/abase/rbrowser/DomBase.js
-      - ../proto/dwtools/amid
-      - ../proto/dwtools/atop
-submodule: {}
-reflector:
-  reflect.proto.:
-    src:
-      filePath:
-        'path::proto': 'path::out.*=1'
-    mandatory: 1
-    criterion:
-      debug: 0
-    inherit:
-      - predefined.*
-  reflect.proto.debug:
-    src:
-      filePath:
-        'path::proto': 'path::out.*=1'
-    mandatory: 1
-    criterion:
-      debug: 1
-    inherit:
-      - predefined.*
-  reflect.submodules:
-    src:
-      filePath:
-        'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
-    mandatory: 1
-    criterion:
-      debug: 1
-    inherit:
-      - predefined.*
-  exported.proto.export:
-    src:
-      filePath:
-        .: ''
-      prefixPath: ../proto
-    mandatory: 1
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      proto: 1
-      export: 1
-      tar: 1
-      public: 1
-  exported.files.proto.export:
-    src:
-      filePath:
-        'path::exported.files.proto.export': ''
-      basePath: .
-      prefixPath: 'path::exported.dir.proto.export'
-    recursive: 0
-    mandatory: 1
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      proto: 1
-      export: 1
-      tar: 1
-      public: 1
-step:
-  clean.out.:
-    opts:
-      filePath: 'path::out.debug'
-    criterion:
-      debug: 0
-    inherit:
-      - files.delete
-  clean.out.debug:
-    opts:
-      filePath: 'path::out.debug'
-    criterion:
-      debug: 1
-    inherit:
-      - files.delete
-  reflect.proto.:
-    opts:
-      reflector: 'reflector::reflect.proto.*=1'
-    criterion:
-      debug: 0
-      raw: 0
-    inherit:
-      - files.reflect
-  reflect.proto.debug:
-    opts:
-      reflector: 'reflector::reflect.proto.*=1'
-    criterion:
-      debug: 1
-      raw: 0
-    inherit:
-      - files.reflect
-  reflect.proto.raw:
-    opts:
-      reflector: 'reflector::reflect.proto.*=1'
-    criterion:
-      debug: 0
-      raw: 1
-    inherit:
-      - files.reflect
-  reflect.proto.debug.raw:
-    opts:
-      reflector: 'reflector::reflect.proto.*=1'
-    criterion:
-      debug: 1
-      raw: 1
-    inherit:
-      - files.reflect
-  reflect.submodules.:
-    opts:
-      reflector: 'reflector::reflect.submodules*=1'
-    criterion:
-      debug: 1
-      raw: 0
-    inherit:
-      - files.reflect
-  reflect.submodules.raw:
-    opts:
-      reflector: 'reflector::reflect.submodules*=1'
-    criterion:
-      debug: 1
-      raw: 1
-    inherit:
-      - files.reflect
-  reflect.submodules:
-    opts:
-      reflector: 'reflector::reflect.submodules*'
-    criterion:
-      debug: 1
-    inherit:
-      - files.reflect
-  export.proto:
-    opts:
-      export: 'path::proto'
-      tar: 0
-    criterion:
-      debug: 1
-      proto: 1
-    inherit:
-      - module.export
-build:
-  debug.raw:
-    steps:
-      - 'step::clean.out*=1'
-      - 'step::reflect.proto.*=1'
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-  debug.compiled:
-    steps:
-      - 'step::clean.out*=1'
-      - 'step::reflect.proto.*=1'
-    criterion:
-      debug: 1
-      raw: 0
-  release.raw:
-    steps:
-      - 'step::clean.out*=1'
-      - 'step::reflect.proto.*=1'
-    criterion:
-      debug: 0
-      raw: 1
-  release.compiled:
-    steps:
-      - 'step::clean.out*=1'
-      - 'step::reflect.proto.*=1'
-    criterion:
-      debug: 0
-      raw: 0
-  all:
-    steps:
-      - 'build::debug.raw'
-      - 'build::release.compiled'
-  proto.export:
-    steps:
-      - 'build::debug.raw'
-      - 'step::export.proto'
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      proto: 1
-      export: 1
-      tar: 1
-      public: 1
-exported:
-  proto.export:
-    version: 0.3.36
-    exportedReflector: 'reflector::exported.proto.export'
-    exportedFilesReflector: 'reflector::exported.files.proto.export'
-    exportedDirPath: 'path::exported.dir.proto.export'
-    exportedFilesPath: 'path::exported.files.proto.export'
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      proto: 1
-      export: 1
-      tar: 1
-      public: 1
+format: outwillfile-2.0
+root:
+  - wDomBasic.out
+consistency:
+  wDomBasic.out.will.yml: &ref_0
+    hash: 7e624a2d1e1665f9a35c46e6a5d28c50
+    size: 13492
+  ../.ex.will.yml: &ref_1
+    hash: 58a40a1cb93c3274b958e748385aec4c
+    size: 1178
+  ../.im.will.yml: &ref_2
+    hash: 844ab52058e80d039128df770afd6bfa
+    size: 1692
 module:
-  ../:
+  wDomBasic.out:
     about:
       name: wDomBasic
+      org: noorg
       description: >-
         Collection of routines for a browser to operate DOM elements and its
         events. No matter whatever problem in a browser you are trying to solve
@@ -301,57 +24,69 @@ module:
         module to get access to shortcuts for a browser.
       enabled: 1
       version: 0.3.36
-      interpreters: *ref_0
-      keywords: *ref_1
+      interpreters:
+        - nodejs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
     path:
       module.willfiles:
         criterion:
           predefined: 1
-        path:
-          - .im.will.yml
-          - .ex.will.yml
+        path: wDomBasic.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: wDomBasic.out
       module.original.willfiles:
         criterion:
           predefined: 1
         path:
-          - .im.will.yml
-          - .ex.will.yml
-      module.common:
+          - ../.ex.will.yml
+          - ../.im.will.yml
+      module.peer.willfiles:
         criterion:
           predefined: 1
-        path: ./
-      local:
+        path:
+          - ../.ex.will.yml
+          - ../.im.will.yml
+      module.peer.in:
         criterion:
           predefined: 1
-      remote:
+        path: ..
+      download:
         criterion:
           predefined: 1
+      repository:
+        path: 'git+https:///github.com/Wandalen/wDomBasic.git'
+      origins:
+        path:
+          - 'git+https:///github.com/Wandalen/wDomBasic.git'
+          - 'npm:///wdombasic'
+      bugs:
+        path: 'https:///github.com/Wandalen/wDomBasic/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       temp:
-        path: out
+        path: .
       out:
-        criterion:
-          predefined: 0
-        path: out
+        path: .
       out.debug:
         criterion:
           debug: 1
-        path: ./out/debug
+        path: debug
       out.release:
         criterion:
           debug: 0
-        path: ./out/release
+        path: release
       proto:
-        path: ./proto
-      repository:
-        path: 'git+https:///github.com/Wandalen/wDomBasic.git'
-      bugs:
-        path: 'https:///github.com/Wandalen/wDomBasic/issues'
+        path: ../proto
+      export:
+        path: '{path::proto}/**'
       exported.dir.proto.export:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -359,9 +94,10 @@ module:
           export: 1
           tar: 1
           public: 1
-        path: ./proto
+        path: ../proto
       exported.files.proto.export:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -370,22 +106,25 @@ module:
           tar: 1
           public: 1
         path:
-          - proto
-          - proto/dwtools
-          - proto/dwtools/Tools.s
-          - proto/dwtools/abase
-          - proto/dwtools/abase/.DS_Store
-          - proto/dwtools/abase/rbrowser
-          - proto/dwtools/abase/rbrowser/.DS_Store
-          - proto/dwtools/abase/rbrowser/DomBase.js
-          - proto/dwtools/amid
-          - proto/dwtools/atop
+          - ../proto
+          - ../proto/dwtools
+          - ../proto/dwtools/Tools.s
+          - ../proto/dwtools/abase
+          - ../proto/dwtools/abase/.DS_Store
+          - ../proto/dwtools/abase/rbrowser
+          - ../proto/dwtools/abase/rbrowser/.DS_Store
+          - ../proto/dwtools/abase/rbrowser/DomBase.js
+          - ../proto/dwtools/amid
+          - ../proto/dwtools/atop
     submodule: {}
     reflector:
       reflect.proto.:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
+          prefixPath: ''
+        dst:
+          prefixPath: ''
         mandatory: 1
         criterion:
           debug: 0
@@ -404,6 +143,9 @@ module:
         src:
           filePath:
             'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+          prefixPath: ''
+        dst:
+          prefixPath: ''
         mandatory: 1
         criterion:
           debug: 1
@@ -412,10 +154,11 @@ module:
       exported.proto.export:
         src:
           filePath:
-            .: ''
-          prefixPath: proto
+            '**': ''
+          prefixPath: ../proto
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -429,9 +172,11 @@ module:
             'path::exported.files.proto.export': ''
           basePath: .
           prefixPath: 'path::exported.dir.proto.export'
+          recursive: 0
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -440,6 +185,15 @@ module:
           tar: 1
           public: 1
     step:
+      export.proto:
+        opts:
+          export: 'path::export'
+          tar: 0
+        criterion:
+          debug: 1
+          proto: 1
+        inherit:
+          - module.export
       clean.out.:
         opts:
           filePath: 'path::out.debug'
@@ -481,6 +235,7 @@ module:
       reflect.proto.debug.raw:
         opts:
           reflector: 'reflector::reflect.proto.*=1'
+          verbosity: null
         criterion:
           debug: 1
           raw: 1
@@ -509,16 +264,47 @@ module:
           debug: 1
         inherit:
           - files.reflect
-      export.proto:
+      exported.proto.export:
         opts:
-          export: 'path::proto'
-          tar: 0
+          reflector: 'reflector::exported.proto.export*'
         criterion:
+          generated: 1
+          default: 1
           debug: 1
+          raw: 1
           proto: 1
+          export: 1
+          tar: 1
+          public: 1
         inherit:
-          - module.export
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
     build:
+      proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
       debug.raw:
         steps:
           - 'step::clean.out*=1'
@@ -552,21 +338,12 @@ module:
         steps:
           - 'build::debug.raw'
           - 'build::release.compiled'
-      proto.export:
-        steps:
-          - 'build::debug.raw'
-          - 'step::export.proto'
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          proto: 1
-          export: 1
-          tar: 1
-          public: 1
     exported:
       proto.export:
         version: 0.3.36
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
         exportedReflector: 'reflector::exported.proto.export'
         exportedFilesReflector: 'reflector::exported.files.proto.export'
         exportedDirPath: 'path::exported.dir.proto.export'
@@ -579,4 +356,242 @@ module:
           export: 1
           tar: 1
           public: 1
-  wDomBasic.out: root
+    consistency:
+      wDomBasic.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
+  ../:
+    about:
+      name: wDomBasic
+      org: noorg
+      description: >-
+        Collection of routines for a browser to operate DOM elements and its
+        events. No matter whatever problem in a browser you are trying to solve
+        several routines of DomBase would help you to solve it faster. It has
+        something in common with Jquery, but no significant overlap. Use the
+        module to get access to shortcuts for a browser.
+      enabled: 1
+      version: 0.3.36
+      interpreters:
+        - nodejs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .ex.will.yml
+          - .im.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .ex.will.yml
+          - .im.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: out/wDomBasic.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: out
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      download:
+        criterion:
+          predefined: 1
+      repository:
+        path: 'git+https:///github.com/Wandalen/wDomBasic.git'
+      origins:
+        path:
+          - 'git+https:///github.com/Wandalen/wDomBasic.git'
+          - 'npm:///wdombasic'
+      bugs:
+        path: 'https:///github.com/Wandalen/wDomBasic/issues'
+      in:
+        path: .
+      temp:
+        path: out
+      out:
+        path: out
+      out.debug:
+        criterion:
+          debug: 1
+        path: out/debug
+      out.release:
+        criterion:
+          debug: 0
+        path: out/release
+      proto:
+        path: proto
+      export:
+        path: '{path::proto}/**'
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      reflect.submodules:
+        src:
+          filePath:
+            'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+    step:
+      export.proto:
+        opts:
+          export: 'path::export'
+          tar: 0
+        criterion:
+          debug: 1
+          proto: 1
+        inherit:
+          - module.export
+      clean.out.:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 0
+        inherit:
+          - files.delete
+      clean.out.debug:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 1
+        inherit:
+          - files.delete
+      reflect.proto.:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.proto.debug.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+          verbosity: null
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules.:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.submodules.raw:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules:
+        opts:
+          reflector: 'reflector::reflect.submodules*'
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+    build:
+      proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+      debug.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      debug.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+      release.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+      release.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+      all:
+        steps:
+          - 'build::debug.raw'
+          - 'build::release.compiled'
+    consistency:
+      ../.ex.will.yml:
+        hash: 58a40a1cb93c3274b958e748385aec4c
+        size: 1178
+      ../.im.will.yml:
+        hash: 844ab52058e80d039128df770afd6bfa
+        size: 1692
+      wDomBasic.out.will.yml: *ref_0
