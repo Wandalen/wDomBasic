@@ -6,7 +6,7 @@ Collection of routines for a browser to operate DOM elements and its events. No 
 ### Try out
 ```
 npm install
-node sample/Sample.s
+node sample/Sample.js
 ```
 
 
