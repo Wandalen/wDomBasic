@@ -15,7 +15,7 @@
  * Collection of routines for a browser to operate DOM elements and its events.
  * @namespace Tools( module::DomBase )
  * @memberof module:Tools/base/DomBase
- */ 
+ */
 
 var _ = wTools;
 var $ = jQuery;
@@ -30,7 +30,7 @@ var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
  * @param {} selection
  * @function domCaretSelect
  * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */ 
+ */
 
 function domCaretSelect( dom, selection )
 {
@@ -85,9 +85,9 @@ function domCaretSelect( dom, selection )
 //
 
 /**
- * @summary Getter/setter for a `dom` object. 
- * @description 
- * Single argument call: 
+ * @summary Getter/setter for a `dom` object.
+ * @description
+ * Single argument call:
  *  Returns value of the element depending on type. If its input field returns it value, otherwise returns text content of the element.
  * Two arguments call:
  *  Changes value of the element depending on type. If elements is a input field changes it value to `val`, otherwise changes text content of the element.
@@ -186,10 +186,10 @@ function domsVal( dom,vals )
 
       var selector = dom.name;
 
-      if( !_.strIsNotEmpty( selector ) )
+      if( !_.strDefined( selector ) )
       return;
 
-      var val = _.entitySelect( vals,selector );
+      var val = _.select( vals,selector );
 
       if( val === undefined )
       return;
@@ -204,9 +204,8 @@ function domsVal( dom,vals )
     recursive : true,
     result : Object.create( null ),
     dom : dom,
-    onUp : function( dom,result )
+    onUp : function( dom,o )
     {
-
       var text = '';
       var val = _.domVal( dom );
 
@@ -221,7 +220,40 @@ function domsVal( dom,vals )
 
       var selector = dom.name;
 
-      _.entitySelectSet( result,selector,val );
+      var parts = _.strSplit
+      ({
+        src : selector,
+        delimeter : [ '.', '[', ']' ],
+        preservingDelimeters : 0,
+        preservingEmpty : 0,
+        preservingQuoting : 0,
+        stripping : 1,
+      });
+
+      let query = parts[ 0 ];
+      for( let i = 0; i < parts.length; i++ )
+      {
+        let set = Object.create( null );
+
+        if( i )
+        query = query + '/' + parts[ i ];
+
+        if( i === parts.length - 1 )
+        set = val;
+        else if( _.select( o.result, query ) != undefined )
+        continue;
+        else if( !isNaN( _.numberFromStr( parts[ i + 1 ] ) ) )
+        set = [];
+
+        _.selectSet
+        ({
+          src : o.result,
+          selector : query,
+          set : set
+        });
+      }
+
+      // _.selectSet( o.result,selector,val );
 
       // return result;
     },
@@ -235,12 +267,12 @@ function domsVal( dom,vals )
 //
 
 /**
- * @summary Changes className property of `dom` element. 
- * @description 
+ * @summary Changes className property of `dom` element.
+ * @description
  * If `adding` is `true` routine adds class `className` to the element.
  * If `adding` is `false` routine removes class `className` from the element.
  * If `adding` is not provided, routine removes class if it exists, otherwise adds it.
- * 
+ *
  * @param {String|Object} dom Target dom.
  * @param {String} cssClass Name of class.
  * @param {Boolean} adding Controls adding/removing of the class.
@@ -251,7 +283,7 @@ function domsVal( dom,vals )
 function domClass( dom,cssClass,adding )
 {
 
-  _.assert( arguments.length === 2 || arguments.length === 3 );
+  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
   _.assert( _.domableIs( dom ) );
   _.assert( _.strIs( cssClass ) );
 
@@ -313,8 +345,8 @@ function domClasses( dom,classes,adding )
 //
 
 /**
- * @summary Manipulates the attributes of `dom` element. 
- * @description 
+ * @summary Manipulates the attributes of `dom` element.
+ * @description
  * If `adding` is `true` routine adds attributes `attrs` to the element.
  * If `adding` is `false` routine removes attributes `attrs` from the element.
  * If single `dom` argument is provided routine returns attributes of the element.
@@ -371,7 +403,7 @@ function domAttrs( dom,attrs,adding )
     }
     else for( var c in attrs )
     {
-      _.assert( _.atomicIs( attrs[ c ] ) );
+      _.assert( _.primitiveIs( attrs[ c ] ) );
       if( adding )
       dom.attr( c,attrs[ c ] );
       else
@@ -384,8 +416,9 @@ function domAttrs( dom,attrs,adding )
 
 //
 
+
 /**
- * @summary Returns true if `dom` element has at least one attribute from `attrs`. 
+ * @summary Returns true if `dom` element has at least one attribute from `attrs`.
  * @param {String|Object} dom Target dom.
  * @param {Array} attrs Source attributes.
  * @function domAttrHasAny
@@ -395,13 +428,13 @@ function domAttrs( dom,attrs,adding )
 function domAttrHasAny( dom,attrs )
 {
   var has = _.mapKeys( _.domAttrs( dom ) );
-  return _.arrayHasAny( has,attrs );
+  return _.longHasAny( has,attrs );
 }
 
 //
 
 /**
- * @summary Returns true if `dom` element has all attribute from `attrs`. 
+ * @summary Returns true if `dom` element has all attribute from `attrs`.
  * @param {String|Object} dom Target dom.
  * @param {Array} attrs Source attributes.
  * @function domAttrHasAny
@@ -412,13 +445,13 @@ function domAttrHasAll( dom,attrs )
 {
   var has = _.mapKeys( _.domAttrs( dom ) );
   debugger;
-  return _.arrayHasAll( has,attrs );
+  return _.longHasAll( has,attrs );
 }
 
 //
 
 /**
- * @summary Returns true if `dom` element doesn't have any attribute from `attrs`. 
+ * @summary Returns true if `dom` element doesn't have any attribute from `attrs`.
  * @param {String|Object} dom Target dom.
  * @param {Array} attrs Source attributes.
  * @function domAttrHasAny
@@ -429,7 +462,7 @@ function domAttrHasNone( dom,attrs )
 {
   var has = _.mapKeys( _.domAttrs( dom ) );
   debugger;
-  return _.arrayHasNone( has,attrs );
+  return _.longHasNone( has,attrs );
 }
 
 //
@@ -507,7 +540,7 @@ function domAttrInherited( dom,attrName )
   if( _.jqueryIs( dom ) )
   dom = dom[ 0 ];
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.domIs( dom ) );
   _.assert( _.strIs( attrName ) );
 
@@ -517,7 +550,7 @@ function domAttrInherited( dom,attrName )
     result = p.getAttribute( attrName );
     p = p.parentNode;
   }
-  while( p && p !== document && _.strTypeOf( p ) !== 'DocumentFragment' && ( result === null || result === undefined ) );
+  while( p && p !== document && _.strType( p ) !== 'DocumentFragment' && ( result === null || result === undefined ) );
 
   return result;
 }
@@ -560,7 +593,7 @@ function domNickname( dom,attrName )
 function domOf( parent,children )
 {
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.domableIs( parent ) );
   _.assert( _.domableIs( children ) );
 
@@ -581,7 +614,7 @@ function domLeftTopGet( dom )
 {
 
   _.assert( _.domableIs( dom ) );
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   var dom = $( dom );
   var result = [];
@@ -591,7 +624,7 @@ function domLeftTopGet( dom )
 
   for( var i = 0 ; i < 2 ; i++ )
   if( _.strIs( result[ i ] ) )
-  result[ i ] = _.strBeginOf( result[ i ],'px' );
+  result[ i ] = _.strRemoveEnd( result[ i ],'px' );
 
   result = _.numbersFrom( result );
 
@@ -605,7 +638,7 @@ function domLeftTopSet( dom,pos )
 
   _.assert( _.domableIs( dom ) );
   _.assert( pos.length === 2 );
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   var dom = $( dom );
 
@@ -624,7 +657,7 @@ function domCenterSet( dom,pos )
 
   _.assert( _.domableIs( dom ) );
   _.assert( pos.length === 2 );
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   var dom = $( dom );
   var size = _.domSizeFastGet( dom );
@@ -825,7 +858,7 @@ function domFirstOf( src,selector )
 
   _.assert( _.domableIs( src ) );
   _.assert( _.strIs( selector ) );
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   selector += ':first';
   src = $( src );
@@ -854,11 +887,14 @@ function domOwnIdentity( dom,identity )
   if( identity === undefined )
   {
 
-    var cssClasses = dom[ 0 ].className.split( /\s+/ );
+    var cssClasses = dom[ 0 ].className;
     var result = '';
 
     if( cssClasses.length )
-    result += '.' + cssClasses.join( '.' );
+    {
+      cssClasses = cssClasses.split( /\s+/ );
+      result += '.' + cssClasses.join( '.' );
+    }
 
     if( dom[ 0 ].id )
     debugger;
@@ -866,23 +902,46 @@ function domOwnIdentity( dom,identity )
     if( dom[ 0 ].id )
     result = '#' + dom[ 0 ].id + result;
 
-    _.assert( result );
+    _.assert( !!result );
 
     return result;
   }
 
-  identity = _.strCutOffAllLeft( identity,' ' )[ 2 ];
+  identity = _.strIsolateEndOrAll( identity,' ' )[ 2 ];
 
   _.assert( identity.indexOf( ' ' ) === -1 );
 
-  identity = _.strSplit({ src : identity, preservingDelimeters : 1, delimeter : [ '.','#' ] })
+  identity = _.strSplitFast
+  ({
+    src : identity,
+    delimeter : [ '.','#', '[', ']' ],
+    preservingDelimeters : 1,
+    preservingEmpty : 0,
+  });
 
-  for( var i = 1 ; i < identity.length ; i+=1 )
-  if( identity[ i-1 ] === '.' )
-  dom.addClass( identity[ i ] );
-  else if( identity[ i-1 ] === '#' )
-  dom.attr( identity[ i ] );
-  else throw _.err( 'unknown prefix',identity[ i-1 ] );
+  for( var i = 1 ; i < identity.length ; i+=2 )
+  {
+    if( identity[ i-1 ] === '.' )
+    {
+      dom.addClass( identity[ i ] );
+    }
+    else if( identity[ i-1 ] === '#' )
+    {
+      dom.attr( 'id', identity[ i ] );
+    }
+    else if( identity[ i-1 ] === '[' && identity[ i+1 ] === ']' )
+    {
+      var attrStrSplitted = _.strSplitNonPreserving({ src : identity[ i ], delimeter : '=' });
+      _.assert( attrStrSplitted.length === 2, 'domOwnIdentity expects attribute indentity of format: attr=val, got:', identity[ i ] );
+      dom.attr( attrStrSplitted[ 0 ], attrStrSplitted[ 1 ] );
+      i += 1;
+    }
+    else
+    {
+      debugger;
+      throw _.err( 'unknown prefix',identity[ i-1 ] );
+    }
+  }
 
 }
 
@@ -894,7 +953,7 @@ function domCssGet( dom,fields )
 
   dom = $( dom )
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( dom.length === 1 );
   _.assert( _.strIs( fields ) || _.arrayIs( fields ) || _.mapIs( fields ) );
 
@@ -925,7 +984,7 @@ function domCssSet( dom,fields )
 
   dom = $( dom )
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( dom.length === 1 );
   _.assert( _.mapIs( fields ) );
 
@@ -954,6 +1013,7 @@ function domEach( o )
 
   for( var d = 0 ; d < o.dom.length ; d++ )
   {
+    // debugger
     _domEach( o.dom[ d ],o );
   }
 
@@ -1023,16 +1083,20 @@ function domCssGlobal( o )
   o = { css : o }
 
   _.routineOptions( domCssGlobal,o );
+
+  if( o.document === null )
+  o.document = document;
+
   _.assert( o.document.head );
   _.assert( _.strIs( o.css ) );
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( o.once )
   {
 
     if( o.key === null )
     o.key = o.css;
-    if( _.arrayHas( _domGlobalCssKeysArray , [ o.key,o.document ] , _.arrayIdentical ) )
+    if( _.longHas( _domGlobalCssKeysArray , [ o.key,o.document ] , _.longIdentical ) )
     return;
     _domGlobalCssKeysArray.push([ o.key,o.document ]);
 
@@ -1045,7 +1109,7 @@ function domCssGlobal( o )
 
 domCssGlobal.defaults =
 {
-  document : document,
+  document : null,
   css : null,
   once : 1,
   key : null,
@@ -1059,9 +1123,13 @@ function domCssExport( o )
   o = { dstDocument : o }
 
   _.routineOptions( domCssExport,o );
+
+  if( o.srcDocument === null )
+  o.srcDocument = document;
+
   _.assert( o.srcDocument.head );
   _.assert( o.dstDocument.head );
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   var styles = o.srcDocument.getElementsByTagName( 'style' );
 
@@ -1088,7 +1156,7 @@ function domCssExport( o )
 domCssExport.defaults =
 {
   dstDocument : null,
-  srcDocument : document,
+  srcDocument : null,
 }
 
 //
@@ -1223,10 +1291,9 @@ function domLoad( o )
 
   _.routineOptions( domLoad,o );
 
-  o.once = new wConsequence();
-  o.ready = new wConsequence();
+  o.once = new _.Consequence();
+  o.ready = new _.Consequence();
 
-  // var consequence = new wConsequence();
   o.parentDom = $( o.parentDom );
   var targetDom = o.parentDom;
   if( o.targetClass )
@@ -1240,7 +1307,7 @@ function domLoad( o )
 
   /* */
 
-  function show()
+  function showMaybe()
   {
 
     if( o.showing )
@@ -1256,8 +1323,8 @@ function domLoad( o )
   if( o.targetClass )
   if( targetDom.hasClass( o.targetClass ) )
   {
-    show();
-    o.ready.give( targetDom );
+    showMaybe();
+    o.ready.take( targetDom );
     return o;
   }
 
@@ -1267,18 +1334,18 @@ function domLoad( o )
   /* */
 
   _.assert( _.mapIs( o ) );
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   // _.assert( _.strIs( o.targetClass ) || o.replacing );
-  _.assert( _.strIsNotEmpty( o.url ), 'expects ( o.url )' );
-  _.assert( o.parentDom.length,'expects { o.parentDom }' );
-  _.assert( targetDom.length,'expects { targetDom }' );
+  _.assert( _.strDefined( o.url ), 'Expects {-o.url-}' );
+  _.assert( o.parentDom.length,'Expects { o.parentDom }' );
+  _.assert( targetDom.length,'Expects { targetDom }' );
 
   /* */
 
-  function handleLoaded( responseData, status, xhr )
+  function loadEnd( responseData, status, xhr )
   {
 
-    _.assert( arguments.length === 3 );
+    _.assert( arguments.length === 3, 'Expects exactly three argument' );
 
     if( status != 'error' && o.replacing ) try
     {
@@ -1311,12 +1378,26 @@ function domLoad( o )
     {
       var classes = _.domClasses( targetDom );
       var attrs = _.domAttrs( targetDom );
-      targetDom = targetDom.replaceWith( responseData );
+
+      if( o.after || o.before )
+      {
+        // debugger;
+        targetDom = targetDom.find( o.after || o.before );
+        _.assert( targetDom.length,o.after ? 'after' : 'before','DOM was not found',o.after || o.before );
+        if( o.after )
+        targetDom = targetDom.after( responseData );
+        else
+        targetDom = targetDom.before( responseData );
+        // debugger;
+      }
+      else
+      {
+        targetDom = targetDom.replaceWith( responseData );
+      }
       targetDom = responseData;
 
       if( o.targetClass )
       _.domClasses( targetDom,o.targetClass,1 );
-
       if( o.preservingAttributes )
       _.domAttrs( targetDom,attrs,1 );
       if( o.preservingClasses )
@@ -1325,21 +1406,19 @@ function domLoad( o )
 
     o.parentDom.attr( 'dom-loaded',1 );
 
-    show();
+    showMaybe();
 
-    o.ready.give( targetDom );
-    o.once.give( targetDom );
+    o.ready.take( targetDom );
+    o.once.take( targetDom );
 
   }
 
   /* */
 
   if( o.replacing )
-  $
-  .get( o.url )
-  .always( handleLoaded );
+  $.get( o.url ).always( loadEnd );
   else
-  targetDom.load( o.url,handleLoaded );
+  targetDom.load( o.url,loadEnd );
 
   return o;
 }
@@ -1351,6 +1430,8 @@ domLoad.defaults =
   parentDom : 'body',
   showing : 0,
   replacing : 1,
+  before : null,
+  after : null,
   preservingClasses : 1,
   preservingAttributes : 1,
 }
@@ -1434,7 +1515,7 @@ function eventClientPosition( o )
   var event = o.event;
   var relative = o.relative;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.eventIs( event ) );
   _.assert( !o.flip || _.arrayIs( o.flip ) );
   _.assertMapHasOnly( o,eventClientPosition.defaults );
@@ -1578,7 +1659,7 @@ function eventMouse( type, cx, cy )
 /*
 function eventWheelZero( event,x,y )
 {
-  _.assert( arguments.length === 3 );
+  _.assert( arguments.length === 3, 'Expects exactly three argument' );
   var wrap;
   var o = Object.create( null );
 
@@ -1630,33 +1711,84 @@ function eventWheelZero( event,x,y )
   return result;
 }
 */
+
 //
 
-function eventWheelDelta( event,usingOne )
+function domFromAtLeastOne( targetDom )
+{
+  let wasDom = targetDom;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.domableIs( targetDom ) );
+  targetDom = $( targetDom );
+  _.assert( targetDom.length > 0, 'Expects at least one DOM element, but found none for', wasDom );
+
+  return targetDom;
+}
+
+//
+
+function domWheelOn( o )
+{
+
+  if( arguments.length === 2 )
+  o = { targetDom : arguments[ 0 ], onWheel : arguments[ 1 ] }
+
+  _.routineOptions( domWheelOn, o );
+  _.assert( _.routineIs( o.onWheel ) );
+
+  o.targetDom = _.domFromAtLeastOne( o.targetDom );
+
+  _.assert( _.routineIs( o.targetDom.mousewheel ), '"jQuery.mousewheel" was not included' );
+
+  o.targetDom.mousewheel( handle );
+  let onWheel = o.onWheel;
+
+  return o;
+
+  /* */
+
+  function handle( e )
+  {
+    let delta = eventWheelDelta( e );
+    return onWheel( e, delta );
+  }
+
+}
+
+domWheelOn.defaults =
+{
+  targetDom : null,
+  onWheel : null,
+}
+
+//
+
+function eventWheelDelta( e, usingOne )
 {
   var deltaX;
   var deltaY;
 
-  if( event.originalEvent )
-  event = event.originalEvent;
+  if( e.originalEvent )
+  e = e.originalEvent;
 
   // debugger;
 
-  if( _.numberIs( event.wheelDeltaX ) )
-  deltaX = event.wheelDeltaX;
-  else if( _.numberIs( event.deltaX ) )
-  deltaX = -event.deltaX;
+  if( _.numberIs( e.wheelDeltaX ) )
+  deltaX = e.wheelDeltaX;
+  else if( _.numberIs( e.deltaX ) )
+  deltaX = -e.deltaX;
 
-  if( _.numberIs( event.wheelDeltaY ) )
-  deltaY = event.wheelDeltaY;
-  else if( _.numberIs( event.deltaY ) )
-  deltaY = -event.deltaY;
-  else if( _.numberIs( event.wheelDelta ) )
-  deltaY = event.wheelDelta;
-  else if( _.numberIs( event.delta ) )
-  deltaY = -event.delta;
-  else if( _.numberIs( event.detail ) )
-  deltaY = event.detail;
+  if( _.numberIs( e.wheelDeltaY ) )
+  deltaY = e.wheelDeltaY;
+  else if( _.numberIs( e.deltaY ) )
+  deltaY = -e.deltaY;
+  else if( _.numberIs( e.wheelDelta ) )
+  deltaY = e.wheelDelta;
+  else if( _.numberIs( e.delta ) )
+  deltaY = -e.delta;
+  else if( _.numberIs( e.detail ) )
+  deltaY = e.detail;
 
   if( usingOne )
   {
@@ -1681,10 +1813,11 @@ var eventWheelDeltaScreen = ( function eventWheelDeltaScreen()
 
   var screenSize;
 
-  return function( event )
+  return function( e )
   {
-    if( !screenSize ) screenSize = [ screen.width / 250 , screen.height / 250 ];
-    var result = eventWheelDelta( event );
+    if( !screenSize )
+    screenSize = [ screen.width / 250 , screen.height / 250 ];
+    var result = eventWheelDelta( e );
     result[ 0 ] *= screenSize[ 0 ];
     result[ 1 ] *= screenSize[ 1 ];
     return result;
@@ -1697,7 +1830,7 @@ var eventWheelDeltaScreen = ( function eventWheelDeltaScreen()
 function eventSpecialMake( o )
 {
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.strIs( o ) )
   o = { name : o };
@@ -1736,7 +1869,7 @@ function eventsObserver( o )
   o = { targetDom : o };
 
   _.assert( _.domIs( o.targetDom ) );
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( eventsObserver,o );
 
   var observer = new MutationObserver( function( mutations )
@@ -1792,7 +1925,7 @@ function eventsBindAll( o )
   }
 
   _.assert( _.domableIs( o.targetDom ) );
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( eventsBindAll,o );
 
   o.targetDom = $( o.targetDom );
@@ -1804,7 +1937,8 @@ function eventsBindAll( o )
     if( !_.strBegins( e,'on' ) || e.length < 3 )
     continue;
 
-    var name = _.strEndOf( e,'on' );
+    debugger;
+    var name = _.strRemoveBegin( e,'on' );
 
     o.targetDom.addEventListener( name,o.onEvent );
 
@@ -2023,6 +2157,10 @@ var Proto =
   eventMouse : eventMouse,
 
   /*eventWheelZero : eventWheelZero,*/
+
+  domFromAtLeastOne : domFromAtLeastOne,
+  domWheelOn : domWheelOn,
+
   eventWheelDelta : eventWheelDelta,
   eventWheelDeltaScreen : eventWheelDeltaScreen,
   eventSpecialMake : eventSpecialMake,
@@ -2035,8 +2173,10 @@ var Proto =
 
   // on
 
+  _domBaselayer3Loaded : true,
+
 };
 
-_.mapExtend( wTools,Proto );
+_.mapExtend( _,Proto );
 
 })();
