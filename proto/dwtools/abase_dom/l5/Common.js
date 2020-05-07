@@ -21,7 +21,7 @@ var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 function formationRadialSet( o )
 {
 
-  if( _.domableIs( o ) )
+  if( _.dom.domableIs( o ) )
   o = { elementsDom : o }
 
   if( o.containerDom )
@@ -31,7 +31,7 @@ function formationRadialSet( o )
 
   if( o.containerDom && o.containerDom.length )
   {
-    var size = _.domSizeFastGet( o.containerDom );
+    var size = _.dom.sizeFastGet( o.containerDom );
     if( o.containerCenter === null || o.containerCenter === undefined )
     o.containerCenter = [ size[ 0 ]/2,size[ 1 ]/2 ];
     if( o.containerRadius === null || o.containerRadius === undefined )
@@ -44,7 +44,7 @@ function formationRadialSet( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.arrayIs( o.containerCenter ) );
   _.assert( _.numberIs( o.containerRadius ) );
-  _.routineOptions( domFormationRadialSet,o );
+  _.routineOptions( formationRadialSet,o );
 
   if( !o.elementsDom.length )
   return;
@@ -55,21 +55,21 @@ function formationRadialSet( o )
 
   if( o.containerDom && o.containerDom.length )
   {
-    if( o.containerDom[ 0 ]._domFormationRadialSetSizes )
+    if( o.containerDom[ 0 ]._formationRadialSetSizes )
     {
-      sizes = o.containerDom[ 0 ]._domFormationRadialSetSizes;
+      sizes = o.containerDom[ 0 ]._formationRadialSetSizes;
     }
     else if( o.containerDom.css( 'display' ) === 'none' )
     {
       _.dom.offscreenMake( o.containerDom,1 );
-      sizes = _.domsSizeGet( o.elementsDom );
-      o.containerDom[ 0 ]._domFormationRadialSetSizes = sizes;
+      sizes = _.dom.domsSizeGet( o.elementsDom );
+      o.containerDom[ 0 ]._formationRadialSetSizes = sizes;
       _.dom.offscreenMake( o.containerDom,0 );
     }
   }
 
   if( !sizes )
-  sizes = _.domsSizeGet( o.elementsDom );
+  sizes = _.dom.domsSizeGet( o.elementsDom );
 
   /* */
 
@@ -82,14 +82,14 @@ function formationRadialSet( o )
     pos[ 0 ] = o.containerCenter[ 0 ] + Math.cos( o.phase + radiansPerElement*i ) * radius;
     pos[ 1 ] = o.containerCenter[ 1 ] + Math.sin( o.phase + radiansPerElement*i ) * radius;
     // logger.log( 'element',i,pos );
-    _.domCenterSet( o.elementsDom[ i ],pos )
+    _.dom.centerSet( o.elementsDom[ i ],pos )
   }
 
   /* */
 
 }
 
-domFormationRadialSet.defaults =
+formationRadialSet.defaults =
 {
   containerDom : null,
   elementsDom : null,
@@ -104,10 +104,10 @@ domFormationRadialSet.defaults =
 function colorOnClick( o )
 {
 
-  if( _.domableIs( o ) )
+  if( _.dom.domableIs( o ) )
   o = { canvas : o };
 
-  _.assert( _.domableIs( o.canvas ) );
+  _.assert( _.dom.domableIs( o.canvas ) );
 
   o.canvas = $( o.canvas );
 
@@ -131,7 +131,7 @@ function colorOnClick( o )
     if( canvas.renderer )
     {
 
-      var position = _.eventClientPosition
+      var position = _.dom.eventClientPosition
       ({
         event : event,
         relative : o.canvas,
@@ -152,7 +152,7 @@ function colorOnClick( o )
 
       throw _.err( 'not tested' );
 
-      var position = _.eventClientPosition
+      var position = _.dom.eventClientPosition
       ({
         event : event,
         relative : o.canvas,
@@ -347,7 +347,7 @@ function scrollFix( o )
 {
   var o = o || Object.create( null );
 
-  _.assert( _.domIs( o.target ) || _.jqueryIs( o.target ), 'scrollFix','Expects o.target' );
+  _.assert( _.dom.is( o.target ) || _.jqueryIs( o.target ), 'scrollFix','Expects o.target' );
 
   o.target = $( o.target );
   var xFix = o.xFix !== undefined ? !!o.xFix : true;
@@ -380,7 +380,7 @@ function scrollFix( o )
 function scrollFocus( o )
 {
 
-  if( _.domLike( o ) )
+  if( _.dom.like( o ) )
   o = { elementDom : o }
 
   o.elementDom = $( o.elementDom );
@@ -396,9 +396,9 @@ function scrollFocus( o )
   _.assert( o.elementDom.length === 1 );
   _.assert( o.contentDom[ 0 ] !== window && o.contentDom[ 0 ] !== document );
 
-  var sizeOfContent = _.domSizeGet( o.contentDom );
-  var sizeOfElement = _.domSizeGet( o.elementDom );
-  var positionOfElement = _.domPositionGet( o.elementDom );
+  var sizeOfContent = _.dom.sizeGet( o.contentDom );
+  var sizeOfElement = _.dom.sizeGet( o.elementDom );
+  var positionOfElement = _.dom.positionGet( o.elementDom );
 
   if( o.mode === 'center' )
   o.contentDom.scrollTop( o.contentDom.scrollTop() + positionOfElement[ 1 ] - sizeOfContent[ 1 ] / 2 );
@@ -433,7 +433,7 @@ function menuable( o )
 {
 
   _.routineOptions( menuable,o );
-  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( _.dom.domableIs( o.targetDom ) );
 
   o.targetDom = $( o.targetDom );
   if( o.iconParentDom )
@@ -449,7 +449,7 @@ function menuable( o )
   o.contentHide.addClass( 'wmenu-conent-hide' );
 
   if( o.firingEventsForDom )
-  o.firingEventsForDom = _.domOf( o.targetDom,o.firingEventsForDom );
+  o.firingEventsForDom = _.dom.of( o.targetDom,o.firingEventsForDom );
 
   /* */
 
@@ -535,7 +535,7 @@ function menuable( o )
     }
   `
 
-  _.domCssGlobal({ css : css, key : menuable });
+  _.dom.cssGlobal({ css : css, key : menuable });
 
   /* */
 
@@ -564,15 +564,15 @@ function menuable( o )
     o.iconParentDom.each( function( i,dom )
     {
       var icon = $( '<i>' ).appendTo( dom );
-      _.domClasses( icon,[ 'wmenu-icon-open-default', 'wmenu-icon-open' ],1 );
+      _.dom.classes( icon,[ 'wmenu-icon-open-default', 'wmenu-icon-open' ],1 );
       icon.attr( 'title','Associated Menu' );
     });
     o.iconOpenDom = o.iconParentDom.find( '.wmenu-icon-open' );
   }
 
-  // _.domClasses( o.iconOpenDom,[ 'wmenu-icon-open','transition','hidden' ],1 );
-  _.domClasses( o.iconOpenDom,[ 'wmenu-icon-open' ],1 );
-  _.domClasses( o.iconOpenDom,[ 'visible' ],0 );
+  // _.dom.classes( o.iconOpenDom,[ 'wmenu-icon-open','transition','hidden' ],1 );
+  _.dom.classes( o.iconOpenDom,[ 'wmenu-icon-open' ],1 );
+  _.dom.classes( o.iconOpenDom,[ 'visible' ],0 );
 
   /* menu */
 
@@ -713,8 +713,8 @@ function menuable( o )
 
   if( o.hidingIcon )
   {
-    _.domClasses( o.iconParentDom,[ 'wmenu-icon-hiding' ],1 );
-    // _.domClasses( o.iconOpenDom,[ 'transition','hidden' ],1 );
+    _.dom.classes( o.iconParentDom,[ 'wmenu-icon-hiding' ],1 );
+    // _.dom.classes( o.iconOpenDom,[ 'transition','hidden' ],1 );
     // o.iconParentDom
     // .on( _.eventName( 'mouseleave' ), function( e )
     // {
@@ -776,7 +776,7 @@ function resizable( o )
   // _.dom.eventsObserver( o.targetDom[ 0 ] ); // xxx
 
   if( o.firingEventsForDom )
-  o.firingEventsForDom = _.domOf( o.targetDom,o.firingEventsForDom );
+  o.firingEventsForDom = _.dom.of( o.targetDom,o.firingEventsForDom );
 
   _.assert( o.containerDom.length >= 1 );
   _.assert( o.targetDom.length >= 1 );
@@ -826,7 +826,7 @@ function resizable( o )
     }
     `
 
-    _.domCssGlobal({ css : css, key : resizable });
+    _.dom.cssGlobal({ css : css, key : resizable });
 
     var corners = _.dom.cornersMake
     ({
@@ -856,20 +856,20 @@ function resizable( o )
 
     // console.log( 'resizable.mousedown' );
 
-    var pos = _.eventClientPosition
+    var pos = _.dom.eventClientPosition
     ({
       event : e,
       relative : o.targetDom,
       flip : [ 1,1 ],
     });
 
-    var pos = _.eventClientPosition( e );
+    var pos = _.dom.eventClientPosition( e );
     var dom = $( this ).closest( '[ wresizable ]' );
 
-    o.state.start = _.eventClientPosition( e );
-    o.state.position = _.domPositionGet( o.targetDom );
-    o.state.size = _.domSizeGet( o.targetDom );
-    o.state.corner = _.domClasses( target );
+    o.state.start = _.dom.eventClientPosition( e );
+    o.state.position = _.dom.positionGet( o.targetDom );
+    o.state.size = _.dom.sizeGet( o.targetDom );
+    o.state.corner = _.dom.classes( target );
     o.state.corner = _.arraySetIntersection( o.state.corner,[ 'lt','lb','rt','rb' ] );
     _.assert( o.state.corner.length === 1 );
     o.state.corner = o.state.corner[ 0 ];
@@ -924,7 +924,7 @@ function resizable( o )
       if( !o.state.start )
       return;
 
-      var pos = _.eventClientPosition( e );
+      var pos = _.dom.eventClientPosition( e );
 
       var dx = pos[ 0 ] - o.state.start[ 0 ];
       var dy = pos[ 1 ] - o.state.start[ 1 ];
@@ -1023,7 +1023,7 @@ function cornersMake( o )
 
   `
 
-  _.domCssGlobal({ css : css, key : cornersMake });
+  _.dom.cssGlobal({ css : css, key : cornersMake });
 
   o.cornerParentDom = $();
   if( o.makingChild )
@@ -1057,9 +1057,9 @@ function cornersMake( o )
 
     if( o.cssClass )
     {
-      _.domClasses( cornerParentDom,o.cssClass,1 );
+      _.dom.classes( cornerParentDom,o.cssClass,1 );
       if( o.makingChild )
-      _.domClasses( cornerChildDom,o.cssClass,1 );
+      _.dom.classes( cornerChildDom,o.cssClass,1 );
     }
 
     if( left === 'left' && top === 'top' )
@@ -1177,7 +1177,7 @@ function windowOpen( o )
 
     if( o.exportingCss )
     {
-      _.domCssExport({ dstDocument : o.window.document });
+      _.dom.cssExport({ dstDocument : o.window.document });
       if( o.targetDom )
       _.dom.abilityCssExport({ targetDom : o.targetDom, dstDocument : o.window.document });
     }
@@ -1292,7 +1292,7 @@ function abilityCssExport( o )
     {
       var ability = e._abilities[ a ];
       if( ability.css )
-      _.domCssGlobal
+      _.dom.cssGlobal
       ({
         css : ability.css,
         key : ability.maker,
@@ -1318,8 +1318,8 @@ function copyable( o )
   var o = o || Object.create( null );
 
   _.routineOptions( copyable,o );
-  _.assert( _.domableIs( o.containerDom ) );
-  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( _.dom.domableIs( o.containerDom ) );
+  _.assert( _.dom.domableIs( o.targetDom ) );
 
   o.containerDom = $( o.containerDom );
   if( _.strIs( o.targetDom ) )
@@ -1369,7 +1369,7 @@ function copyableHtmlText( o )
   var o = o || Object.create( null );
 
   _.routineOptions( copyableHtmlText,o );
-  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( _.dom.domableIs( o.targetDom ) );
 
   /* */
 
@@ -1392,7 +1392,7 @@ function copyableHtmlText( o )
   .on( _.eventName( 'click' ), function( e )
   {
     var dom = $( this ).closest( '[ wcopyable-html-text ]' );
-    _.domClipboardCopy( _.domTextGet( dom ) );
+    _.dom.clipboardCopy( _.dom.textGet( dom ) );
   });
 
 }
@@ -1414,7 +1414,7 @@ function pinnable( o )
     if( o.makingTargetDom && !o.targetDom )
     o.targetDom = o.containerDom;
 
-  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( _.dom.domableIs( o.targetDom ) );
 
   /* */
 
@@ -1518,7 +1518,7 @@ var subjective = (function()
 
     _.assertMapHasOnly( o,optionsDefault );
     _.mapSupplement( o,optionsDefault );
-    _.assert( _.domableIs( o.target ) );
+    _.assert( _.dom.domableIs( o.target ) );
 
     //
 
@@ -1617,7 +1617,7 @@ function tristatable( o )
 
   _.assertMapHasOnly( o,tristatable.defaults );
   _.mapSupplement( o,tristatable.defaults );
-  _.assert( _.domableIs( o.items ) );
+  _.assert( _.dom.domableIs( o.items ) );
 
   //
 
@@ -1756,7 +1756,7 @@ function panelMake( o )
   $( document.body ).append( o.targetDom );
 
   if( o.cssClasses )
-  _.domClasses( o.targetDom, o.cssClasses, 1 );
+  _.dom.classes( o.targetDom, o.cssClasses, 1 );
 
   if( o.css )
   {
@@ -1901,7 +1901,7 @@ function offscreenMake()
     if( value )
     {
 
-      dst[ 0 ]._domOffscreenOriginalCss = _.domCssGet( dst,[ 'display','left','top' ] );
+      dst[ 0 ]._domOffscreenOriginalCss = _.dom.cssGet( dst,[ 'display','left','top' ] );
 
       var css =
       {
@@ -1910,7 +1910,7 @@ function offscreenMake()
         'top' : '100000px',
       }
 
-      _.domCssSet( dst,css );
+      _.dom.cssSet( dst,css );
 
     }
     else
@@ -1919,7 +1919,7 @@ function offscreenMake()
       _.assert( dst[ 0 ]._domOffscreenOriginalCss );
 
       if( dst[ 0 ]._domOffscreenOriginalCss )
-      _.domCssSet( dst,dst[ 0 ]._domOffscreenOriginalCss );
+      _.dom.cssSet( dst,dst[ 0 ]._domOffscreenOriginalCss );
       dst,dst[ 0 ]._domOffscreenOriginalCss = null;
 
     }
@@ -2098,7 +2098,7 @@ function habbitMouseClick( o )
     var down = o.down[ 0 ] = Object.create( null );
 
     down.mouseEvent = event;
-    down.clickPosition = _.eventClientPosition( event );
+    down.clickPosition = _.dom.eventClientPosition( event );
     down.clickTime = event.timeStamp;
     down.extendingEvent = extendingEvent;
 
@@ -2148,7 +2148,7 @@ function habbitMouseClick( o )
     var up = o.up[ 0 ] = Object.create( null );
 
     up.mouseEvent = event;
-    up.clickPosition = _.eventClientPosition( event );
+    up.clickPosition = _.dom.eventClientPosition( event );
     up.clickTime = event.timeStamp;
     up.extendingEvent = extendingEvent;
 
@@ -2260,7 +2260,7 @@ function habbitMouseClick( o )
     if( !o.down[ 0 ] )
     return;
 
-    var clickPosition = _.eventClientPosition( e );
+    var clickPosition = _.dom.eventClientPosition( e );
     var tooFar = _.avector.distanceSqr( clickPosition,o.down[ 0 ].clickPosition ) > o.clickPositionTolerance;
 
     if( tooFar )
@@ -2430,7 +2430,7 @@ function habbitDrag( o )
   var value = '';
   var lastEvent = null;
 
-  if( _.domLike( o ) )
+  if( _.dom.like( o ) )
   o = { targetDom : o }
 
   if( o.arbitrary )
@@ -2451,7 +2451,7 @@ function habbitDrag( o )
   o.targetNewPosition = [ 0,0 ];
 
   if( o.draggableAttr )
-  _.domAttrs( o.targetDom,o.draggableAttr,1 );
+  _.dom.attrs( o.targetDom,o.draggableAttr,1 );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( o.targetDom.length === 1 );
@@ -2482,22 +2482,22 @@ function habbitDrag( o )
 
     // debugger;
     if( o.nonDraggableAttr )
-    if( _.domAttrHasAny( o.targetDom , o.nonDraggableAttr ) || _.domAttrHasAny( e.target , o.nonDraggableAttr ) )
+    if( _.dom.attrHasAny( o.targetDom , o.nonDraggableAttr ) || _.dom.attrHasAny( e.target , o.nonDraggableAttr ) )
     return;
 
     // return;
     console.log( 'habbitDrag : handleMouseDown' );
 
     if( o.draggingAttr )
-    _.domAttrs( o.targetDom,o.draggingAttr,1 );
+    _.dom.attrs( o.targetDom,o.draggingAttr,1 );
 
-    o.down = _.eventClientPosition
+    o.down = _.dom.eventClientPosition
     ({
       event : e,
       relative : o.relativeDom,
     });
 
-    o.targetOldPosition = _.domLeftTopGet( o.targetDom );
+    o.targetOldPosition = _.dom.leftTopGet( o.targetDom );
     for( var i = 0 ; i < 2 ; i++ )
     o.targetNewPosition[ i ] = o.targetOldPosition[ i ];
 
@@ -2518,7 +2518,7 @@ function habbitDrag( o )
     console.log( 'habbitDrag : handleMouseUp' );
 
     if( o.draggingAttr )
-    _.domAttrs( o.targetDom,o.draggingAttr,0 );
+    _.dom.attrs( o.targetDom,o.draggingAttr,0 );
 
     if( giveEvent( e,'dragEnd' ) !== false )
     o.down = null;
@@ -2535,7 +2535,7 @@ function habbitDrag( o )
 
     // console.log( 'habbitDrag : handleMouseMove' );
 
-    o.position = _.eventClientPosition
+    o.position = _.dom.eventClientPosition
     ({
       event : e,
       relative : o.relativeDom,
@@ -2628,7 +2628,7 @@ habbitDrag.defaults =
 function draggable2( o )
 {
 
-  if( _.domLike( o ) )
+  if( _.dom.like( o ) )
   o = { targetDom : o }
   o.arbitrary = 1;
   _.routineOptions( draggable2,o );
@@ -2732,8 +2732,8 @@ var draggable = (function()
     if( o.notDraggableTagNames === null )
     o.notDraggableTagNames = [ 'TEXTAREA','INPUT' ]
 
-    _.assert( _.domableIs( o.target ) );
-    _.assert( _.domableIs( o.container ) );
+    _.assert( _.dom.domableIs( o.target ) );
+    _.assert( _.dom.domableIs( o.container ) );
     _.assert( arguments.length === 1, 'Expects single argument' );
 
     o.state = Object.create( null );
@@ -2766,7 +2766,7 @@ var draggable = (function()
       o.state.target = dom;
       o.state.offset = dom.offset();
       o.state.offset = [ o.state.offset.left,o.state.offset.top ];
-      o.state.start = _.eventClientPosition( event );
+      o.state.start = _.dom.eventClientPosition( event );
 
       o.container.attr( 'wdragging',1 );
       dom.attr( 'wdragging',1 );
@@ -2792,7 +2792,7 @@ var draggable = (function()
     {
       if( !o.state.start ) return;
       var dom = o.state.target;
-      var pos = _.eventClientPosition( event );
+      var pos = _.dom.eventClientPosition( event );
       dom.offset
       ({
         left : o.state.offset[ 0 ] + pos[ 0 ] - o.state.start[ 0 ],
@@ -2841,7 +2841,7 @@ function habitRightClick( targetSelector,onEvent )
 function habitDropFile( targetDom,onEvent )
 {
 
-  _.assert( _.domableIs( targetDom ) )
+  _.assert( _.dom.domableIs( targetDom ) )
 
   var target = $( targetDom );
 
@@ -2879,13 +2879,13 @@ function uiPopupDefaults( dom )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
 
   /* console.log( 'popup :',_.domNickname( dom,'data-tab' ) ); */
 
   var dom = $( dom );
-  var position = _.domAttrInherited( dom,'data-position' ) || 'bottom center';
-  var variation = _.domAttrInherited( dom,'data-variation' ) || '';
+  var position = _.dom.attrInherited( dom,'data-position' ) || 'bottom center';
+  var variation = _.dom.attrInherited( dom,'data-variation' ) || '';
 
   var hoverable = dom.hasClass( 'hoverable' );
   var inline = dom.hasClass( 'inline' );
@@ -2913,7 +2913,7 @@ function uiInitPopups( dom )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
 
   dom = $( dom );
 
@@ -2945,7 +2945,7 @@ function uiInitDropdown( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( uiInitDropdown,o );
-  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( _.dom.domableIs( o.targetDom ) );
 
   if( o.dropdownOptions === null )
   o.dropdownOptions = Object.create( null );
@@ -2978,7 +2978,7 @@ var uiTabsInit = ( function uiTabsInit()
 
     // if( arguments.length === 1 && _.mapIs( targetDom ) )
     // o = targetDom;
-    // else if( arguments.length === 1 && _.domableIs( targetDom ) )
+    // else if( arguments.length === 1 && _.dom.domableIs( targetDom ) )
     // o = { targetDom : targetDom };
     // else if( arguments.length === 2 )
     // o.targetDom = targetDom;
@@ -2986,7 +2986,7 @@ var uiTabsInit = ( function uiTabsInit()
     // var o = o || Object.create( null );
 
     _.assert( arguments.length === 1, 'Expects single argument' );
-    _.assert( !o.targetDom || _.domableIs( o.targetDom ),'uiTabsInit :','Expects { targetDom } as first argument' );
+    _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ),'uiTabsInit :','Expects { targetDom } as first argument' );
     _.assertMapHasNoUndefine( o );
     _.routineOptions( uiTabsInit,o );
 
@@ -3172,7 +3172,7 @@ function uiInitGeneric( o )
 
   // if( arguments.length === 1 && _.mapIs( targetDom ) )
   // o = targetDom;
-  // else if( arguments.length === 1 && _.domableIs( targetDom ) )
+  // else if( arguments.length === 1 && _.dom.domableIs( targetDom ) )
   // o = { targetDom : targetDom };
   // else if( arguments.length === 2 )
   // o.targetDom = targetDom;
@@ -3181,7 +3181,7 @@ function uiInitGeneric( o )
   o.dropdownOptions = Object.create( null );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( !o.targetDom || _.domableIs( o.targetDom ),'uiInitGeneric :','Expects DOM {o.targetDom}' );
+  _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ),'uiInitGeneric :','Expects DOM {o.targetDom}' );
   _.assertMapHasNoUndefine( o );
   _.routineOptions( uiInitGeneric,o );
 
@@ -3223,7 +3223,7 @@ function uiInitSimple( dom )
   var o = o || Object.create( null );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
 
   dom = $( dom );
 
@@ -3242,13 +3242,13 @@ uiInitSimple.defaults =
 
 function uiShow( o )
 {
-  if( _.domIs( o ) )
+  if( _.dom.is( o ) )
   o = { targetDom : o };
 
   if( arguments[ 2 ] !== undefined )
   o.value = arguments[ 2 ];
 
-  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( _.dom.domableIs( o.targetDom ) );
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.routineOptions( uiShow,o );
   _.assert( o.value !== undefined );
