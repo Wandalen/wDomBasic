@@ -1,36 +1,16 @@
-(function _DomBase_js_() {
+(function _aCommon_js_() {
 
 'use strict';
 
-/**
-  Collection of routines for a browser to operate DOM elements and its events. No matter whatever problem in a browser you are trying to solve several routines of DomBase would help you to solve it faster. It has something in common with Jquery, but no significant overlap. Use the module to get access to shortcuts for a browser.
-  @module Tools/base/DomBase
-*/
-
-/**
- * @file DomBase.js.
- */
-
-/**
- * Collection of routines for a browser to operate DOM elements and its events.
- * @namespace Tools( module::DomBase )
- * @memberof module:Tools/base/DomBase
- */
-
-var _ = wTools;
+var _global = _global_;
+var _ = _global.wTools;
+let Self = _.dom = _.dom || Object.create( null );
 var $ = jQuery;
 var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 //
 // dom
 //
-
-/**
- * @param {} dom
- * @param {} selection
- * @function domCaretSelect
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
 
 function domCaretSelect( dom, selection )
 {
@@ -83,20 +63,6 @@ function domCaretSelect( dom, selection )
 }
 
 //
-
-/**
- * @summary Getter/setter for a `dom` object.
- * @description
- * Single argument call:
- *  Returns value of the element depending on type. If its input field returns it value, otherwise returns text content of the element.
- * Two arguments call:
- *  Changes value of the element depending on type. If elements is a input field changes it value to `val`, otherwise changes text content of the element.
- *  Returns previous value of element `dom`.
- * @param {String|Object} dom Target dom
- * @param {} val Value to set.
- * @function domVal
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
 
 function domVal( dom,val )
 {
@@ -266,20 +232,6 @@ function domsVal( dom,vals )
 
 //
 
-/**
- * @summary Changes className property of `dom` element.
- * @description
- * If `adding` is `true` routine adds class `className` to the element.
- * If `adding` is `false` routine removes class `className` from the element.
- * If `adding` is not provided, routine removes class if it exists, otherwise adds it.
- *
- * @param {String|Object} dom Target dom.
- * @param {String} cssClass Name of class.
- * @param {Boolean} adding Controls adding/removing of the class.
- * @function domClass
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
-
 function domClass( dom,cssClass,adding )
 {
 
@@ -344,19 +296,6 @@ function domClasses( dom,classes,adding )
 
 //
 
-/**
- * @summary Manipulates the attributes of `dom` element.
- * @description
- * If `adding` is `true` routine adds attributes `attrs` to the element.
- * If `adding` is `false` routine removes attributes `attrs` from the element.
- * If single `dom` argument is provided routine returns attributes of the element.
- * @param {String|Object} dom Target dom.
- * @param {String|Object} attrs Source attributes.
- * @param {Boolean} adding Controls adding/removing of the attributes.
- * @function domAttrs
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
-
 function domAttrs( dom,attrs,adding )
 {
 
@@ -416,15 +355,6 @@ function domAttrs( dom,attrs,adding )
 
 //
 
-
-/**
- * @summary Returns true if `dom` element has at least one attribute from `attrs`.
- * @param {String|Object} dom Target dom.
- * @param {Array} attrs Source attributes.
- * @function domAttrHasAny
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
-
 function domAttrHasAny( dom,attrs )
 {
   var has = _.mapKeys( _.domAttrs( dom ) );
@@ -432,14 +362,6 @@ function domAttrHasAny( dom,attrs )
 }
 
 //
-
-/**
- * @summary Returns true if `dom` element has all attribute from `attrs`.
- * @param {String|Object} dom Target dom.
- * @param {Array} attrs Source attributes.
- * @function domAttrHasAny
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
 
 function domAttrHasAll( dom,attrs )
 {
@@ -450,14 +372,6 @@ function domAttrHasAll( dom,attrs )
 
 //
 
-/**
- * @summary Returns true if `dom` element doesn't have any attribute from `attrs`.
- * @param {String|Object} dom Target dom.
- * @param {Array} attrs Source attributes.
- * @function domAttrHasAny
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
-
 function domAttrHasNone( dom,attrs )
 {
   var has = _.mapKeys( _.domAttrs( dom ) );
@@ -466,16 +380,6 @@ function domAttrHasNone( dom,attrs )
 }
 
 //
-
-/**
- * @summary Recursively collects text content of the `dom` element.
- * @param {Object} o Options object.
- * @param {Object|String} o.targetDom Dom element.
- * @param {Object} o.strippingEmptyLines Removes empty lines from text.
- * @param {Object} o.strippingEnds Removes empty whitespaces from the beginning/ending of the string.
- * @function domTextGet
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
 
 function domTextGet( o )
 {
@@ -524,15 +428,6 @@ domTextGet.defaults =
 
 //
 
-/**
- * @summary Looks for attribute `attrName` on `dom` element and it parents.
- * @description Returns value of attribute of undefined if nothing found.
- * @param {Object|String} dom Dom element.
- * @param {String} attrName Attributes to find.
- * @function domAttrInherited
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
-
 function domAttrInherited( dom,attrName )
 {
   var result;
@@ -556,14 +451,6 @@ function domAttrInherited( dom,attrName )
 }
 
 //
-
-/**
- * @summary Generates selector for `dom` element using it properties.
- * @param {Object|String} dom Dom element.
- * @param {String} attrName Attributes to find.
- * @function domNickname
- * @memberof module:Tools/base/DomBase.Tools( module::DomBase )
- */
 
 function domNickname( dom,attrName )
 {
@@ -907,7 +794,7 @@ function domOwnIdentity( dom,identity )
     return result;
   }
 
-  identity = _.strIsolateEndOrAll( identity,' ' )[ 2 ];
+  identity = _.strIsolateRightOrAll( identity,' ' )[ 2 ];
 
   _.assert( identity.indexOf( ' ' ) === -1 );
 
@@ -2090,6 +1977,7 @@ function eventFire2( targetDom, event )
 var Proto =
 {
 
+
   // dom
 
   domCaretSelect : domCaretSelect,
@@ -2178,5 +2066,6 @@ var Proto =
 };
 
 _.mapExtend( _,Proto );
+_.mapExtend( Self,Proto );
 
 })();
