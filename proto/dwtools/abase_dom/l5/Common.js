@@ -15,7 +15,7 @@ var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 function domCaretSelect( dom, selection )
 {
 
-  if( _.jqueryIs( dom ) )
+  if( _.dom.jqueryIs( dom ) )
   dom = dom[ 0 ];
 
   if( selection !== undefined )
@@ -236,7 +236,7 @@ function domClass( dom,cssClass,adding )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
   _.assert( _.strIs( cssClass ) );
 
   dom = $( dom );
@@ -257,7 +257,7 @@ function domClasses( dom,classes,adding )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 3 );
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
 
   dom = $( dom );
 
@@ -300,7 +300,7 @@ function domAttrs( dom,attrs,adding )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
 
   if( adding === undefined )
   adding = 1;
@@ -384,7 +384,7 @@ function domAttrHasNone( dom,attrs )
 function domTextGet( o )
 {
 
-  if( _.domableIs( o ) )
+  if( _.dom.domableIs( o ) )
   o = { targetDom : o }
   _.routineOptions( domTextGet,o );
 
@@ -432,11 +432,11 @@ function domAttrInherited( dom,attrName )
 {
   var result;
 
-  if( _.jqueryIs( dom ) )
+  if( _.dom.jqueryIs( dom ) )
   dom = dom[ 0 ];
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.domIs( dom ) );
+  _.assert( _.dom.is( dom ) );
   _.assert( _.strIs( attrName ) );
 
   var p = dom;
@@ -455,11 +455,11 @@ function domAttrInherited( dom,attrName )
 function domNickname( dom,attrName )
 {
 
-  if( _.jqueryIs( dom ) )
+  if( _.dom.jqueryIs( dom ) )
   dom = dom[ 0 ];
 
   _.assert( arguments.length <= 2 );
-  _.assert( _.domIs( dom ) );
+  _.assert( _.dom.is( dom ) );
 
   var name = dom.tagName.toLowerCase();
 
@@ -481,8 +481,8 @@ function domOf( parent,children )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.domableIs( parent ) );
-  _.assert( _.domableIs( children ) );
+  _.assert( _.dom.domableIs( parent ) );
+  _.assert( _.dom.domableIs( children ) );
 
   // if( !children )
   // return children;
@@ -500,7 +500,7 @@ function domOf( parent,children )
 function domLeftTopGet( dom )
 {
 
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   var dom = $( dom );
@@ -523,7 +523,7 @@ function domLeftTopGet( dom )
 function domLeftTopSet( dom,pos )
 {
 
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
   _.assert( pos.length === 2 );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
@@ -542,7 +542,7 @@ function domLeftTopSet( dom,pos )
 function domCenterSet( dom,pos )
 {
 
-  _.assert( _.domableIs( dom ) );
+  _.assert( _.dom.domableIs( dom ) );
   _.assert( pos.length === 2 );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
@@ -725,7 +725,7 @@ function domFirst()
   {
 
     var src = arguments[ a ];
-    if( !_.domableIs( src ) )
+    if( !_.dom.domableIs( src ) )
     continue;
 
     src = $( src );
@@ -743,7 +743,7 @@ function domFirst()
 function domFirstOf( src,selector )
 {
 
-  _.assert( _.domableIs( src ) );
+  _.assert( _.dom.domableIs( src ) );
   _.assert( _.strIs( selector ) );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
@@ -894,7 +894,7 @@ function domEach( o )
 {
 
   _.routineOptions( domEach,o );
-  _.assert( _.domableIs( o.dom ) );
+  _.assert( _.dom.domableIs( o.dom ) );
 
   o.dom = $( o.dom );
 
@@ -924,7 +924,7 @@ domEach.defaults =
 function _domEach( dom,o )
 {
 
-  _.assert( _.domIs( dom ) );
+  _.assert( _.dom.is( dom ) );
 
   if( dom.nodeType === Node.ELEMENT_NODE )
   {
@@ -1396,14 +1396,14 @@ function eventClientPosition( o )
 {
   var result;
 
-  if( _.eventIs( o ) )
+  if( _.dom.eventIs( o ) )
   o = { event : o };
 
   var event = o.event;
   var relative = o.relative;
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.eventIs( event ) );
+  _.assert( _.dom.eventIs( event ) );
   _.assert( !o.flip || _.arrayIs( o.flip ) );
   _.assertMapHasOnly( o,eventClientPosition.defaults );
 
@@ -1419,7 +1419,7 @@ function eventClientPosition( o )
   if( event.changedTouches && event.changedTouches.length )
   result = [ event.changedTouches[ 0 ].clientX,event.changedTouches[ 0 ].clientY ];
 
-  _.assert( !relative || _.jqueryIs( relative ),'eventClientPosition :','relative must be jQuery object if defined' );
+  _.assert( !relative || _.dom.jqueryIs( relative ),'eventClientPosition :','relative must be jQuery object if defined' );
 
   if( relative && result )
   {
@@ -1606,7 +1606,7 @@ function domFromAtLeastOne( targetDom )
   let wasDom = targetDom;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.domableIs( targetDom ) );
+  _.assert( _.dom.domableIs( targetDom ) );
   targetDom = $( targetDom );
   _.assert( targetDom.length > 0, 'Expects at least one DOM element, but found none for', wasDom );
 
@@ -1755,7 +1755,7 @@ function eventsObserver( o )
   if( !_.objectIs( o ) )
   o = { targetDom : o };
 
-  _.assert( _.domIs( o.targetDom ) );
+  _.assert( _.dom.is( o.targetDom ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( eventsObserver,o );
 
@@ -1811,7 +1811,7 @@ function eventsBindAll( o )
     console.log( e.type );
   }
 
-  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( _.dom.domableIs( o.targetDom ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( eventsBindAll,o );
 
@@ -1913,7 +1913,7 @@ eventsBindWatcher.defaults =
 function eventFire( o )
 {
   _.routineOptions( eventFire,o );
-  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( _.dom.domableIs( o.targetDom ) );
 
   o.targetDom = $( o.targetDom );
 
@@ -1956,7 +1956,7 @@ eventFire.defaults =
 function eventFire2( targetDom, event )
 {
 
-  _.assert( _.domIs( targetDom ) );
+  _.assert( _.dom.is( targetDom ) );
 
   if ( targetDom.dispatchEvent )
   {

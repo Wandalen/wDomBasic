@@ -13,14 +13,31 @@
  * @module Tools/base/DomBasic
  */
 
-var _global = _global_;
-var _ = _global.wTools;
+let _global = _global_;
+let _ = _global.wTools;
 let Self = _.dom = _.dom || Object.create( null );
-var $ = jQuery;
 
 // --
 // checkers
 // --
+
+function is( src )
+{
+  if( !_global.Node )
+  return false;
+  return src instanceof Node;
+}
+
+//
+
+function like( src )
+{
+  if( !_global.Node )
+  return false;
+  if( src instanceof Node )
+  return true;
+  return jqueryIs( src );
+}
 
 function eventIs( src )
 {
@@ -53,7 +70,7 @@ function jqueryIs( src )
 
 function canvasIs( src )
 {
-  if( _.jqueryIs( src ) )
+  if( _.dom.jqueryIs( src ) )
   src = src[ 0 ];
   if( src instanceof HTMLCanvasElement )
   return true;
@@ -64,7 +81,7 @@ function canvasIs( src )
 
 function imageIs( src )
 {
-  if( _.jqueryIs( src ) )
+  if( _.dom.jqueryIs( src ) )
   src = src[ 0 ];
   if( src instanceof HTMLImageElement )
   return true;
@@ -75,7 +92,7 @@ function imageIs( src )
 
 function imageLike( src )
 {
-  if( _.jqueryIs( src ) )
+  if( _.dom.jqueryIs( src ) )
   src = src[ 0 ];
   if( src instanceof HTMLCanvasElement )
   return true;
@@ -86,66 +103,19 @@ function imageLike( src )
 
 //
 
-function domIs( src )
-{
-  if( !_global.Node )
-  return false;
-  return src instanceof Node;
-}
-
-//
-
-function domLike( src )
-{
-  if( !_global.Node )
-  return false;
-  if( src instanceof Node )
-  return true;
-  return jqueryIs( src );
-}
-
-//
-
 function domableIs( src )
 {
-  return _.strIs( src ) || _.domIs( src ) || _.jqueryIs( src );
+  return _.strIs( src ) || _.dom.is( src ) || _.dom.jqueryIs( src );
 }
 
 //
 // dom
 //
 
-function domInclude( filePath )
-{
-
-  var ext = _.uri.ext( filePath );
-
-  if( _.longHas( [ 'css', 'less' ], ext ) )
-  {
-    var link = document.createElement( 'link' );
-    link.href = filePath;
-    link.type = 'text/' + ext;
-    link.rel = 'stylesheet';
-    link.media = 'screen,print';
-    document.head.appendChild( link );
-  }
-  else
-  {
-    var script = document.createElement( 'script' );
-    script.src = filePath;
-    document.head.appendChild( script );
-  }
-
-}
-
-//
-
 function headIs( src )
 {
   return _.strType( src ) === 'HTMLHeadElement';
 }
-
-//
 
 //
 
@@ -227,48 +197,68 @@ function empty( targetDom )
   targetDom.removeChild( targetDom.firstChild );
 }
 
+//
+
+function include( filePath )
+{
+
+  var ext = _.uri.ext( filePath );
+
+  if( _.longHas( [ 'css', 'less' ], ext ) )
+  {
+    var link = document.createElement( 'link' );
+    link.href = filePath;
+    link.type = 'text/' + ext;
+    link.rel = 'stylesheet';
+    link.media = 'screen,print';
+    document.head.appendChild( link );
+  }
+  else
+  {
+    var script = document.createElement( 'script' );
+    script.src = filePath;
+    document.head.appendChild( script );
+  }
+
+}
+
 // --
 // prototype
 // --
 
-var Proto =
+let Fields =
 {
-
-  // checkers
-
-  eventIs : eventIs,
-  htmlIs : htmlIs,
-  jqueryIs : jqueryIs,
-  canvasIs : canvasIs,
-  imageIs : imageIs,
-  imageLike : imageLike,
-  domIs : domIs,
-  domLike : domLike,
-  domableIs : domableIs,
-  headIs : headIs,
-
-  // dom
-
-  domInclude : domInclude,
-
-  _domBaselayer1Loaded : true,
-
+  _domBaselayer1Loaded : true
 }
 
-var Routines =
+let Routines =
 {
+
   // checkers
 
-  is : domIs,
+  is,
+  like,
+
+  eventIs,
+  htmlIs,
+  jqueryIs,
+  canvasIs,
+  imageIs,
+  imageLike,
+  domableIs,
+  headIs,
 
   // dom
 
   from,
   make,
   empty,
+
+  include
+
 }
 
-_.mapExtend( _,Proto );
+_.mapExtend( Self,Fields );
 _.mapExtend( Self,Routines );
 
 })();
