@@ -1,2071 +1,3412 @@
-(function _aCommon_js_() {
+(function _Common_js_() {
 
 'use strict';
 
 var _global = _global_;
 var _ = _global.wTools;
-let Self = _.dom = _.dom || Object.create( null );
 var $ = jQuery;
+let Self = _.dom = _.dom || Object.create( null );
 var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
-//
-// dom
-//
-
-function domCaretSelect( dom, selection )
-{
-
-  if( _.dom.jqueryIs( dom ) )
-  dom = dom[ 0 ];
-
-  if( selection !== undefined )
-  {
-    if( !_.arrayIs( selection ) ) selection = [ selection ];
-    dom.focus();
-    if( dom.setSelectionRange )
-    {
-      dom.setSelectionRange( selection[ 0 ],selection[ 1 ],selection[ 2 ] );
-    }
-    else if( dom.selectionStart !== undefined )
-    {
-      dom.selectionEnd = selection[ 0 ];
-      dom.selectionStart = selection[ 1 ];
-      // dom.focus();
-    }
-    else if( dom.createTextRange )
-    {
-      var range = dom.createTextRange();
-      range.collapse( true );
-      range.moveEnd( 'character',selection[ 1 ] );
-      range.moveStart( 'character',selection[ 0 ] );
-      range.select();
-      // dom.focus();
-    }
-    dom.focus();
-  }
-  else
-  {
-
-    if( dom.selectionStart !== undefined ){
-      return [ dom.selectionStart,dom.selectionEnd,dom.selectionDirection ];
-    }
-    else if( dom.getSelectionRange )
-    {
-      return [ dom.getSelectionRange().x,dom.getSelectionRange().y ];
-    }
-    else if( dom.createTextRange )
-    {
-      var range = dom.createTextRange();
-      return [ range.startOffset,range.endOffset ];
-    }
-  }
-
-}
-
-//
-
-function domVal( dom,val )
-{
-
-  var result;
-  var dom = $( dom );
-
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-
-  if( val !== undefined )
-  {
-
-    var caretSelected;
-    if( document.activeElement == dom[ 0 ] )
-    caretSelected = domCaretSelect( dom[ 0 ] );
-
-    if( dom.is( 'input[ type=checkbox ]' ) )
-    {
-      result = dom[ 0 ].checked ? true : false;
-      dom[ 0 ].checked = val ? true : false;
-    }
-    else if( dom.is( 'input' ) )
-    {
-      result = dom[ 0 ].value;
-      dom[ 0 ].value = val;
-    }
-    else
-    {
-      result = dom.text();
-      dom.text( val );
-    }
-
-    if( caretSelected )
-    domCaretSelect( dom,caretSelected );
-
-  }
-  else
-  {
-
-    if( dom.is( 'input[ type=checkbox ]' ) )
-    {
-      result = dom[ 0 ].checked ? true : false;
-    }
-    else if( dom.is( 'input' ) )
-    {
-
-      result = dom[ 0 ].value;
-
-      if( result === '' || result === undefined )
-      result = dom[ 0 ].defaultFieldsMap;
-
-      if( result === '' || result === undefined )
-      result = dom[ 0 ].placeholder;
-
-    }
 /*
-    else
-    {
-      result = dom.text();
-    }
+
+- implement unbind for habbitMouseClick!!!
+
 */
-  }
 
-  return result;
-}
+// --
+// dom
+// --
 
-//
-
-function domsVal( dom,vals )
+function formationRadialSet( o )
 {
-  var result;
 
-  _.assert( arguments.length <= 2 );
+  if( _.domableIs( o ) )
+  o = { elementsDom : o }
 
-  if( !dom )
-  dom = document.body;
+  if( o.containerDom )
+  o.containerDom = $( o.containerDom );
+
+  o.elementsDom = $( o.elementsDom );
+
+  if( o.containerDom && o.containerDom.length )
+  {
+    var size = _.domSizeFastGet( o.containerDom );
+    if( o.containerCenter === null || o.containerCenter === undefined )
+    o.containerCenter = [ size[ 0 ]/2,size[ 1 ]/2 ];
+    if( o.containerRadius === null || o.containerRadius === undefined )
+    o.containerRadius = Math.min( size[ 0 ]/2,size[ 1 ]/2 );
+  }
 
   /* */
 
-  if( arguments.length === 2  )
-  result = _.domEach
-  ({
-    recursive : true,
-    dom : dom,
-    onUp : function( dom )
+  _.assert( o.containerDom.length <= 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( _.arrayIs( o.containerCenter ) );
+  _.assert( _.numberIs( o.containerRadius ) );
+  _.routineOptions( domFormationRadialSet,o );
+
+  if( !o.elementsDom.length )
+  return;
+
+  /* sizes */
+
+  var sizes;
+
+  if( o.containerDom && o.containerDom.length )
+  {
+    if( o.containerDom[ 0 ]._domFormationRadialSetSizes )
+    {
+      sizes = o.containerDom[ 0 ]._domFormationRadialSetSizes;
+    }
+    else if( o.containerDom.css( 'display' ) === 'none' )
+    {
+      _.dom.offscreenMake( o.containerDom,1 );
+      sizes = _.domsSizeGet( o.elementsDom );
+      o.containerDom[ 0 ]._domFormationRadialSetSizes = sizes;
+      _.dom.offscreenMake( o.containerDom,0 );
+    }
+  }
+
+  if( !sizes )
+  sizes = _.domsSizeGet( o.elementsDom );
+
+  /* */
+
+  var radius = o.radius*o.containerRadius;
+  var radiansPerElement = 2*Math.PI / o.elementsDom.length;
+  var pos = [];
+
+  for( var i = 0 ; i < o.elementsDom.length ; i++ )
+  {
+    pos[ 0 ] = o.containerCenter[ 0 ] + Math.cos( o.phase + radiansPerElement*i ) * radius;
+    pos[ 1 ] = o.containerCenter[ 1 ] + Math.sin( o.phase + radiansPerElement*i ) * radius;
+    // logger.log( 'element',i,pos );
+    _.domCenterSet( o.elementsDom[ i ],pos )
+  }
+
+  /* */
+
+}
+
+domFormationRadialSet.defaults =
+{
+  containerDom : null,
+  elementsDom : null,
+  containerCenter : null,
+  containerRadius : null,
+  radius : 1,
+  phase : 0,
+}
+
+//
+
+function colorOnClick( o )
+{
+
+  if( _.domableIs( o ) )
+  o = { canvas : o };
+
+  _.assert( _.domableIs( o.canvas ) );
+
+  o.canvas = $( o.canvas );
+
+  _.assert( o.canvas.length === 1, 'Expects exactly one canvas' );
+  _.assert( o.canvas[ 0 ] instanceof HTMLCanvasElement, 'Expects exactly one canvas' );
+
+  var canvas = o.canvas[ 0 ];
+
+  o.canvas
+  .on( _.eventName( 'mousemove' ), function( event )
+  {
+
+    if( !event.ctrlKey || !event.altKey )
+    return;
+
+    //if( event.target !== canvas )
+    //return;
+
+    var color = null;
+
+    if( canvas.renderer )
     {
 
-      var selector = dom.name;
-
-      if( !_.strDefined( selector ) )
-      return;
-
-      var val = _.select( vals,selector );
-
-      if( val === undefined )
-      return;
-
-      _.domVal( dom,val );
-
-    },
-  });
-  else
-  result = _.domEach
-  ({
-    recursive : true,
-    result : Object.create( null ),
-    dom : dom,
-    onUp : function( dom,o )
-    {
-      var text = '';
-      var val = _.domVal( dom );
-
-      if( val === undefined )
-      return;
-      // return result;
-
-      var val = _.domVal( dom );
-
-      if( !isNaN( val ) )
-      val = Number( val );
-
-      var selector = dom.name;
-
-      var parts = _.strSplit
+      var position = _.eventClientPosition
       ({
-        src : selector,
-        delimeter : [ '.', '[', ']' ],
-        preservingDelimeters : 0,
-        preservingEmpty : 0,
-        preservingQuoting : 0,
-        stripping : 1,
+        event : event,
+        relative : o.canvas,
+        flip : [ 0,1 ],
       });
 
-      let query = parts[ 0 ];
-      for( let i = 0; i < parts.length; i++ )
-      {
-        let set = Object.create( null );
+      var renderer = canvas.renderer;
+      // w4d.RenderTarget.prototype._webglRendertargetActivate_static.call( null,null,renderer );
+      debugger;
+      // gRenderTarget.screen.webglRenderTargetActivate( renderer );
+      // renderer.renderTarget = gRenderTarget.screen;
+      renderer.renderTarget = renderer.screen;
+      color = renderer.readPixel( position );
 
-        if( i )
-        query = query + '/' + parts[ i ];
-
-        if( i === parts.length - 1 )
-        set = val;
-        else if( _.select( o.result, query ) != undefined )
-        continue;
-        else if( !isNaN( _.numberFromStr( parts[ i + 1 ] ) ) )
-        set = [];
-
-        _.selectSet
-        ({
-          src : o.result,
-          selector : query,
-          set : set
-        });
-      }
-
-      // _.selectSet( o.result,selector,val );
-
-      // return result;
-    },
-  });
-
-  /* */
-
-  return result;
-}
-
-//
-
-function domClass( dom,cssClass,adding )
-{
-
-  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.dom.domableIs( dom ) );
-  _.assert( _.strIs( cssClass ) );
-
-  dom = $( dom );
-
-  if( adding === undefined )
-  adding = !dom.hasClass( cssClass );
-
-  if( adding )
-  dom.addClass( cssClass );
-  else
-  dom.removeClass( cssClass );
-
-}
-
-//
-
-function domClasses( dom,classes,adding )
-{
-
-  _.assert( arguments.length === 1 || arguments.length === 3 );
-  _.assert( _.dom.domableIs( dom ) );
-
-  dom = $( dom );
-
-  if( arguments.length === 1 )
-  {
-
-    _.assert( dom.length === 1 );
-
-    return dom[ 0 ].className.split( /\s+/ );
-
-  }
-  else
-  {
-
-    _.assert( dom.length >= 1 );
-    _.assert( _.arrayIs( classes ) || _.strIs( classes ) );
-
-    if( _.strIs( classes ) )
-    {
-      if( adding )
-      dom.addClass( classes );
-      else
-      dom.removeClass( classes );
-    }
-    else for( var c = 0 ; c < classes.length ; c++ )
-    {
-      if( adding )
-      dom.addClass( classes[ c ] );
-      else
-      dom.removeClass( classes[ c ] );
-    }
-
-  }
-
-}
-
-//
-
-function domAttrs( dom,attrs,adding )
-{
-
-  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
-  _.assert( _.dom.domableIs( dom ) );
-
-  if( adding === undefined )
-  adding = 1;
-
-  dom = $( dom );
-
-  if( arguments.length === 1 )
-  {
-
-    _.assert( dom.length === 1 );
-
-    var result = Object.create( null );
-    for( var a = 0 ; a < dom[ 0 ].attributes.length ; a++ )
-    {
-      if( dom[ 0 ].attributes[ a ].name === 'class' )
-      continue;
-      result[ dom[ 0 ].attributes[ a ].name ] = dom[ 0 ].attributes[ a ].value;
-    }
-
-    return result;
-  }
-  else
-  {
-
-    _.assert( dom.length >= 1 );
-    _.assert( _.objectIs( attrs ) || _.strIs( attrs ) );
-
-    // if( !adding )
-    // debugger;
-
-    if( _.strIs( attrs ) )
-    {
-      // if( !adding )
-      // debugger;
-      if( adding )
-      dom.attr( attrs,1 );
-      else
-      dom.removeAttr( attrs );
-    }
-    else for( var c in attrs )
-    {
-      _.assert( _.primitiveIs( attrs[ c ] ) );
-      if( adding )
-      dom.attr( c,attrs[ c ] );
-      else
-      dom.removeAttr( c,attrs[ c ] );
-    }
-
-  }
-
-}
-
-//
-
-function domAttrHasAny( dom,attrs )
-{
-  var has = _.mapKeys( _.domAttrs( dom ) );
-  return _.longHasAny( has,attrs );
-}
-
-//
-
-function domAttrHasAll( dom,attrs )
-{
-  var has = _.mapKeys( _.domAttrs( dom ) );
-  debugger;
-  return _.longHasAll( has,attrs );
-}
-
-//
-
-function domAttrHasNone( dom,attrs )
-{
-  var has = _.mapKeys( _.domAttrs( dom ) );
-  debugger;
-  return _.longHasNone( has,attrs );
-}
-
-//
-
-function domTextGet( o )
-{
-
-  if( _.dom.domableIs( o ) )
-  o = { targetDom : o }
-  _.routineOptions( domTextGet,o );
-
-  var result = _.domEach
-  ({
-    recursive : true,
-    result : '',
-    dom : o.targetDom,
-    onUp : function( dom,iterator )
-    {
-      var text = '';
-
-      if( dom.nodeType === Node.TEXT_NODE )
-      text = dom.nodeValue;
-      else if( dom.value )
-      text = dom.value;
-      else if( dom.placeholder )
-      text = dom.placeholder;
-
-      if( o.strippingEnds )
-      iterator.result += _.strStrip({ src : text, stripper : ' ' });
-      else
-      iterator.result += text;
-
-    },
-  });
-
-  // debugger;
-  if( o.strippingEmptyLines )
-  result = _.strStripEmptyLines( result );
-
-  return result;
-}
-
-domTextGet.defaults =
-{
-  targetDom : null,
-  strippingEmptyLines : 1,
-  strippingEnds : 1,
-}
-
-//
-
-function domAttrInherited( dom,attrName )
-{
-  var result;
-
-  if( _.dom.jqueryIs( dom ) )
-  dom = dom[ 0 ];
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.dom.is( dom ) );
-  _.assert( _.strIs( attrName ) );
-
-  var p = dom;
-  do
-  {
-    result = p.getAttribute( attrName );
-    p = p.parentNode;
-  }
-  while( p && p !== document && _.strType( p ) !== 'DocumentFragment' && ( result === null || result === undefined ) );
-
-  return result;
-}
-
-//
-
-function domNickname( dom,attrName )
-{
-
-  if( _.dom.jqueryIs( dom ) )
-  dom = dom[ 0 ];
-
-  _.assert( arguments.length <= 2 );
-  _.assert( _.dom.is( dom ) );
-
-  var name = dom.tagName.toLowerCase();
-
-  if( dom.id )
-  name += '#' + dom.id;
-
-  if( dom.className )
-  name += '.' + dom.className.split( ' ' ).join( '.' );
-
-  if( attrName && dom.getAttribute( attrName ) )
-  name += '[ ' + attrName + '=' + dom.getAttribute( attrName ) + ' ]';
-
-  return name;
-}
-
-//
-
-function domOf( parent,children )
-{
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.dom.domableIs( parent ) );
-  _.assert( _.dom.domableIs( children ) );
-
-  // if( !children )
-  // return children;
-
-  parent = $( parent );
-
-  if( _.strIs( children ) )
-  children = parent.find( children );
-
-  return children;
-}
-
-//
-
-function domLeftTopGet( dom )
-{
-
-  _.assert( _.dom.domableIs( dom ) );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-
-  var dom = $( dom );
-  var result = [];
-
-  result[ 0 ] = dom.css( 'left' );
-  result[ 1 ] = dom.css( 'top' );
-
-  for( var i = 0 ; i < 2 ; i++ )
-  if( _.strIs( result[ i ] ) )
-  result[ i ] = _.strRemoveEnd( result[ i ],'px' );
-
-  result = _.numbersFrom( result );
-
-  return result;
-}
-
-//
-
-function domLeftTopSet( dom,pos )
-{
-
-  _.assert( _.dom.domableIs( dom ) );
-  _.assert( pos.length === 2 );
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-
-  var dom = $( dom );
-
-  dom.css
-  ({
-    left : pos[ 0 ],
-    top : pos[ 1 ],
-  });
-
-}
-
-//
-
-function domCenterSet( dom,pos )
-{
-
-  _.assert( _.dom.domableIs( dom ) );
-  _.assert( pos.length === 2 );
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-
-  var dom = $( dom );
-  var size = _.domSizeFastGet( dom );
-
-  _.assert( dom.length === 1 );
-
-  //logger.log( 'size',size );
-
-  dom.css
-  ({
-    left : pos[ 0 ] - size[ 0 ] / 2,
-    top : pos[ 1 ] - size[ 1 ] / 2,
-  });
-
-}
-
-//
-
-function domPositionGet( dom )
-{
-  var dom = $( dom );
-
-  _.assert( dom.length === 1 );
-
-  var result = dom.position();
-
-  result = [ result.left,result.top ];
-
-  dom[ 0 ]._domPositionGet = result;
-
-  return result;
-}
-
-//
-
-function domBoundingBoxGet( dom )
-{
-  var dom = $( dom );
-
-  _.assert( dom.length === 1 );
-
-  var child = dom[ 0 ].getBoundingClientRect();
-  var parent = dom[ 0 ].parentNode.getBoundingClientRect();
-
-  var result = [ child.left-parent.left,child.top-parent.top,child.right-parent.left,child.bottom-parent.top ];
-
-  return result;
-}
-
-//
-
-function domBoundingBoxGlobalGet( dom )
-{
-  var dom = $( dom );
-
-  _.assert( dom.length === 1 );
-
-  var child = dom[ 0 ].getBoundingClientRect();
-  var result = [ child.left,child.top,child.right,child.bottom ];
-
-  dom[ 0 ]._domBondingBoxGet = result;
-
-  return result;
-}
-
-//
-
-function domSizeGet( dom )
-{
-  var result = [];
-  var dom = $( dom );
-
-  _.assert( dom.length === 1 );
-
-  result = [ dom.outerWidth(),dom.outerHeight() ];
-  dom[ 0 ]._domSizeGet = result;
-
-  return result;
-}
-
-//
-
-function domSizeFastGet( dom )
-{
-  var dom = $( dom );
-
-  if( dom[ 0 ]._domSizeGet )
-  return dom[ 0 ]._domSizeGet;
-
-  return domSizeGet( dom );
-
-}
-
-//
-
-function domsSizeGet( dom )
-{
-  var result = [];
-  var dom = $( dom );
-
-  for( var i = 0 ; i < dom.length ; i++ )
-  result[ i ] = domSizeGet( dom[ i ] );
-
-  return result;
-}
-
-//
-
-function domsSizeFastGet( dom )
-{
-  var result = [];
-  var dom = $( dom );
-
-  for( var i = 0 ; i < dom.length ; i++ )
-  result[ i ] = domSizeFastGet( dom[ i ] );
-
-  return result;
-}
-
-//
-
-function domRadiusGet( dom )
-{
-  var result;
-  var dom = $( dom );
-
-  result = Math.min( dom.outerWidth(),dom.outerHeight() );
-  dom[ 0 ]._domRadiusGet = result;
-
-  return result;
-}
-
-//
-
-function domRadiusFastGet( dom )
-{
-  var dom = $( dom );
-
-  if( dom[ 0 ]._domRadiusGet )
-  return dom[ 0 ]._domRadiusGet;
-
-  return domSizeGet( dom );
-
-}
-
-//
-
-function domsRadiusGet( dom )
-{
-  var result = [];
-  var dom = $( dom );
-
-  for( var i = 0 ; i < dom.length ; i++ )
-  result[ i ] = domRadiusGet( dom[ i ] );
-
-  return result;
-}
-
-//
-
-function domsRadiusFastGet( dom )
-{
-  var result = [];
-  var dom = $( dom );
-
-  for( var i = 0 ; i < dom.length ; i++ )
-  result[ i ] = domRadiusFastGet( dom[ i ] );
-
-  return result;
-}
-
-//
-
-function domFirst()
-{
-
-  for( var a = 0 ; a < arguments.length ; a++ )
-  {
-
-    var src = arguments[ a ];
-    if( !_.dom.domableIs( src ) )
-    continue;
-
-    src = $( src );
-    if( !src.length )
-    continue;
-
-    return src[ 0 ];
-  }
-
-  return;
-}
-
-//
-
-function domFirstOf( src,selector )
-{
-
-  _.assert( _.dom.domableIs( src ) );
-  _.assert( _.strIs( selector ) );
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-
-  selector += ':first';
-  src = $( src );
-
-  var result = src.filter( selector );
-
-  if( result.length )
-  return result[ 0 ];
-
-  result = src.find( selector );
-
-  return result[ 0 ];
-}
-
-//
-
-function domOwnIdentity( dom,identity )
-{
-
-  dom = $( dom );
-
-  _.assert( dom.length === 1 );
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( identity === undefined || _.strIs( identity ) );
-
-  if( identity === undefined )
-  {
-
-    var cssClasses = dom[ 0 ].className;
-    var result = '';
-
-    if( cssClasses.length )
-    {
-      cssClasses = cssClasses.split( /\s+/ );
-      result += '.' + cssClasses.join( '.' );
-    }
-
-    if( dom[ 0 ].id )
-    debugger;
-
-    if( dom[ 0 ].id )
-    result = '#' + dom[ 0 ].id + result;
-
-    _.assert( !!result );
-
-    return result;
-  }
-
-  identity = _.strIsolateRightOrAll( identity,' ' )[ 2 ];
-
-  _.assert( identity.indexOf( ' ' ) === -1 );
-
-  identity = _.strSplitFast
-  ({
-    src : identity,
-    delimeter : [ '.','#', '[', ']' ],
-    preservingDelimeters : 1,
-    preservingEmpty : 0,
-  });
-
-  for( var i = 1 ; i < identity.length ; i+=2 )
-  {
-    if( identity[ i-1 ] === '.' )
-    {
-      dom.addClass( identity[ i ] );
-    }
-    else if( identity[ i-1 ] === '#' )
-    {
-      dom.attr( 'id', identity[ i ] );
-    }
-    else if( identity[ i-1 ] === '[' && identity[ i+1 ] === ']' )
-    {
-      var attrStrSplitted = _.strSplitNonPreserving({ src : identity[ i ], delimeter : '=' });
-      _.assert( attrStrSplitted.length === 2, 'domOwnIdentity expects attribute indentity of format: attr=val, got:', identity[ i ] );
-      dom.attr( attrStrSplitted[ 0 ], attrStrSplitted[ 1 ] );
-      i += 1;
     }
     else
     {
-      debugger;
-      throw _.err( 'unknown prefix',identity[ i-1 ] );
+
+      throw _.err( 'not tested' );
+
+      var position = _.eventClientPosition
+      ({
+        event : event,
+        relative : o.canvas,
+        flip : [ 0,0 ],
+      });
+
+      var context = canvas.getContext( '2d' );
+      color = context.getImageData( position[ 0 ], position[ 1 ], 1, 1 ).data;
+
     }
-  }
+
+    var colorFloat = [ ];
+    for( var i = 0 ; i < color.length ; i++ )
+    colorFloat[ i ] = color[ i ] / 255;
+
+    //console.log( 'position :',_.toStr( position ) );
+    console.log( 'color',' :',_.toStr( color ),' :',_.toStr( colorFloat,{ precision : 3 } ) );
+
+  });
 
 }
 
 //
 
-function domCssGet( dom,fields )
+/*
+
+    _.dom.msg
+    ({
+      kind : 'negative',
+      msg : msg,
+      title : title,
+    });
+
+*/
+
+var msg = ( function msg()
 {
-  var result = Object.create( null );
 
-  dom = $( dom )
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( dom.length === 1 );
-  _.assert( _.strIs( fields ) || _.arrayIs( fields ) || _.mapIs( fields ) );
-
-  if( _.strIs( fields ) )
+  var kinds = [ 'neutral','positive','negative' ];
+  var titles =
   {
+    'neutral' : 'Info :',
+    'positive' : '',
+    'negative' : 'Something has gone wrong!',
+  };
+  var cssClassSemantic =
+  {
+    'neutral' : 'info',
+    'positive' : 'positive',
+    'negative' : 'negative',
+  }
+  var cssClass =
+  {
+    'neutral' : 'panel-msg-neutral',
+    'positive' : 'panel-msg-positive',
+    'negative' : 'panel-msg-negative',
+  }
+  var smiles =
+  {
+    'neutral' : 'smile',
+    'positive' : 'smile',
+    'negative' : 'meh',
+  }
+
+  return function msg( o )
+  {
+
+    var o = o || Object.create( null );
+    var optionsDefault =
+    {
+      kind : 'neutral',
+      msg : '',
+      title : '',
+      target : '',
+    }
+
+    if( o.kind === undefined )
+    o.kind = 'neutral';
+
+    _.assertMapHasOnly( o,optionsDefault );
+    _.assert( kinds.indexOf( o.kind ) !== -1,'dom.msg :','unknown type' );
+
+    if( o.msg === undefined )
+    o.msg = '';
+
+    if( !_.strIs( o.msg ) )
+    o.msg = _.toStr( o.msg,{ levels : 2 } );
+
+    if( o.title === undefined )
+    o.title = titles[ o.kind ];
+
+    if( o.target === undefined )
+    o.target = '.' + cssClass[ o.kind ];
+
+    //
+
+    var dom = $( o.target );
+    if( !dom.length )
+    {
+      var html =
+      [
+        '<div class="ui message icon hidden layout">',
+          '<i class="smile icon"></i><i class="close icon"></i>',
+          '<div class="content">',
+            '<div class="header"></div>',
+            '<p class="text"></p>',
+          '</div>',
+        '</div>',
+      ].join( '\n' );
+      dom = $( html );
+      var body = document.body;
+      var top = $( 'body > .panel.top' );
+      if( top.length === 1 ) top.after( dom );
+      else dom.prependTo( document.body );
+      dom.addClass( cssClass[ o.kind ] ).addClass( cssClassSemantic[ o.kind ] );
+      dom.find( '.smile' ).removeClass( 'smile' ).addClass( smiles[ o.kind ] )
+    }
+
+    //
+
+    dom.find( 'p' ).text( o.msg ).css( 'white-space','pre' );
+    dom.find( '.header' ).text( o.title );
+
+    if( dom.hasClass( 'hidden' ) )
+    dom
+    .transition
+    ({
+      animation : 'swing down',
+      duration  : 500,
+    });
+
+    if( dom[ 0 ]._domMsgInited ) return;
+
+    _.assert( dom.length );
+    dom[ 0 ]._domMsgInited = true;
+
+    dom.find( '.close' )
+    .on( 'click', function()
+    {
+      $( this )
+      .closest( '.message' )
+      .transition
+      ({
+        animation : 'fly down',
+        duration  : 400,
+      })
+      ;
+    })
+    ;
+
+  }
+
+})();
+
+//
+
+var _domLoadingModeLoading = 1;
+function loadingMode( value )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+
+  if( !_domLoadingModeLoading )
+  _domLoadingModeLoading = 0;
+
+  _domLoadingModeLoading += value ? +1 : -1;
+
+  if( _domLoadingModeLoading < 0 )
+  {
+
+    console.warn( _.err( 'loadingMode : have used more times then loadingBegin' ).toString() );
+    _domLoadingModeLoading = 0;
     debugger;
-    result[ fields ] = dom.css( fields );
-  }
-  else if( _.arrayIs( fields ) )
-  {
-    for( var f = 0 ; f < fields.length ; f++ )
-    result[ fields[ f ] ] = dom.css( fields[ f ] );
-  }
-  else if( _.mapIs( fields ) )
-  {
-    debugger;
-    for( var f in fields.length )
-    result[ fields[ f ] ] = dom.css( fields[ f ] );
+
   }
 
-  return result;
+  if( _domLoadingModeLoading ) {
+
+    $( '.panel-loading' ).removeClass( 'layout-invisible' );
+
+  } else {
+
+    $( '.panel-loading' ).addClass( 'layout-invisible' );
+
+  }
+
 }
 
 //
 
-function domCssSet( dom,fields )
+function scrollFix( o )
 {
+  var o = o || Object.create( null );
 
-  dom = $( dom )
+  _.assert( _.domIs( o.target ) || _.jqueryIs( o.target ), 'scrollFix','Expects o.target' );
 
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( dom.length === 1 );
-  _.assert( _.mapIs( fields ) );
+  o.target = $( o.target );
+  var xFix = o.xFix !== undefined ? !!o.xFix : true;
+  var yFix = o.yFix !== undefined ? !!o.yFix : true;
 
-  dom.css( fields );
+  o.target.each( function( k,element )
+  {
 
-  return dom;
+    var element = $( element );
+    var relative = o.relative || element.parent();
+    var position = element.position();
+
+    relative.scroll( function( event )
+    {
+
+      if( xFix === true )
+      element.css( 'left', ( position.left + relative.scrollLeft() ) + 'px' );
+
+      if( yFix === true )
+      element.css( 'top', ( position.top + relative.scrollTop() ) + 'px' );
+
+    });
+
+  });
+
 }
 
 //
 
-function domEmToPx( dom,em )
-{
-  var emSize = parseFloat( dom.css( 'font-size' ) );
-  return( emSize * em );
-}
-
-//
-
-function domEach( o )
+function scrollFocus( o )
 {
 
-  _.routineOptions( domEach,o );
-  _.assert( _.dom.domableIs( o.dom ) );
+  if( _.domLike( o ) )
+  o = { elementDom : o }
 
-  o.dom = $( o.dom );
+  o.elementDom = $( o.elementDom );
 
-  for( var d = 0 ; d < o.dom.length ; d++ )
-  {
-    // debugger
-    _domEach( o.dom[ d ],o );
-  }
-
-  return o.result;
-}
-
-domEach.defaults =
-{
-  dom : null,
-  result : null,
-  recursive : true,
-  usingNodeTypeElement : true,
-  usingNodeTypeText : true,
-  usingNodeTypesAll : false,
-  onUp : function( dom,o ){},
-  onDown : function( dom,o ){},
-}
-
-//
-
-function _domEach( dom,o )
-{
-
-  _.assert( _.dom.is( dom ) );
-
-  if( dom.nodeType === Node.ELEMENT_NODE )
-  {
-    if( !o.usingNodeTypeElement )
-    return;
-  }
-  else if( dom.nodeType === Node.TEXT_NODE )
-  {
-    if( !o.usingNodeTypeText )
-    return;
-  }
+  if( !o.contentDom )
+  o.contentDom = o.elementDom.parent().parent();
   else
-  {
-    if( !o.usingNodeTypesAll )
-    return;
-  }
+  o.contentDom = $( o.contentDom );
+
+  _.routineOptions( scrollFocus,o );
+  _.assert( [ 'center','begin','end' ].indexOf( o.mode ) !== -1 );
+  _.assert( o.contentDom.length === 1 );
+  _.assert( o.elementDom.length === 1 );
+  _.assert( o.contentDom[ 0 ] !== window && o.contentDom[ 0 ] !== document );
+
+  var sizeOfContent = _.domSizeGet( o.contentDom );
+  var sizeOfElement = _.domSizeGet( o.elementDom );
+  var positionOfElement = _.domPositionGet( o.elementDom );
+
+  if( o.mode === 'center' )
+  o.contentDom.scrollTop( o.contentDom.scrollTop() + positionOfElement[ 1 ] - sizeOfContent[ 1 ] / 2 );
+  else if( o.mode === 'begin' )
+  o.contentDom.scrollTop( o.contentDom.scrollTop() + positionOfElement[ 1 ] );
+  else if( o.mode === 'end' )
+  o.contentDom.scrollTop( o.contentDom.scrollTop() + positionOfElement[ 1 ] - sizeOfContent[ 1 ] + sizeOfElement[ 1 ] + 1 );
+
+}
+
+scrollFocus.defaults =
+{
+  contentDom : null,
+  elementDom : null,
+  mode : 'center',
+}
+
+//
+
+function scrolable( o )
+{
+
+  if( typeof wScrollable === 'undefined' )
+  throw _.err( 'please include Scrollable.js first' );
+
+  return wScrollable( o );
+}
+
+//
+
+function menuable( o )
+{
+
+  _.routineOptions( menuable,o );
+  _.assert( _.domableIs( o.targetDom ) );
+
+  o.targetDom = $( o.targetDom );
+  if( o.iconParentDom )
+  o.iconParentDom = $( o.iconParentDom );
+
+  o.targetDom.addClass( 'wmenu' );
+
+  if( o.contentHide )
+  o.contentHide = $( o.contentHide );
+  else
+  o.contentHide = o.targetDom.children( '.wmenu-conent-hide' );
+
+  o.contentHide.addClass( 'wmenu-conent-hide' );
+
+  if( o.firingEventsForDom )
+  o.firingEventsForDom = _.domOf( o.targetDom,o.firingEventsForDom );
 
   /* */
 
-  var r = o.onUp( dom,o );
-  _.assert( r === undefined );
+  var css =
+  `
+    .wmenu.wmaximized
+    {
+      left : 0 !important;
+      top : 0 !important;
+      width : 100% !important;
+      height : 100% !important;
+    }
+    .wmenu.active > .wmenu-conent-hide
+    {
+      filter : blur( 3px );
+    }
+    .wmenu .wmenu-menu
+    {
+      display : none;
+      position : absolute;
+      clear : both;
+      width : 100%;
+      height : 100%;
+      left : 0;
+      top : 0;
+      z-index : 1;
+      text-align : center;
+      flex-direction : column;
+      justify-content : center;
+    }
+    .wmenu .wmenu-menu
+    {
+      line-height : 2em;
+    }
+    .wmenu .wcorner-parent.wmenuable-corner
+    {
+      margin : 0em;
+      width : 2em;
+      height : 2em;
+    }
+    .wmenu.active .wmenu-menu .wmenu-item
+    {
+      cursor : pointer;
+      align-self : center;
+    }
+    .wmenu.active .wmenu-menu .wmenu-item:hover
+    {
+      text-shadow : 1px 1px 4px #000000;
+    }
+    .wmenu .wmenu-icon-open-default
+    {
+      border-width : 1px;
+      border-style : solid;
+      border-color : #999;
+      border-radius : 3px;
+      margin : 0.5em;
+      width : 1em;
+      height : 1em;
+      transition : background-color 0.4s;
+    }
+    .wmenu .wmenu-icon-open-default:hover
+    {
+      background-color : #f44;
+    }
+    .wmenu.active .wmenu-icon-open-default:hover
+    {
+      background-color : #4f4;
+    }
+    .wmenu .wcorner-parent .wmenu-icon-open-default
+    {
+      position : absolute;
+      color : #666666;
+      cursor : pointer;
+    }
+    .wmenu .wcorner-parent.wmenu-icon-hiding
+    {
+      opacity : 0;
+      transition : opacity 0.4s;
+    }
+    .wmenu .wcorner-parent.wmenu-icon-hiding:hover
+    {
+      opacity : 1;
+    }
+  `
 
-  var children = dom.childNodes;
-  for( var d = 0 ; d < children.length ; d++ )
+  _.domCssGlobal({ css : css, key : menuable });
+
+  /* */
+
+  if( !o.iconParentDom )
   {
-    var dom = children[ d ];
-    _domEach( dom,o );
+
+    var corners = _.dom.cornersMake
+    ({
+      targetDom : o.targetDom,
+      corners : o.corners,
+      cssClass : 'wmenuable-corner',
+      makingChild : 0,
+    });
+
+    o.iconParentDom = corners.cornerParentDom;
+    _.assert( o.iconParentDom.length === o.corners.length );
+
   }
 
-  var r = o.onDown( dom,o );
-  _.assert( r === undefined );
+  if( o.iconOpenDom )
+  {
+    o.iconOpenDom = $( o.iconOpenDom );
+  }
+  else
+  {
+    o.iconParentDom.each( function( i,dom )
+    {
+      var icon = $( '<i>' ).appendTo( dom );
+      _.domClasses( icon,[ 'wmenu-icon-open-default', 'wmenu-icon-open' ],1 );
+      icon.attr( 'title','Associated Menu' );
+    });
+    o.iconOpenDom = o.iconParentDom.find( '.wmenu-icon-open' );
+  }
 
-  return o.context;
-}
+  // _.domClasses( o.iconOpenDom,[ 'wmenu-icon-open','transition','hidden' ],1 );
+  _.domClasses( o.iconOpenDom,[ 'wmenu-icon-open' ],1 );
+  _.domClasses( o.iconOpenDom,[ 'visible' ],0 );
 
-//
+  /* menu */
 
-var _domGlobalCssKeysArray = [];
-function domCssGlobal( o )
-{
+  o.items = o.items || [];
 
-  if( _.strIs( o ) )
-  o = { css : o }
+  if( !o.menuDom )
+  {
+    o.menuDom = $( '<div class="wmenu-menu transition hidden">' ).appendTo( o.targetDom );
 
-  _.routineOptions( domCssGlobal,o );
+    if( o.addingStockItems )
+    {
+      _.arrayAppendArrayOnceStrictly( o.items, [ 'Maximize','Window','Close','Resume' ] );
+    }
 
-  if( o.document === null )
-  o.document = document;
+    for( var i = 0 ; i < o.items.length ; i++ )
+    {
+      var item = $( '<div>' ).appendTo( o.menuDom );
+      item.text( o.items[ i ] );
+      item.addClass( 'wmenu-item' );
+      item.attr( 'item',o.items[ i ] );
+    }
 
-  _.assert( o.document.head );
-  _.assert( _.strIs( o.css ) );
-  _.assert( arguments.length === 1, 'Expects single argument' );
+  }
+  else
+  {
+    o.menuDom = $( o.menuDom );
+  }
 
-  if( o.once )
+  o.itemsDom = o.menuDom.find( '.wmenu-item' );
+
+  _.assert( o.menuDom.length );
+  _.assert( o.itemsDom.length );
+
+  /* item handler */
+
+  function handleItemSelect( event )
   {
 
-    if( o.key === null )
-    o.key = o.css;
-    if( _.longHas( _domGlobalCssKeysArray , [ o.key,o.document ] , _.longIdentical ) )
+    var t = $( event.target );
+    var item = t.attr( 'item' );
+    var e =
+    {
+      dom : t,
+      kind : 'item-selected',
+      item : item,
+    }
+
+    if( o.addingStockItems )
+    {
+
+      if( item === 'Resume' )
+      {
+        o.menuShow( 0 );
+      }
+      else if( e.item === 'Close' )
+      {
+        o.targetDom.remove();
+      }
+      else if( e.item === 'Window' )
+      {
+        _.dom.windowOpen
+        ({
+          targetDom : o.targetDom,
+        });
+      }
+      else if( e.item === 'Maximize' )
+      {
+        o.targetDom.addClass( 'wmaximized' );
+        e.dom.attr( 'item','Minimize' );
+        e.dom.text( 'Minimize' );
+        if( o.firingEventsForDom )
+        _.dom.eventFire({ targetDom : o.firingEventsForDom, kind : 'resize' });
+      }
+      else if( e.item === 'Minimize' )
+      {
+        o.targetDom.removeClass( 'wmaximized' );
+        e.dom.attr( 'item','Maximize' );
+        e.dom.text( 'Maximize' );
+        if( o.firingEventsForDom )
+        _.dom.eventFire({ targetDom : o.firingEventsForDom, kind : 'resize' });
+      }
+
+    }
+
+    if( !o.onEvent )
     return;
-    _domGlobalCssKeysArray.push([ o.key,o.document ]);
+
+    o.onEvent( e );
 
   }
 
-  var result = $( '<style>' + o.css + '<style>' ).appendTo( o.document.head );
+  /*o.itemsDom.on( _.eventName( 'click' ), handleItemSelect );*/
 
-  return result;
-}
+  _dom.habbitMouseClick
+  ({
+    dom : o.itemsDom,
+    // givingRepeat : 1,
+    onEvent : function handleHold( e )
+    {
 
-domCssGlobal.defaults =
-{
-  document : null,
-  css : null,
-  once : 1,
-  key : null,
-}
+      console.log( 'kindOfMouseEvent',e.kindOfMouseEvent );
+      // debugger;
+      // if( e.kindOfMouseEvent !== 'repeat' )
+      // return;
+      handleItemSelect.call( this,e );
 
-//
+    },
+  });
 
-function domCssExport( o )
-{
-  if( o instanceof Document )
-  o = { dstDocument : o }
+  /* icon handler */
 
-  _.routineOptions( domCssExport,o );
-
-  if( o.srcDocument === null )
-  o.srcDocument = document;
-
-  _.assert( o.srcDocument.head );
-  _.assert( o.dstDocument.head );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-
-  var styles = o.srcDocument.getElementsByTagName( 'style' );
-
-  for( var s = 0 ; s < styles.length ; s++ )
+  o.iconOpenDom.on( _.eventName( 'click' ), function( e )
   {
-    var style = styles[ s ];
-    var css = style.textContent;
 
-    // console.log( 'css',css.length );
-    // if( !css )
+    console.log( 'menuable.click' );
     // debugger;
 
-    _.domCssGlobal
+    var active = o.targetDom.hasClass( 'active' );
+    o.menuShow( !active );
+
+  });
+
+  /* menu show */
+
+  o.menuShow = function menuShow( val )
+  {
+
+    o.targetDom.toggleClass( 'active' );
+    o.menuDom.transition
     ({
-      document : o.dstDocument,
-      css : css,
-      once : 0,
+      animation : 'scale',
+      displayType : 'flex',
     });
 
   }
 
-}
+  /* icon hide */
 
-domCssExport.defaults =
-{
-  dstDocument : null,
-  srcDocument : null,
-}
-
-//
-
-function domClipboardCopy( text )
-{
-  var result = false;
-  var textArea = document.createElement( 'textarea' );
-
-  textArea.style.position = 'fixed';
-  textArea.style.padding = 0;
-  textArea.style.margin = 0;
-  textArea.style.top = 0;
-  textArea.style.left = 0;
-  textArea.style.fontSize = '6px';
-
-  textArea.style.width = '100%';
-  textArea.style.height = '100%';
-  textArea.style.border = 'none';
-  textArea.style.outline = 'none';
-  textArea.style.boxShadow = 'none';
-  textArea.style.background = 'transparent';
-
-  textArea.value = text;
-
-  document.body.appendChild( textArea );
-
-  textArea.focus();
-  textArea.setSelectionRange( 0, textArea.value.length );
-  /*textArea.select();*/
-
-  try
+  if( o.hidingIcon )
   {
-
-    result = document.execCommand( 'copy' );
-    if( !result )
-    _.errLog( 'Failed to copy into clipboard' );
-
-  }
-  catch(err )
-  {
-    _.errLog( 'Failed to copy into clipboard',err );
+    _.domClasses( o.iconParentDom,[ 'wmenu-icon-hiding' ],1 );
+    // _.domClasses( o.iconOpenDom,[ 'transition','hidden' ],1 );
+    // o.iconParentDom
+    // .on( _.eventName( 'mouseleave' ), function( e )
+    // {
+    //   var t = $( this ).children();
+    //   t.transition
+    //   ({
+    //     animation : 'scale',
+    //     displayType : 'flex',
+    //   });
+    // })
+    // .on( _.eventName( 'mouseenter' ), function( e )
+    // {
+    //   var t = $( this ).children();
+    //   t.transition
+    //   ({
+    //     animation : 'scale',
+    //     displayType : 'flex',
+    //   });
+    // })
   }
 
-  document.body.removeChild( textArea );
-  return result;
-}
-
-//
-
-var domFullScreen = ( function domFullScreen()
-{
-
-  var inFullscreen = 0;
-  var requestFullScreen = null;
-  var cancelFullScreen = null;
-
-  /* */
-
-  function initFullScreen()
-  {
-    if( 'requestFullScreen' in document )
-    {
-      requestFullScreen = 'requestFullScreen';
-      cancelFullScreen = 'cancelFullScreen';
-    }
-    else if( 'webkitCancelFullScreen' in document )
-    {
-      requestFullScreen = 'webkitRequestFullScreen';
-      cancelFullScreen = 'webkitCancelFullScreen';
-    }
-    else if( 'mozCancelFullScreen' in document )
-    {
-      requestFullScreen = 'mozRequestFullScreen';
-      cancelFullScreen = 'mozCancelFullScreen';
-    }
-    else if( 'msCancelFullScreen' in document )
-    {
-      requestFullScreen = 'msRequestFullScreen';
-      cancelFullScreen = 'msCancelFullScreen';
-    }
-    else
-    {
-      requestFullScreen = NaN;
-      cancelFullScreen = NaN;
-    }
-  }
-
-  return function domFullScreen( src )
-  {
-
-    _.assert( arguments.length === 0 || arguments.length === 1 );
-
-    if( requestFullScreen === null )
-    initFullScreen();
-
-    if( src )
-    {
-      if( requestFullScreen )
-      {
-        document.body[ requestFullScreen ]();
-        inFullscreen = true;
-      }
-      else
-      {
-        inFullscreen = false;
-        alert( 'Fullscreen is not supported.' );
-      }
-    }
-    else
-    {
-      inFullscreen = false;
-      if( cancelFullScreen )
-      {
-        document[ cancelFullScreen ]();
-      }
-      else
-      {
-        alert( 'Fullscreen is not supported.' );
-      }
-
-    }
-
-  }
-
-})();
-
-//
-
-function domLoad( o )
-{
-
-  _.routineOptions( domLoad,o );
-
-  o.once = new _.Consequence();
-  o.ready = new _.Consequence();
-
-  o.parentDom = $( o.parentDom );
-  var targetDom = o.parentDom;
-  if( o.targetClass )
-  targetDom = o.parentDom.find( '.' + o.targetClass ).addBack( '.' + o.targetClass );
-
-  if( !targetDom.length )
-  if( o.replacing )
-  targetDom = o.parentDom;
-  else
-  targetDom = $( '<div>' ).prependTo( o.parentDom );
-
-  /* */
-
-  function showMaybe()
-  {
-
-    if( o.showing )
-    {
-      o.parentDom.show();
-      targetDom.show();
-    }
-
-  }
-
-  /* */
-
-  if( o.targetClass )
-  if( targetDom.hasClass( o.targetClass ) )
-  {
-    showMaybe();
-    o.ready.take( targetDom );
-    return o;
-  }
-
-  if( o.targetClass )
-  _.domClasses( targetDom,o.targetClass,1 );
-
-  /* */
-
-  _.assert( _.mapIs( o ) );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  // _.assert( _.strIs( o.targetClass ) || o.replacing );
-  _.assert( _.strDefined( o.url ), 'Expects {-o.url-}' );
-  _.assert( o.parentDom.length,'Expects { o.parentDom }' );
-  _.assert( targetDom.length,'Expects { targetDom }' );
-
-  /* */
-
-  function loadEnd( responseData, status, xhr )
-  {
-
-    _.assert( arguments.length === 3, 'Expects exactly three argument' );
-
-    if( status != 'error' && o.replacing ) try
-    {
-      _.assert( _.strIs( responseData ) );
-      responseData = $( responseData );
-    }
-    catch( err )
-    {
-      status = 'error';
-      reason = _.err( err );
-    }
-
-    if( status === 'error' )
-    {
-      var reason ;
-      if( _.objectIs( xhr ) )
-      reason = xhr.status + ' : ' + xhr.statusText;
-      else
-      reason = responseData.status + ' : ' + responseData.statusText;
-      reason += ' : ' + o.url;
-      var html = 'Error ' + reason;
-      targetDom.html( html );
-      var err = _.errLogOnce( reason );
-      o.ready.error( err );
-      o.once.error( err );
-      return;
-    }
-
-    if( o.replacing )
-    {
-      var classes = _.domClasses( targetDom );
-      var attrs = _.domAttrs( targetDom );
-
-      if( o.after || o.before )
-      {
-        // debugger;
-        targetDom = targetDom.find( o.after || o.before );
-        _.assert( targetDom.length,o.after ? 'after' : 'before','DOM was not found',o.after || o.before );
-        if( o.after )
-        targetDom = targetDom.after( responseData );
-        else
-        targetDom = targetDom.before( responseData );
-        // debugger;
-      }
-      else
-      {
-        targetDom = targetDom.replaceWith( responseData );
-      }
-      targetDom = responseData;
-
-      if( o.targetClass )
-      _.domClasses( targetDom,o.targetClass,1 );
-      if( o.preservingAttributes )
-      _.domAttrs( targetDom,attrs,1 );
-      if( o.preservingClasses )
-      _.domClasses( targetDom,classes,1 );
-    }
-
-    o.parentDom.attr( 'dom-loaded',1 );
-
-    showMaybe();
-
-    o.ready.take( targetDom );
-    o.once.take( targetDom );
-
-  }
-
-  /* */
-
-  if( o.replacing )
-  $.get( o.url ).always( loadEnd );
-  else
-  targetDom.load( o.url,loadEnd );
+  _.dom.abilityRegister
+  ({
+    targetDom : o.targetDom,
+    settings : o,
+    maker : menuable,
+    css : css,
+  });
 
   return o;
 }
 
-domLoad.defaults =
-{
-  url : null,
-  targetClass : null,
-  parentDom : 'body',
-  showing : 0,
-  replacing : 1,
-  before : null,
-  after : null,
-  preservingClasses : 1,
-  preservingAttributes : 1,
-}
-
-// --
-// event
-// --
-
-var eventName = ( function eventName()
-{
-  var _eventMap = null;
-
-  return function( name )
-  {
-
-    if( _.arrayIs( name ) )
-    {
-      var result = [ ];
-
-      for( var n = 0 ; n < name.length ; n++ )
-      result[ n ] = this.eventName( name[ n ] );
-
-      return result;
-    }
-    else if( !_.strIs( name ) )
-    throw _.err( 'eventName :','expect string or array as argument' );
-
-    var touchSupported = ( 'ontouchstart' in window ) || ( 'onmsgesturechange' in window );
-    if( !_eventMap )
-    {
-      _eventMap = Object.create( null );
-      if( touchSupported )
-      {
-        _eventMap[ 'mousedown' ] = 'touchstart';
-        _eventMap[ 'mouseup' ] = 'touchend';
-        _eventMap[ 'mousemove' ] = 'touchmove';
-        _eventMap[ 'mouseenter' ] = 'touchenter';
-        _eventMap[ 'mouseleave' ] = 'touchleave';
-        _eventMap[ 'dblclick' ] = 'taphold';
-
-        if( 'ontouch' in window )
-        _eventMap[ 'click' ] = 'touch';
-        else if( !( 'onclick' in window ) )
-        _eventMap[ 'click' ] = 'click';
-        else
-        _eventMap[ 'click' ] = 'touchend';
-
-        //if( !( 'onclick' in window ) )
-        //_eventMap[ 'click' ] = 'touchend'; // xxx
-        //xxx
-
-      }
-      else
-      {
-        _eventMap[ 'mousedown' ] = 'mousedown';
-        _eventMap[ 'mouseup' ] = 'mouseup';
-        _eventMap[ 'mousemove' ] = 'mousemove';
-        _eventMap[ 'mouseenter' ] = 'mouseenter';
-        _eventMap[ 'mouseleave' ] = 'mouseleave';
-        _eventMap[ 'dblclick' ] = 'dblclick';
-        _eventMap[ 'click' ] = 'click';
-      }
-    }
-
-    if( _eventMap[ name ] ) return _eventMap[ name ];
-    else return name;
-
-  }
-
-})();
-
-//
-
-function eventClientPosition( o )
-{
-  var result;
-
-  if( _.dom.eventIs( o ) )
-  o = { event : o };
-
-  var event = o.event;
-  var relative = o.relative;
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.dom.eventIs( event ) );
-  _.assert( !o.flip || _.arrayIs( o.flip ) );
-  _.assertMapHasOnly( o,eventClientPosition.defaults );
-
-  if( _.numberIs( event.clientX ) )
-  result = [ event.clientX,event.clientY ];
-
-  if( event.originalEvent )
-  event = event.originalEvent;
-
-  if( event.targetTouches && event.targetTouches.length )
-  result = [ event.targetTouches[ 0 ].clientX,event.targetTouches[ 0 ].clientY ];
-
-  if( event.changedTouches && event.changedTouches.length )
-  result = [ event.changedTouches[ 0 ].clientX,event.changedTouches[ 0 ].clientY ];
-
-  _.assert( !relative || _.dom.jqueryIs( relative ),'eventClientPosition :','relative must be jQuery object if defined' );
-
-  if( relative && result )
-  {
-    var offset = relative.offset();
-    result[ 0 ] -= offset.left;
-    result[ 1 ] -= offset.top;
-  }
-
-  if( o.flip )
-  {
-
-    if( !relative )
-    throw _.err( 'not implemented' );
-
-    var size = _.domSizeGet( relative );
-
-    if( o.flip[ 0 ] )
-    result[ 0 ] = size[ 0 ] - result[ 0 ] - 1;
-
-    if( o.flip[ 1 ] )
-    result[ 1 ] = size[ 1 ] - result[ 1 ] - 1;
-
-  }
-
-  return result;
-}
-
-eventClientPosition.defaults =
-{
-  event : null,
-  relative : null,
-  flip : null,
-}
-
-//
-
-function eventRedirect( dst,src )
-{
-
-  src = $( src );
-  dst = $( dst );
-
-  function handleRedirect( event ){
-    if( event.originalEvent && !event.originalEvent.doNotRedirect ) dst.trigger( event );
-    return true;
-  }
-
-  function handleMark( event ){
-    if( event.originalEvent ) event.originalEvent.doNotRedirect = 1;
-  }
-
-  function handleStop( event ){
-    return false;
-  }
-
-  src.children()
-  .on( "blur focus focusin focusout load resize scroll unload click dblclick " +
-    "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
-    "change select submit keydown keypress keyup error contextmenu mousewheel", handleMark );
-
-  //src.on( "mousemove", handleRedirect );
-
-  //src.on( "mousedown mouseup mousemove", handleRedirect );
-
-  //src.on( "blur focus focusin focusout click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave mousewheel", handleRedirect );
-
-  src.on( "blur focus focusin focusout load resize scroll unload click dblclick " +
-    "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
-    "change select submit keydown keypress keyup error contextmenu mousewheel", handleRedirect );
-
-}
-
-//
-
-function eventMouse( type, cx, cy )
-{
-
-  if( cx === undefined ) cx = 0;
-  if( cy === undefined ) cy = 0;
-
-  var sx = cx + window.screenX;
-  var sy = cy + window.screenY;
-
-  var event;
-  var e = {
-    bubbles : true,
-    cancelable : ( type != "mousemove" ),
-    view : window,
-    detail : 0,
-    screenX : sx,
-    screenY : sy,
-    clientX : cx,
-    clientY : cy,
-    ctrlKey : false,
-    altKey : false,
-    shiftKey : false,
-    metaKey : false,
-    button : 0,
-    relatedTarget : undefined
-  };
-
-  if ( typeof( document.createEvent ) == "function" ) {
-    event = document.createEvent( "MouseEvents" );
-    event.initMouseEvent( type,
-      e.bubbles, e.cancelable, e.view, e.detail,
-      e.screenX, e.screenY, e.clientX, e.clientY,
-      e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
-      e.button, null );
-      //e.button, document.body.parentNode );
-  } else if ( document.createEventObject ) {
-    event = document.createEventObject();
-    for ( prop in e ) {
-      event[ prop ] = e[ prop ];
-    }
-    event.button = { 0 :1, 1 :4, 2 :2 }[ event.button ] || event.button;
-  }
-
-  //event.fromElement = null;
-
-  return event;
-}
-
-//
-/*
-function eventWheelZero( event,x,y )
-{
-  _.assert( arguments.length === 3, 'Expects exactly three argument' );
-  var wrap;
-  var o = Object.create( null );
-
-  if( event.originalEvent )
-  {
-    wrap = event;
-    if( x )
-    if( _.numberIs( event.deltaX ) )
-    event.deltaX = 0;
-    if( y )
-    if( _.numberIs( event.deltaY ) )
-    event.deltaY = 0;
-    event = event.originalEvent;
-  }
-
-  {
-    if( _.numberIs( event.wheelDeltaX ) )
-    o.wheelDeltaX = y ? 0 : event.wheelDeltaX;
-    if( _.numberIs( event.deltaX ) )
-    o.deltaX = y ? 0 : event.deltaX;
-  }
-
-  {
-    if( _.numberIs( event.wheelDeltaY ) )
-    o.wheelDeltaY = y ? 0 : event.wheelDeltaY;
-    if( _.numberIs( event.deltaY ) )
-    o.deltaY = y ? 0 : event.deltaY;
-    if( _.numberIs( event.wheelDelta ) )
-    o.wheelDelta = y ? 0 : event.wheelDelta;
-    if( _.numberIs( event.delta ) )
-    o.delta = y ? 0 : event.delta;
-    if( _.numberIs( event.detail ) )
-    o.detail = y ? 0 : event.detail;
-  }
-
-  var result = new event.constructor( o );
-
-  if( wrap )
-  {
-    var o = Object.create( null );
-    if( _.numberIs( event.deltaX ) )
-    o.deltaX = y ? 0 : event.deltaX;
-    if( _.numberIs( event.deltaY ) )
-    o.deltaY = y ? 0 : event.deltaY;
-    o.originalEvent = result;
-    result = new wrap.constructor( o );
-  }
-
-  return result;
-}
-*/
-
-//
-
-function domFromAtLeastOne( targetDom )
-{
-  let wasDom = targetDom;
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.dom.domableIs( targetDom ) );
-  targetDom = $( targetDom );
-  _.assert( targetDom.length > 0, 'Expects at least one DOM element, but found none for', wasDom );
-
-  return targetDom;
-}
-
-//
-
-function domWheelOn( o )
-{
-
-  if( arguments.length === 2 )
-  o = { targetDom : arguments[ 0 ], onWheel : arguments[ 1 ] }
-
-  _.routineOptions( domWheelOn, o );
-  _.assert( _.routineIs( o.onWheel ) );
-
-  o.targetDom = _.domFromAtLeastOne( o.targetDom );
-
-  _.assert( _.routineIs( o.targetDom.mousewheel ), '"jQuery.mousewheel" was not included' );
-
-  o.targetDom.mousewheel( handle );
-  let onWheel = o.onWheel;
-
-  return o;
-
-  /* */
-
-  function handle( e )
-  {
-    let delta = eventWheelDelta( e );
-    return onWheel( e, delta );
-  }
-
-}
-
-domWheelOn.defaults =
+menuable.defaults =
 {
   targetDom : null,
-  onWheel : null,
+  contentHide : null,
+  iconParentDom : null,
+  iconOpenDom : null,
+  menuDom : null,
+  menuItemsDom : null,
+  items : null,
+  onEvent : null,
+  addingStockItems : 1,
+  hidingIcon : 1,
+  firingEventsForDom : 'canvas',
+  corners : [ 'lt','lb','rt','rb' ],
 }
 
 //
 
-function eventWheelDelta( e, usingOne )
-{
-  var deltaX;
-  var deltaY;
-
-  if( e.originalEvent )
-  e = e.originalEvent;
-
-  // debugger;
-
-  if( _.numberIs( e.wheelDeltaX ) )
-  deltaX = e.wheelDeltaX;
-  else if( _.numberIs( e.deltaX ) )
-  deltaX = -e.deltaX;
-
-  if( _.numberIs( e.wheelDeltaY ) )
-  deltaY = e.wheelDeltaY;
-  else if( _.numberIs( e.deltaY ) )
-  deltaY = -e.deltaY;
-  else if( _.numberIs( e.wheelDelta ) )
-  deltaY = e.wheelDelta;
-  else if( _.numberIs( e.delta ) )
-  deltaY = -e.delta;
-  else if( _.numberIs( e.detail ) )
-  deltaY = e.detail;
-
-  if( usingOne )
-  {
-
-    if( deltaX > +1 ) deltaX = +1;
-    else if( deltaX < -1 ) deltaX = -1;
-    else deltaX = 0;
-
-    if( deltaY > +1 ) deltaY = +1;
-    else if( deltaY < -1 ) deltaY = -1;
-    else deltaY = 0;
-
-  }
-
-  return [ +deltaX,+deltaY ];
-}
-
-//
-
-var eventWheelDeltaScreen = ( function eventWheelDeltaScreen()
+function resizable( o )
 {
 
-  var screenSize;
+  _.routineOptions( resizable,o );
 
-  return function( e )
-  {
-    if( !screenSize )
-    screenSize = [ screen.width / 250 , screen.height / 250 ];
-    var result = eventWheelDelta( e );
-    result[ 0 ] *= screenSize[ 0 ];
-    result[ 1 ] *= screenSize[ 1 ];
-    return result;
-  }
+  o.containerDom = $( o.containerDom );
+  o.targetDom = $( o.targetDom );
 
-})();
+  // _.dom.eventsObserver( o.targetDom[ 0 ] ); // xxx
 
-//
+  if( o.firingEventsForDom )
+  o.firingEventsForDom = _.domOf( o.targetDom,o.firingEventsForDom );
 
-function eventSpecialMake( o )
-{
-
+  _.assert( o.containerDom.length >= 1 );
+  _.assert( o.targetDom.length >= 1 );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  if( _.strIs( o ) )
-  o = { name : o };
+  /* handles */
 
-  _.assertMapHasOnly( o,eventSpecialMake.defaults );
+  if( o.makingHandles )
+  {
+    _.assert( !o.handleParentDom );
+    _.assert( !o.handleChildDom );
 
-  var event = new CustomEvent
-  (
-    'resize',
+    var css =
+    `
+    .wresizable
     {
-      detail :
-      {
-        time : new Date(),
-      },
-      bubbles : true,
-      cancelable : true,
+      position : absolute;
     }
-  );
 
-  /* document.dispatchEvent( event ); */
+    .wresizable .wresizable-corner.wcorner-parent
+    {
+      display : block;
+      position : absolute;
+      height : 14px;
+      width : 14px;
+      background : transparent;
+      z-index : 2;
+      transition : height 0.4s, width 0.4s;
+    }
 
-  return event;
+    .wresizable .wresizable-corner.wcorner-parent:hover
+    {
+      height : 23px;
+      width : 23px;
+    }
+
+    .wresizable .wresizable-corner.wcorner-child.lt,
+    .wresizable .wresizable-corner.wcorner-child.rb
+    {
+      cursor : nwse-resize;
+    }
+
+    .wresizable .wresizable-corner.wcorner-child.lb,
+    .wresizable .wresizable-corner.wcorner-child.rt
+    {
+      cursor : nesw-resize;
+    }
+    `
+
+    _.domCssGlobal({ css : css, key : resizable });
+
+    var corners = _.dom.cornersMake
+    ({
+      targetDom : o.targetDom,
+      corners : o.corners,
+      cssClass : 'wresizable-corner',
+    });
+
+    o.handleParentDom = corners.cornerParentDom;
+    o.handleChildDom = corners.cornerChildDom;
+
+    o.handleChildDom.addClass( 'layout-cross' );
+
+  }
+
+  /* pre */
+
+  o.targetDom.addClass( 'wresizable' );
+  o.state = Object.create( null );
+
+  /* handler */
+
+  o.handleParentDom
+  .on( _.eventName( 'mousedown' ), function( e )
+  {
+    var target = $( e.target );
+
+    // console.log( 'resizable.mousedown' );
+
+    var pos = _.eventClientPosition
+    ({
+      event : e,
+      relative : o.targetDom,
+      flip : [ 1,1 ],
+    });
+
+    var pos = _.eventClientPosition( e );
+    var dom = $( this ).closest( '[ wresizable ]' );
+
+    o.state.start = _.eventClientPosition( e );
+    o.state.position = _.domPositionGet( o.targetDom );
+    o.state.size = _.domSizeGet( o.targetDom );
+    o.state.corner = _.domClasses( target );
+    o.state.corner = _.arraySetIntersection( o.state.corner,[ 'lt','lb','rt','rb' ] );
+    _.assert( o.state.corner.length === 1 );
+    o.state.corner = o.state.corner[ 0 ];
+
+    o.targetDom.attr( 'wresizing',1 );
+    o.containerDom.attr( 'wresizing',1 );
+    o.containerDom.attr( 'wdraggable-not',1 );
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    return false;
+  })
+
+  /*  */
+
+  o.target
+
+  o.targetDom
+  .on( _.eventName( 'drag' ), function( e )
+  {
+    if( !o.state.start ) return;
+    e.preventDefault();
+    return false;
+  })
+  .on( 'domRelocated', function( e )
+  {
+    o.containerDom = $( this ).parent();
+    bindContainer();
+  })
+  ;
+
+  /* */
+
+  function bindContainer()
+  {
+
+    o.containerDom
+    .on( _.eventName( 'mouseup' ), function( e )
+    {
+      if( !o.state.start )
+      return;
+
+      o.state.start = null;
+      o.targetDom.removeAttr( 'wresizing' );
+      o.containerDom.removeAttr( 'wresizing' );
+      o.containerDom.removeAttr( 'wdraggable-not' );
+
+    })
+    .on( _.eventName( 'mousemove' ), function( e )
+    {
+      if( !o.state.start )
+      return;
+
+      var pos = _.eventClientPosition( e );
+
+      var dx = pos[ 0 ] - o.state.start[ 0 ];
+      var dy = pos[ 1 ] - o.state.start[ 1 ];
+
+      // console.log( 'resizable.mousemove',dx,dy );
+
+      if( o.state.corner[ 0 ] === 'r' )
+      o.targetDom.css
+      ({
+        'width' : ( o.state.size[ 0 ] + dx ) + 'px',
+      });
+      else
+      o.targetDom.css
+      ({
+        'left' : ( o.state.position[ 0 ] + dx ) + 'px',
+        'width' : ( o.state.size[ 0 ] - dx ) + 'px',
+      });
+
+      if( o.state.corner[ 1 ] === 'b' )
+      o.targetDom.css
+      ({
+        'height' : ( o.state.size[ 1 ] + dy ) + 'px',
+      });
+      else
+      o.targetDom.css
+      ({
+        'top' : ( o.state.position[ 1 ] + dy ) + 'px',
+        'height' : ( o.state.size[ 1 ] - dy ) + 'px',
+      });
+
+      _.dom.eventFire({ targetDom : o.firingEventsForDom, kind : 'resize' });
+
+      return false;
+    });
+
+  }
+
+  bindContainer();
+
+  _.dom.abilityRegister
+  ({
+    targetDom : o.targetDom,
+    settings : o,
+    maker : resizable,
+    css : css,
+  });
+
 }
 
-eventSpecialMake.defaults =
+resizable.defaults =
 {
+  corners : [ 'lt','lb','rt','rb' ],
+  makingHandles : 1,
+  firingEventsForDom : 'canvas',
+  handleParentDom : null,
+  handleChildDom : null,
+  handleCssClass : 'wresizeable-handle',
+  containerDom : 'body',
+  targetDom : null,
+}
+
+//
+
+function cornersMake( o )
+{
+
+  _.routineOptions( cornersMake,o );
+
+  o.targetDom = $( o.targetDom );
+
+  _.assert( o.targetDom.length >= 1 );
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( !o.cornerParentDom );
+  _.assert( !o.cornerChildDom );
+
+  var css =
+  `
+  .wcorner-parent
+  {
+    display : block;
+    position : absolute;
+    height : 14px;
+    width : 14px;
+    clear : both;
+    background : transparent;
+    z-index : 2;
+    transition : height 0.4s, width 0.4s;
+  }
+
+  .wcorner-child
+  {
+    position : relative;
+    height : 100%;
+    width : 100%;
+  }
+
+  `
+
+  _.domCssGlobal({ css : css, key : cornersMake });
+
+  o.cornerParentDom = $();
+  if( o.makingChild )
+  o.cornerChildDom = $();
+
+  var cornerParentDom,cornerChildDom;
+  for( var side of o.corners )
+  {
+
+    if( o.makingChild )
+    cornerParentDom = $( '<div class="wcorner-parent"><div class="wcorner-child"></div></div>' ).appendTo( o.targetDom );
+    else
+    cornerParentDom = $( '<div class="wcorner-parent"></div>' ).appendTo( o.targetDom );
+
+    if( o.makingChild )
+    cornerChildDom = cornerParentDom.children( '.wcorner-child' );
+
+    var left = _.strHas( side,'l' ) ? 'left' : 'right';
+    var top = _.strHas( side,'t' ) ? 'top' : 'bottom';
+    cornerParentDom.css
+    ({
+      [ left ] : '0',
+      [ top ] : '0',
+    });
+
+    cornerParentDom.children( 'div' ).css
+    ({
+      [ left ] : left === 'left' ? 'calc( -50% - 1px )' : '-50%',
+      [ top ] : top === 'top' ? 'calc( -50% - 1px )' : '-50%',
+    });
+
+    if( o.cssClass )
+    {
+      _.domClasses( cornerParentDom,o.cssClass,1 );
+      if( o.makingChild )
+      _.domClasses( cornerChildDom,o.cssClass,1 );
+    }
+
+    if( left === 'left' && top === 'top' )
+    {
+      cornerParentDom.addClass( 'lt' )
+      if( o.makingChild )
+      cornerChildDom.addClass( 'lt' )
+    }
+    else if( left === 'left' && top === 'bottom' )
+    {
+      cornerParentDom.addClass( 'lb' )
+      if( o.makingChild )
+      cornerChildDom.addClass( 'lb' )
+    }
+    else if( left === 'right' && top === 'top' )
+    {
+      cornerParentDom.addClass( 'rt' )
+      if( o.makingChild )
+      cornerChildDom.addClass( 'rt' )
+    }
+    else if( left === 'right' && top === 'bottom' )
+    {
+      cornerParentDom.addClass( 'rb' )
+      if( o.makingChild )
+      cornerChildDom.addClass( 'rb' )
+    }
+
+    o.cornerParentDom = o.cornerParentDom.add( cornerParentDom );
+    if( o.makingChild )
+    o.cornerChildDom = o.cornerChildDom.add( cornerChildDom );
+
+  }
+
+  _.dom.abilityRegister
+  ({
+    targetDom : o.targetDom,
+    settings : o,
+    maker : cornersMake,
+    css : css,
+    combining : 'rewriting',
+  });
+
+  return o;
+}
+
+cornersMake.defaults =
+{
+  targetDom : null,
+  corners : [ 'lt','lb','rt','rb' ],
+  cssClass : null,
+  makingChild : 1,
+}
+
+//
+
+function windowOpen( o )
+{
+
+  o = _.routineOptions( windowOpen, o );
+  _.assert( _.arrayIs( o.features ) || o.features === null );
+  _.assert( _.strIs( o.uri ) );
+  _.assert( _.strIs( o.iframeName ) );
+  _.assert( _.strIs( o.title ) || o.title === null );
+  _.assert( _.routineIs( o.onClose ) || _.consequenceIs( o.onClose ) || o.onClose === null );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( o.features === null )
+  o.features = [];
+
+  if( o.size )
+  {
+    _.assert( !o.asTab, 'Expects no {o.size} when {o.asTab} is enabled.' );
+    _.assert( _.arrayIs( o.size ) );
+    _.assert( o.size.length === 2 );
+    o.features.push( 'width=' +  o.size[ 0 ] )
+    o.features.push( 'height=' + o.size[ 1 ] )
+  }
+
+  if( o.asTab )
+  {
+    _.assert( o.iframeName === null || o.iframeName === '_blank' );
+    if( !o.iframeName )
+    o.iframeName = '_blank';
+  }
+
+  let features = o.features.join( ',' );
+
+  o.window = window.open( o.uri, o.iframeName, features );
+  if( o.window )
+  {
+
+    if( o.onClose === null )
+    o.onClose = new _.Consequence();
+
+    $( o.window ).on( 'beforeunload', () => o.onClose( o.window ) );
+
+    if( o.title )
+    o.window.document.title = o.title;
+
+    var body = $( o.window.document.body );
+    if( o.targetDom )
+    body.append( o.targetDom );
+
+    if( o.targetDom )
+    _.dom.eventFire
+    ({
+      kind : 'domRelocated',
+      targetDom : o.targetDom,
+      informingDescandants : 1,
+      extendMap :
+      {
+        parentDom : body,
+      }
+    });
+
+    if( o.exportingCss )
+    {
+      _.domCssExport({ dstDocument : o.window.document });
+      if( o.targetDom )
+      _.dom.abilityCssExport({ targetDom : o.targetDom, dstDocument : o.window.document });
+    }
+
+  }
+  else
+  {
+    console.warn( 'Please allow popups for this website' );
+  }
+
+  return o;
+}
+
+windowOpen.defaults =
+{
+  uri : '',
+  iframeName : '',
+  title : null,
+  size : null,
+  asTab : 0,
+  features : null,
+  exportingCss : 1,
+  targetDom : null,
+  onClose : null
+}
+
+//
+
+function abilityRegister( o )
+{
+
+  _.assert( _.jqueryIs( o.targetDom ) );
+  _.assert( _.routineIs( o.maker ) );
+  _.assert( _.strDefined( o.maker.name ) );
+  _.assert( _.objectIs( o.settings ) );
+  _.assert( !o.combining || o.combining === 'rewriting' );
+
+  o.name = o.maker.name;
+
+  o.targetDom.each( function( k,e )
+  {
+
+    if( !e._abilities )
+    e._abilities = Object.create( null );
+
+    if( !o.combining )
+    _.assert( !e._abilities[ o.name ] );
+
+    e._abilities[ o.name ] = o;
+
+  });
+
+  return o;
+}
+
+abilityRegister.defaults =
+{
+  maker : null,
+  targetDom : null,
+  settings : null,
+  css : null,
+  combining : 0,
+}
+
+//
+
+function abilityUnregister( o )
+{
+
+  _.assert( _.jqueryIs( o.targetDom ) );
+  _.assert( _.strDefined( o.name ) );
+
+  debugger
+
+  o.targetDom.each( function( k,e )
+  {
+
+    _.assert( e._abilities );
+    _.assert( e._abilities[ o.name ] );
+
+    delete e._abilities[ o.name ];
+
+  });
+
+  debugger;
+
+  return o;
+}
+
+abilityUnregister.defaults =
+{
+  targetDom : null,
+  ability : null,
   name : null,
 }
 
 //
 
-function eventsObserver( o )
+function abilityCssExport( o )
 {
-
-  if( !_.objectIs( o ) )
-  o = { targetDom : o };
-
-  _.assert( _.dom.is( o.targetDom ) );
+  _.routineOptions( abilityCssExport,o );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( eventsObserver,o );
+  _.jqueryIs( o.targetDom )
 
-  var observer = new MutationObserver( function( mutations )
+  o.targetDom.each( function( k,e )
   {
-    mutations.forEach( function( mutation )
+
+    if( !e._abilities )
+    return;
+
+    for( var a in e._abilities )
     {
-      if( o.verbosity )
-      console.log( mutation.type );
-      if( o.onMutation )
-      o.onMutation.call( o,mutation );
-    });
+      var ability = e._abilities[ a ];
+      if( ability.css )
+      _.domCssGlobal
+      ({
+        css : ability.css,
+        key : ability.maker,
+        document : o.dstDocument,
+      });
+
+    }
+
   });
 
-  var config =
-  {
-    childList : true,
-    attributes : true,
-    characterData : true,
-    subtree : true,
-    // attributeOldValue : true,
-    // characterDataOldValue : true,
-    // attributeFilter : true,
-  };
-
-  observer.observe( o.targetDom,config );
-
-  // observer.disconnect();
-
 }
 
-eventsObserver.defaults =
+abilityCssExport.defaults =
 {
-  verbosity : 1,
   targetDom : null,
-  onMutation : null,
+  dstDocument : null,
 }
 
 //
 
-function eventsBindAll( o )
+function copyable( o )
 {
-  if( !_.mapIs( o ) )
-  o = { targetDom : o }
+  var o = o || Object.create( null );
 
-  if( !o.onEvent )
-  o.onEvent = function( e )
-  {
-    if( e.type === 'pointermove' )
-    return;
-    if( e.type === 'mousemove' )
-    return;
-    console.log( e.type );
-  }
+  _.routineOptions( copyable,o );
+  _.assert( _.domableIs( o.containerDom ) );
+  _.assert( _.domableIs( o.targetDom ) );
 
-  _.assert( _.dom.domableIs( o.targetDom ) );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( eventsBindAll,o );
-
+  o.containerDom = $( o.containerDom );
+  if( _.strIs( o.targetDom ) )
+  o.targetDom = o.containerDom.find( o.targetDom );
+  else
   o.targetDom = $( o.targetDom );
-  _.assert( o.targetDom.length === 1 );
-  o.targetDom = o.targetDom[ 0 ];
 
-  for( var e in o.targetDom )
-  {
-    if( !_.strBegins( e,'on' ) || e.length < 3 )
-    continue;
+  /* */
 
-    debugger;
-    var name = _.strRemoveBegin( e,'on' );
+  _.assert( o.targetDom.length );
+  _.assert( o.containerDom.length );
 
-    o.targetDom.addEventListener( name,o.onEvent );
+  /* */
 
-  }
-
-}
-
-eventsBindAll.defaults =
-{
-  targetDom : null,
-  onEvent : null,
-}
-
-//
-
-var _jqueryOriginalOn = jQuery.fn.on;
-function eventsBindWatcher( o )
-{
-  o = _.routineOptions( eventsBindWatcher,o )
-
-  _.assert( _jqueryOriginalOn === jQuery.fn.on,'on of jQuery is already overwritten' );
-
-  o.result = o.result || [];
-  o.close = function close()
-  {
-    jQuery.fn.on = _jqueryOriginalOn;
-    return o.result;
-  }
-
-  jQuery.fn.on = function on( eventName,handler )
+  o.targetDom
+  .on( _.eventName( 'click' ), function( e )
   {
     var dom = $( this );
-    var selector;
-    var data;
+    var val = this.value;
 
-    var argumentsLength = arguments.length;
-    if( arguments[ argumentsLength-1 ] === undefined )
-    argumentsLength -= 1;
-    if( arguments[ argumentsLength-1 ] === undefined )
-    argumentsLength -= 1;
+    if( !this.value.length )
+    this.value = this.placeholder;
+    this.setSelectionRange( 0, this.value.length );
 
-    if( argumentsLength === 3 )
+    var successful = document.execCommand( 'copy' );
+
+    if( !successful )
+    _.errLog( 'copyable :','fail to copy into clipboard' );
+
+    if( !val.length )
+    this.value = val;
+
+  });
+
+}
+
+copyable.defaults =
+{
+  containerDom : 'body',
+  targetDom : 'input'
+}
+
+//
+
+function copyableHtmlText( o )
+{
+  var o = o || Object.create( null );
+
+  _.routineOptions( copyableHtmlText,o );
+  _.assert( _.domableIs( o.targetDom ) );
+
+  /* */
+
+  o.containerDom = $( o.containerDom );
+  if( _.strIs( o.targetDom ) )
+  o.targetDom = o.containerDom.find( o.targetDom );
+  else
+  o.targetDom = $( o.targetDom );
+
+  o.containerDom.attr( 'wcopyable-html-text',1 );
+
+  /* */
+
+  _.assert( o.targetDom.length );
+  _.assert( o.containerDom.length );
+
+  /* */
+
+  o.targetDom
+  .on( _.eventName( 'click' ), function( e )
+  {
+    var dom = $( this ).closest( '[ wcopyable-html-text ]' );
+    _.domClipboardCopy( _.domTextGet( dom ) );
+  });
+
+}
+
+copyableHtmlText.defaults =
+{
+  containerDom : 'body',
+  targetDom : null,
+}
+
+//
+
+function pinnable( o )
+{
+  var o = o || Object.create( null );
+
+  _.routineOptions( pinnable,o );
+
+    if( o.makingTargetDom && !o.targetDom )
+    o.targetDom = o.containerDom;
+
+  _.assert( _.domableIs( o.targetDom ) );
+
+  /* */
+
+  o.containerDom = $( o.containerDom );
+  if( _.strIs( o.targetDom ) )
+  o.targetDom = o.containerDom.find( o.targetDom );
+  else
+  o.targetDom = $( o.targetDom );
+
+  /* */
+
+  if( o.makingTargetDom )
+  {
+    o.targetDom = $( '<i class="ui pin icon"></i>' ).appendTo( o.targetDom );
+    // o.targetDom.css();
+  }
+
+  o.containerDom.attr( 'wpinnable',1 );
+
+  /* */
+
+  function handlePin( event )
+  {
+    var icon = $( this );
+    var dom = icon.closest( '[ wpinnable ]' );
+    var value = o.onPin.call( dom,!dom.attr( 'wpinned' ) );
+
+    if( value )
     {
-      if( _.strIs( arguments[ 1 ] ) )
-      selector = arguments[ 1 ];
-      else
-      data = arguments[ 1 ];
-      handler = arguments[ 2 ];
+      icon.removeClass( 'pin' );
+      icon.addClass( 'x' );
+    }
+    else
+    {
+      icon.addClass( 'pin' );
+      icon.removeClass( 'x' );
     }
 
-    if( argumentsLength === 4 )
+    if( value )
+    dom.attr( 'wpinned',1 );
+    else
+    dom.removeAttr( 'wpinned' );
+
+    /*console.log( 'pinned',value );*/
+
+    return value;
+  }
+
+  /* */
+
+  o.pin = function()
+  {
+    if( arguments.length === 0 )
+    return !!o.containerDom.attr( 'wpinned' );
+    else
     {
-      selector = arguments[ 1 ];
-      data = arguments[ 2 ];
-      handler = arguments[ 3 ];
+      var src = !!arguments[ 0 ];
+      if( o.pin() === src )
+      return src;
+      return handlePin.call( o.targetDom[ 0 ] );
+    }
+  }
+
+  /* */
+
+  o.targetDom
+  .on( _.eventName( 'click' ),handlePin );
+
+  _.dom.abilityRegister
+  ({
+    targetDom : o.targetDom,
+    settings : o,
+    maker : pinnable,
+  });
+
+  return o;
+}
+
+pinnable.defaults =
+{
+  containerDom : 'body',
+  targetDom : null,
+  makingTargetDom : 0,
+  onPin : function( value ){ return value },
+}
+
+//
+
+var subjective = (function()
+{
+
+  return function subjective( o )
+  {
+    var o = o || Object.create( null );
+    var optionsDefault =
+    {
+      container : 'body',
+      target : null,
+      onFocus : function( value ){ return value },
     }
 
-    _.assert( dom !== this );
-    _.assert( arguments.length === 2 || arguments.length === 3 || arguments.length === 4 );
-    _.assert( _.routineIs( handler ) );
+    _.assertMapHasOnly( o,optionsDefault );
+    _.mapSupplement( o,optionsDefault );
+    _.assert( _.domableIs( o.target ) );
 
-    var e = Object.create( null )
-    e.dom = dom;
-    e.eventName = eventName;
-    e.selector = selector;
-    e.data = data;
-    e.handler = handler;
+    //
 
-    o.result.push( e );
+    o.container = $( o.container );
+    if( _.strIs( o.target ) )
+    o.target = o.container.find( o.target );
+    else
+    o.target = $( o.target );
 
-    var result = _jqueryOriginalOn.call( this,eventName,handler );
-    return result;
+    o.target.attr( 'wsubjective',1 );
+
+    //
+
+    o.target
+    .on( _.eventName( 'mouseleave' ), function( event )
+    {
+      var icon = $( this );
+      var dom = icon.closest( '[ wsubjective ]' );
+
+      o.onFocus.call( dom,false );
+
+    })
+    ;
+
+  }
+
+})();
+
+//
+
+function widgable( o )
+{
+  var o = o || Object.create( null );
+
+  _.routineOptions( widgable,o );
+
+  o.targetDom = $( o.targetDom );
+  if( !o.containerDom )
+  o.containerDom = o.targetDom.parent();
+
+  _.assert( o.targetDom.length === 1 );
+  _.assert( o.containerDom.length === 1 );
+
+  function handleMenuItem( e )
+  {
+  }
+
+  if( 0 )
+  _.dom.pinnable
+  ({
+    makingTargetDom : 1,
+    containerDom : parentDom,
+    // targetDom : '.pin.icon',
+    onPin : function( value )
+    {
+      debugger;
+    }
+  });
+
+  o.resizable = _.dom.resizable
+  ({
+    targetDom : o.targetDom,
+    containerDom : o.containerDom,
+    firingEventsForDom : o.firingEventsForDom,
+  });
+
+  o.menuable = _.dom.menuable
+  ({
+    targetDom : o.targetDom,
+    onEvent : handleMenuItem,
+    firingEventsForDom : o.firingEventsForDom,
+  });
+
+  o.draggable = _.dom.draggable2
+  ({
+    targetDom : o.targetDom,
+    manualDragApplication : 0,
+    nonDraggableAttr : _.arrayFlatten( [ 'wresizing' ] , [ o.nonDraggableAttr ] ),
+  });
+
+}
+
+widgable.defaults =
+{
+  targetDom : null,
+  containerDom : null,
+  firingEventsForDom : 'canvas',
+  nonDraggableAttr : 'wdragable-inactive',
+}
+
+//
+
+function tristatable( o )
+{
+  var o = o || Object.create( null );
+
+  _.assertMapHasOnly( o,tristatable.defaults );
+  _.mapSupplement( o,tristatable.defaults );
+  _.assert( _.domableIs( o.items ) );
+
+  //
+
+  o.items = $( o.items );
+  _.assert( o.items.length >= 1 );
+
+  //
+
+  o.itemSet = function( state )
+  {
+    var stateWas = _.mapExtend( null,o.state );
+
+    _.assert( _.strIs( state.name ) );
+
+    if( state.on === undefined )
+    state.on = state.name !== stateWas.name || !stateWas.on;
+
+    if( stateWas.name === state.name && !!stateWas.on === !!state.on )
+    return;
+
+    /*Object.freeze( state );*/
+
+    if( o.onChange( state,stateWas ) === false )
+    {
+      o.state = stateWas;
+      return false;
+    }
+    else
+    {
+      o.state = state;
+      if( o.context )
+      o.context.eventGive
+      ({
+        kind : 'tristateChange',
+        tristate : o,
+        state : state,
+        stateWas : stateWas,
+      });
+
+      return true;
+    }
+  }
+
+  //
+
+  if( o.eventForActivation )
+  o.items
+  .on( _.eventName( o.eventForActivation ), function( event )
+  {
+    var t = $( this );
+    var state = Object.create( null );
+    state.name = o.onStateNameOf( t,event );
+    state.dom = t;
+
+    _.assert( _.strIs( state.name ) );
+
+    o.items.removeClass( 'active' );
+    if( o.itemSet( state ) )
+    if( o.state.on )
+    t.addClass( 'active' );
+
+  });
+
+  return o;
+}
+
+tristatable.defaults =
+{
+  items : null,
+  state : {},
+  context : null,
+  eventForActivation : 'click',
+  onChange : function( state,stateWas ){ return true; },
+  onStateNameOf : function( dom,event ){ throw _.err( 'no assigned' ); },
+}
+
+// --
+//
+// --
+
+function buttonMake( o )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.routineOptions( buttonMake,o );
+
+  o.parentDom = $( o.parentDom );
+  var html = o.onHtmlGet( o );
+  o.buttonDom = $( html );
+
+  _.assert( o.parentDom.length,'DOM with selector ".buttons-container" not found' );
+  _.assert( o.buttonDom.length );
+
+  _.dom.uiInitPopups( o.buttonDom );
+  o.buttonDom.appendTo( o.parentDom );
+
+  if( o.onClick ) {
+    o.buttonDom.on( _.eventName( 'mouseup' ),( e ) => o.onClick.call( o.context || this,e ) );
+    if( o.keyboard && _global_.Mousetrap )
+    _global_.Mousetrap.bind( o.keyboard,( e ) => o.onClick.call( o.context || this,e ) );
   }
 
   return o;
 }
 
-eventsBindWatcher.defaults =
+buttonMake.defaults =
 {
-  result : null,
+  parentDom : null,
+  text : '',
+  hint : '',
+  cssClass : '',
+  keyboard : null,
+  onClick : null,
+  onHtmlGet : null,
+  context : null,
 }
 
 //
 
-function eventFire( o )
+function panelMake( o )
 {
-  _.routineOptions( eventFire,o );
-  _.assert( _.dom.domableIs( o.targetDom ) );
+  o = o || Object.create( null );
+  if( !_.objectIs( o ) )
+  o = { targetDom : o }
+
+  _.routineOptions( panelMake,o );
+  o.targetDom = $( o.targetDom );
+
+  if( !o.targetDom.length )
+  o.targetDom = $( '<' + o.htmlTag + '>' );
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( o.targetDom.length >= 1 );
+
+  if( !o.targetDom.parents().has( document.body ).length )
+  $( document.body ).append( o.targetDom );
+
+  if( o.cssClasses )
+  _.domClasses( o.targetDom, o.cssClasses, 1 );
+
+  if( o.css )
+  {
+    if( o.total )
+    o.targetDom.css
+    ({
+      'z-index' : '1000',
+      'left' : '0',
+      'top' : '0',
+      'width' : '100%',
+      'height' : '100%',
+    });
+    else
+    o.targetDom.css
+    ({
+      'width' : '200px',
+      'height' : '200px',
+      'border-width' : '1px',
+      'border-style' : 'solid',
+      'border-color' : '#999',
+    });
+  }
+
+  if( o.fill )
+  o.targetDom.css({ 'background-color' : o.fill });
+
+  return o;
+}
+
+panelMake.defaults =
+{
+  targetDom : null,
+  // fill : 'red',
+  fill : 'silver',
+  cssClasses : [ 'layout-stretch' ],
+  css : 1,
+  htmlTag : 'div',
+  total : 0,
+}
+
+//
+
+function totalPanelMake( o )
+{
+  o = o || Object.create( null );
+  if( !_.objectIs( o ) )
+  o = { targetDom : o }
+
+  o.total = 1;
+  if( !o.cssClasses )
+  o.cssClasses = [ 'layout-stretch','panel-total' ];
+
+  return _.dom.panelMake( o );
+}
+
+totalPanelMake.defaults =
+{
+  total : 1,
+}
+
+totalPanelMake.defaults.__proto__ = panelMake.defaults;
+
+//
+
+function shut( down,container,imageUrl )
+{
+
+  if( container === undefined ) container = $( 'body' );
+  container = $( container );
+  if( down === undefined ) down = 1;
+  if( imageUrl === undefined ) imageUrl = '/amid_viewer/image/loading.gif';
+
+  if( down )
+  {
+    if( typeof Mousetrap !== 'undefined' ) Mousetrap.pause();
+    var result = $( '.dom-shut-down',container );
+    if( result.length ) return result;
+    var result = $('<div>')
+      .addClass( 'dom-shut-down' )
+      .css( 'z-index',1000 )
+      .css( 'position','fixed' )
+      .css( 'left','0' )
+      .css( 'top','0' )
+      .css( 'width','100%' )
+      .css( 'height','100%' )
+
+      .css( 'background','rgba(0,0,0,0.2)' )
+      .css( 'background-image','url(' + imageUrl + ')' )
+      .css( 'background-repeat','no-repeat' )
+      .css( 'background-repeat','no-repeat' )
+      .css( 'background-position','center' )
+      .css( 'background-size','80px 80px' )
+
+      .appendTo( container );
+    return result;
+  }
+  else
+  {
+    if( Mousetrap ) Mousetrap.unpause();
+    var result = $( '.dom-shut-down',container );
+    return result.remove();
+  }
+
+}
+
+//
+
+function offscreenMake()
+{
+
+  if( arguments.length === 0 )
+  {
+
+    var result = $( 'body > div.offscreen' );
+
+    if( !result.length )
+    {
+      result = $( '<div>' )
+      .addClass( 'offscreen' )
+      .css( 'display','fixed' )
+      .css( 'position','absolute' )
+      .css( 'left','1000000px' )
+      .css( 'top','1000000px' )
+      .css( 'z-index','-10' )
+      .css( 'width','auto' )
+      .css( 'height','auto' )
+      .css( 'opacity','1' )
+      .css( 'overflow','visible' )
+      .appendTo( 'body' )
+      ;
+    }
+
+    return result;
+  }
+  else if( arguments.length === 1 || arguments.length === 2 )
+  {
+    var dst = $( arguments[ 0 ] );
+    var value = arguments[ 1 ] === undefined ? 1 : arguments[ 1 ];
+
+    _.assert( dst.length === 1 );
+
+    if( value )
+    {
+
+      dst[ 0 ]._domOffscreenOriginalCss = _.domCssGet( dst,[ 'display','left','top' ] );
+
+      var css =
+      {
+        'display' : 'block',
+        'left' : '100000px',
+        'top' : '100000px',
+      }
+
+      _.domCssSet( dst,css );
+
+    }
+    else
+    {
+
+      _.assert( dst[ 0 ]._domOffscreenOriginalCss );
+
+      if( dst[ 0 ]._domOffscreenOriginalCss )
+      _.domCssSet( dst,dst[ 0 ]._domOffscreenOriginalCss );
+      dst,dst[ 0 ]._domOffscreenOriginalCss = null;
+
+    }
+
+  }
+  else throw _.err( 'unexpected' );
+
+}
+
+//
+
+function textEditMake( o )
+{
+  var con = new _.Consequence();
+
+  debugger;
+
+  if( o === undefined )
+  o = Object.create( null );
+
+  if( _.strIs( o ) )
+  o = { text : o };
+
+  _.routineOptions( textEditMake,o );
+
+  o.container = $( o.container );
+
+  _.assert( o.container.length >= 1 );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  /* textarea */
+
+  o.textarea = $( '<textarea>' );
+  o.textarea.text( o.text );
+  o.textarea.css
+  ({
+    'width' : '100%',
+    'height' : '100%',
+  });
+
+  /* hud */
+
+  if( o.usingHud )
+  {
+
+    var hudOptions =
+    {
+      data : Object.create( null ),
+      containerDom : o.container,
+      resizable : 1,
+      pinned : 1,
+      onPin : function( value )
+      {
+        if( !value )
+        con.take( o.textarea.text() );
+        return value;
+      }
+    }
+
+    if( !o.hud )
+    o.hud = new wHud( hudOptions );
+
+    o.hud.centrate();
+    o.hud.show();
+
+    o.container = o.hud.contentDom;
+
+  }
+
+  /* */
+
+/*
+  o.container = $( '<div>' ).appendTo( o.container );
+  o.container.css
+  ({
+    'overflow' : 'hidden',
+    'width' : '100%',
+    'height' : '100%',
+  });
+*/
+
+  /* */
+
+  o.textarea.appendTo( o.container );
+
+  return con;
+}
+
+textEditMake.defaults =
+{
+
+  container : 'body',
+  text : '',
+  usingHud : 1,
+
+}
+
+// --
+//
+// --
+
+function habbitMouseClick( o )
+{
+
+  var mouseup = _.eventName( 'mouseup' );
+  var mousedown = _.eventName( 'mousedown' );
+  var mousemove = _.eventName( 'mousemove' );
+
+  _.routineOptions( habbitMouseClick,o );
+
+  _.assert( _.objectIs( o.onEvent ) || _.routineIs( o.onEvent ) );
+  _.assert( !!o.dom );
+
+  o.down = [ null,null ];
+  o.up = [ null,null ];
+
+  // give click
+
+  function giveEvent( kindOfMouseEvent,down,up )
+  {
+
+    if( !o.givingSingleClick && kindOfMouseEvent === 'single' )
+    return;
+
+    // console.log( 'giveEvent :',kindOfMouseEvent,_.time.now() - down.clickTime );
+
+    var e =
+    {
+      kind : 'mouseEvent',
+      kindOfMouseEvent : kindOfMouseEvent,
+      clickHandler : o,
+      target : down.mouseEvent.target,
+      mouse : down.mouseEvent,
+      down : down.mouseEvent,
+      up : up ? up.mouseEvent : null,
+      position : down.clickPosition,
+      time : down.clickTime,
+      extendingEvent : down.extendingEvent,
+    }
+
+    if( _.routineIs( o.onEvent ) )
+    o.onEvent.call( o,e );
+    else
+    o.onEvent.eventGive( e );
+
+  }
+
+  // maybe single click
+
+  function maybeSingle()
+  {
+
+    if( !o.up[ 1 ] || !o.down[ 1 ] )
+    return;
+
+    debugger;
+
+    /* double or single click? */
+
+    if( tooFar )
+    {
+      debugger;
+      giveEvent( 'single',o.down[ 1 ],o.up[ 1 ] );
+      o.down[ 1 ] = null;
+      o.up[ 1 ] = null;
+    }
+
+  }
+
+  // handle mousedown
+
+  function handleMouseDown( event,extendingEvent )
+  {
+
+    o.down[ 1 ] = o.down[ 0 ];
+    var down = o.down[ 0 ] = Object.create( null );
+
+    down.mouseEvent = event;
+    down.clickPosition = _.eventClientPosition( event );
+    down.clickTime = event.timeStamp;
+    down.extendingEvent = extendingEvent;
+
+    /* give previous single click if mouse up was too far from the new mouse down */
+
+    if( o.down[ 1 ] && o.up[ 0 ] )
+    {
+
+      var tooFar = _.avector.distanceSqr( o.down[ 0 ].clickPosition,o.down[ 1 ].clickPosition ) > o.clickPositionTolerance;
+      if( tooFar )
+      {
+        giveEvent( 'single',o.down[ 1 ],o.up[ 0 ] );
+        o.down[ 1 ] = null;
+        o.up[ 0 ] = null;
+      }
+
+    }
+
+    var delay2 = o.repeatDelay2;
+    function handleRepeat()
+    {
+
+      if( o.down[ 0 ] !== down )
+      return;
+
+      if( o.up[ 0 ] )
+      return;
+
+      debugger;
+      giveEvent( 'repeat',o.down[ 0 ],null );
+      setTimeout( handleRepeat, delay2 );
+      delay2 -= 1;
+
+    }
+
+    if( o.givingRepeat )
+    setTimeout( handleRepeat, o.repeatDelay1 );
+
+  }
+
+  // handle mouseup
+
+  function handleMouseUp( event,extendingEvent )
+  {
+
+    o.up[ 1 ] = o.up[ 0 ];
+    var up = o.up[ 0 ] = Object.create( null );
+
+    up.mouseEvent = event;
+    up.clickPosition = _.eventClientPosition( event );
+    up.clickTime = event.timeStamp;
+    up.extendingEvent = extendingEvent;
+
+    /* orphan */
+
+    if( !o.down[ 0 ] )
+    {
+      o.up[ 0 ] = null;
+      return;
+    }
+
+    /* too far */
+
+    var tooFar = _.avector.distanceSqr( o.up[ 0 ].clickPosition,o.down[ 0 ].clickPosition ) > o.clickPositionTolerance;
+
+    /* too late */
+
+    var tooLate;
+    if( o.givingDoubleClick )
+    tooLate = o.up[ 0 ].clickTime - o.down[ 0 ].clickTime > o.clickDelay;
+    else
+    tooLate = true;
+    if( tooLate )
+    {
+      o.down[ 0 ] = null;
+      o.up[ 0 ] = null;
+      maybeSingle();
+      return;
+    }
+
+    /* maybe double */
+
+    if( o.up[ 1 ] && o.down[ 1 ] )
+    {
+
+      if( tooFar )
+      {
+        maybeSingle();
+      }
+      else
+      {
+        giveEvent( 'double',o.down[ 1 ],o.up[ 0 ] );
+        o.down[ 0 ] = null;
+        o.up[ 0 ] = null;
+        return;
+      }
+
+    }
+
+    /* too far mouseup */
+
+    if( tooFar )
+    {
+      o.down[ 0 ] = null;
+      o.up[ 0 ] = null;
+      return;
+    }
+
+    /* is click */
+
+    // console.log( 'before.timeout',o.down,o.up );
+
+    var delay = Math.max( 1,o.down[ 0 ].clickTime - _.time.now() + o.clickDelay-10 );
+    setTimeout( function()
+    {
+
+      _.assert( o.givingDoubleClick );
+
+      // console.log( 'after.timeout',o.down,o.up );
+
+      if( o.up[ 0 ] !== up )
+      {
+        return;
+      }
+
+      _.assert( !!o.down[ 0 ] );
+
+/*
+      if( o.up[ 1 ] )
+      debugger;
+      happen sometimes !!!
+*/
+
+      if( o.down[ 1 ] )
+      {
+        giveEvent( 'single',o.down[ 1 ],o.up[ 0 ] );
+        o.down[ 1 ] = null;
+        o.up[ 0 ] = null;
+      }
+      else
+      {
+        giveEvent( 'single',o.down[ 0 ],o.up[ 0 ] );
+        o.down[ 0 ] = null;
+        o.up[ 0 ] = null;
+      }
+
+      o.down[ 1 ] = null;
+      o.up[ 1 ] = null;
+
+    }, delay );
+
+  }
+
+  // hamdler of mousem ove
+
+  function handleMouseMove( e,extendingEvent )
+  {
+
+    if( !o.down[ 0 ] )
+    return;
+
+    var clickPosition = _.eventClientPosition( e );
+    var tooFar = _.avector.distanceSqr( clickPosition,o.down[ 0 ].clickPosition ) > o.clickPositionTolerance;
+
+    if( tooFar )
+    {
+
+      if( o.down[ 0 ] && o.up[ 0 ] )
+      giveEvent( 'single',o.down[ 0 ],o.up[ 0 ] );
+
+      o.down[ 0 ] = null;
+      o.up[ 0 ] = null;
+    }
+
+  }
+
+  // handler of events
+
+  o.handleMouseEvent = function( event,extendingEvent )
+  {
+
+    // if( event.type !== 'mousemove' )
+    // debugger;
+
+    _.assert( arguments.length === 1 || arguments.length === 2 );
+    _.assert( _.eventIs( event ) );
+
+    if( event.type === mousedown )
+    handleMouseDown( event,extendingEvent );
+    else if( event.type === mouseup )
+    handleMouseUp( event,extendingEvent );
+    else if( event.type === mousemove )
+    handleMouseMove( event,extendingEvent );
+    else
+    throw _.assert( 0,'unexpected event type',event.type );
+
+  }
+
+  o.dom = $( o.dom );
+
+  if( !o.usingManualEventsOnly )
+  {
+
+    // debugger;
+    o.dom
+    .on( mouseup,o.handleMouseEvent )
+    .on( mousedown,o.handleMouseEvent )
+    .on( mousemove,o.handleMouseEvent )
+    ;
+
+  }
+
+  _.accessor.forbid
+  ({
+    object : o,
+    strict : 0,
+    names : { clientPosition : 'clientPosition' },
+  });
+
+  Object.preventExtensions( o );
+  Object.seal( o );
+
+  return o;
+}
+
+habbitMouseClick.defaults =
+{
+  dom : null,
+  onEvent : null,
+
+  usingManualEventsOnly : 0,
+
+  givingSingleClick : 1,
+  givingDoubleClick : 1,
+  givingRepeat : 0,
+
+  mouseEvent : null,
+
+  clickPositionTolerance : 25,
+  clickDelay : 300,
+  repeatDelay1 : 450,
+  repeatDelay2 : 150,
+}
+
+//
+
+function habbitKeyEnter( o )
+{
+  var keyUpName = 'keyup';
+  var keyDownName = 'keydown';
+  var value = '';
+  var lastEvent = null;
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.routineOptions( habbitKeyEnter,o );
+
+  // give event
+
+  function giveEvent()
+  {
+
+    var e =
+    {
+      kind : 'keybaordEnter',
+      enterHandler : o,
+      value : value,
+      lastEvent : lastEvent,
+    }
+
+    if( _.routineIs( o.onEvent ) )
+    o.onEvent.call( o,e );
+    else
+    o.onEvent.eventGive( e );
+
+  }
+
+  // original events handler
+
+  o.handleKeyEvent = function handleKeyEvent( e )
+  {
+
+    if( !e.key || e.key.length !== 1 )
+    return;
+
+    value += e.key;
+    lastEvent = e;
+
+    setTimeout( function()
+    {
+
+      if( e !== lastEvent )
+      return;
+
+      giveEvent();
+
+      value = '';
+
+    },o.delay );
+
+  }
+
+  if( !o.usingManualEventsOnly )
+  {
+
+    o.dom
+    .on( keyUpName,o.handleKeyEvent )
+    //.on( keyDownName,o.handleKeyEvent )
+    ;
+
+  }
+
+}
+
+habbitKeyEnter.defaults =
+{
+  onEvent : null,
+  delay : 1000,
+  dom : null,
+}
+
+//
+
+function habbitDrag( o )
+{
+  var mouseup = _.eventName( 'mouseup' );
+  var mousedown = _.eventName( 'mousedown' );
+  var mousemove = _.eventName( 'mousemove' );
+  var mouseleave = _.eventName( 'mouseleave' );
+  var value = '';
+  var lastEvent = null;
+
+  if( _.domLike( o ) )
+  o = { targetDom : o }
+
+  if( o.arbitrary )
+  _.mapComplement( o,habbitDrag.defaults );
+  else
+  _.routineOptions( habbitDrag,o );
 
   o.targetDom = $( o.targetDom );
 
-  var event = new Event( o.kind,
+  if( !o.rootDom )
+  o.rootDom = o.targetDom.parent();
+  o.rootDom = $( o.rootDom );
+
+  o.down = null;
+  o.position = null;
+  o.delta = [ 0,0 ];
+  o.targetOldPosition = [ 0,0 ];
+  o.targetNewPosition = [ 0,0 ];
+
+  if( o.draggableAttr )
+  _.domAttrs( o.targetDom,o.draggableAttr,1 );
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( o.targetDom.length === 1 );
+  _.assert( o.rootDom.length === 1 );
+
+  /* */
+
+  function giveEvent( e,kind )
   {
-    // 'bubbles' : true,
-    'cancelable' : true,
-  });
 
-  if( o.extendingByOptions )
-  _.mapExtend( event,o );
+    var event = Object.create( null );
+    event.original = e;
+    event.handler = o;
+    event.kind = kind;
 
-  if( o.extendMap )
-  _.mapExtend( event,o.extendMap );
+    if( _.consequenceIs( o.onEvent ) )
+    return o.onEvent.eventGive( event );
+    else if( _.routineIs( o.onEvent ) )
+    return o.onEvent( event );
+    else _.assert( o.onEvent === null );
 
-  if( !o.informingDescandants )
-  o.targetDom.each( function( k,dom )
+  }
+
+  /* */
+
+  o.handleMouseDown = function handleMouseDown( e )
   {
-    dom.dispatchEvent( event );
-  });
-  else
-  o.targetDom.find( '*' ).addBack().each( function( k,dom )
-  {
-    dom.dispatchEvent( event );
-  });
 
+    // debugger;
+    if( o.nonDraggableAttr )
+    if( _.domAttrHasAny( o.targetDom , o.nonDraggableAttr ) || _.domAttrHasAny( e.target , o.nonDraggableAttr ) )
+    return;
+
+    // return;
+    console.log( 'habbitDrag : handleMouseDown' );
+
+    if( o.draggingAttr )
+    _.domAttrs( o.targetDom,o.draggingAttr,1 );
+
+    o.down = _.eventClientPosition
+    ({
+      event : e,
+      relative : o.relativeDom,
+    });
+
+    o.targetOldPosition = _.domLeftTopGet( o.targetDom );
+    for( var i = 0 ; i < 2 ; i++ )
+    o.targetNewPosition[ i ] = o.targetOldPosition[ i ];
+
+    if( giveEvent( e,'dragBegin' ) === false )
+    o.down = null;
+    else
+    return false;
+  }
+
+  /* */
+
+  o.handleMouseUp = function handleMouseUp( e )
+  {
+
+    if( o.down === null )
+    return;
+
+    console.log( 'habbitDrag : handleMouseUp' );
+
+    if( o.draggingAttr )
+    _.domAttrs( o.targetDom,o.draggingAttr,0 );
+
+    if( giveEvent( e,'dragEnd' ) !== false )
+    o.down = null;
+
+  }
+
+  /* */
+
+  o.handleMouseMove = function handleMouseMove( e )
+  {
+
+    if( !o.down )
+    return;
+
+    // console.log( 'habbitDrag : handleMouseMove' );
+
+    o.position = _.eventClientPosition
+    ({
+      event : e,
+      relative : o.relativeDom,
+    });
+
+    for( var i = 0 ; i < 2 ; i++ )
+    {
+      if( o.allowedDirections[ i ] )
+      o.delta[ i ] = o.position[ i ] - o.down[ i ];
+      else
+      o.delta[ i ] = 0;
+      o.targetNewPosition[ i ] = o.targetOldPosition[ i ] + o.delta[ i ];
+    }
+
+    giveEvent( e,'drag' );
+
+  }
+
+  /* original events handler */
+
+  o.handleEvent = function handleEvent( e )
+  {
+
+    if( e.type === mousedown )
+    return o.handleMouseDown( e );
+    else if( e.type === mouseup )
+    return o.handleMouseUp( e );
+    else if( e.type === mousemove )
+    return o.handleMouseMove( e );
+    else if( e.type === mouseleave )
+    return o.handleMouseUp( e );
+
+  }
+
+  o.bindTarget = function bindTarget()
+  {
+    o.targetDom
+    .on( mousedown,o.handleEvent )
+    ;
+  }
+
+  o.bindRoot = function bindRoot()
+  {
+    o.rootDom
+    .on( mouseup,o.handleEvent )
+    .on( mousemove,o.handleEvent )
+    .on( mouseleave,o.handleEvent )
+    ;
+  }
+
+  o.unbindRoot = function unbindRoot()
+  {
+    o.rootDom
+    .off( mouseup,o.handleEvent )
+    .off( mousemove,o.handleEvent )
+    .off( mouseleave,o.handleEvent )
+    ;
+  }
+
+  /* */
+
+  if( !o.usingManualEventsOnly )
+  {
+
+    o.bindTarget();
+    o.bindRoot();
+
+  }
+
+  return o;
 }
 
-eventFire.defaults =
+habbitDrag.defaults =
 {
+  onEvent : null,
   targetDom : null,
-  kind : null,
-  extendMap : null,
-  extendingByOptions : 1,
-  informingDescandants : 0,
+  rootDom : 'body',
+  relativeDom : null,
+  allowedDirections : [ 1,1 ],
+  usingManualEventsOnly : 0,
+  arbitrary : 0,
+
+  draggingAttr : 'wdragging',
+  draggableAttr : 'wdraggable',
+  nonDraggableAttr : '',
 }
 
 //
 
-function eventFire2( targetDom, event )
+function draggable2( o )
 {
 
-  _.assert( _.dom.is( targetDom ) );
+  if( _.domLike( o ) )
+  o = { targetDom : o }
+  o.arbitrary = 1;
+  _.routineOptions( draggable2,o );
+  o = _.dom.habbitDrag( o );
 
-  if ( targetDom.dispatchEvent )
+  /* drag */
+
+  function drag()
   {
-    targetDom.dispatchEvent( event );
-  }
-  else if( targetDom.fireEvent )
-  {
-    targetDom.fireEvent( 'on' + type, event );
+
+    o.targetDom.css
+    ({
+      'left' : o.targetNewPosition[ 0 ] + 'px',
+      'top' : o.targetNewPosition[ 1 ] + 'px',
+    });
+
   }
 
-  return event;
+  /* */
+
+  var onEvent = o.onEvent;
+  o.onEvent = function handleMouseMove( e )
+  {
+
+    if( !o.manualDragApplication )
+    drag( e );
+
+    if( onEvent )
+    onEvent.call( this,e );
+
+  }
+
+  _.dom.abilityRegister
+  ({
+    targetDom : o.targetDom,
+    settings : o,
+    maker : draggable2,
+  });
+
+  o.targetDom
+  .on( 'domRelocated', function( e )
+  {
+    if( o.usingManualEventsOnly )
+    return;
+
+    o.unbindRoot();
+    o.rootDom = $( this ).parent();
+    o.bindRoot();
+
+  })
+  ;
+
+  return o;
+}
+
+draggable2.defaults =
+{
+
+  usingManualEventsOnly : 0,
+  manualDragApplication : 1,
+
+}
+
+draggable2.defaults.__proto__ = habbitDrag.defaults;
+
+//
+
+var draggable = (function()
+{
+
+  var styleAdded;
+
+  function addStyles()
+  {
+    if( styleAdded )
+    return;
+
+    styleAdded = true;
+
+    var style = $( '<style>' );
+
+    style
+    .prop( 'type', 'text/css' )
+    .appendTo( 'head' )
+    .html
+    ([
+      '[ wdragging ], [ wdragging ] *',
+      '{',
+        'cursor : move',
+      '}',
+    ].join( '\n' ));
+
+  }
+
+  return function draggable( o )
+  {
+    var o = o || Object.create( null );
+
+    _.routineOptions( draggable,o );
+
+    if( o.notDraggableTagNames === null )
+    o.notDraggableTagNames = [ 'TEXTAREA','INPUT' ]
+
+    _.assert( _.domableIs( o.target ) );
+    _.assert( _.domableIs( o.container ) );
+    _.assert( arguments.length === 1, 'Expects single argument' );
+
+    o.state = Object.create( null );
+    o.container = $( o.container );
+    o.target = $( o.target );
+    o.target.attr( 'wdraggable',1 );
+
+    /* */
+
+    addStyles();
+
+    /* */
+
+    o.target
+    .on( _.eventName( 'mousedown' ), function( event )
+    {
+
+      // debugger;
+
+      var notDraggable = $( this ).closest( '[ wdraggable-not ]' );
+      if( notDraggable.length )
+      return;
+
+      var tagName = event.target.tagName;
+      if( o.notDraggableTagNames.indexOf( tagName ) !== -1 )
+      return;
+
+      var dom = $( this ).closest( '[ wdraggable ]' );
+
+      o.state.target = dom;
+      o.state.offset = dom.offset();
+      o.state.offset = [ o.state.offset.left,o.state.offset.top ];
+      o.state.start = _.eventClientPosition( event );
+
+      o.container.attr( 'wdragging',1 );
+      dom.attr( 'wdragging',1 );
+    })
+    .on( _.eventName( 'drag' ), function( event )
+    {
+      event.preventDefault();
+      return false;
+    })
+    ;
+
+    /* */
+
+    o.container
+    .on( _.eventName( 'mouseup' ), function( event )
+    {
+      if( !o.state.start ) return;
+      o.state.start = null;
+      o.state.target.removeAttr( 'wdragging' );
+      o.container.removeAttr( 'wdragging' );
+    })
+    .on( _.eventName( 'mousemove' ), function( event )
+    {
+      if( !o.state.start ) return;
+      var dom = o.state.target;
+      var pos = _.eventClientPosition( event );
+      dom.offset
+      ({
+        left : o.state.offset[ 0 ] + pos[ 0 ] - o.state.start[ 0 ],
+        top : o.state.offset[ 1 ] + pos[ 1 ] - o.state.start[ 1 ],
+      });
+    });
+
+  }
+
+})();
+
+draggable.defaults =
+{
+  container : 'body',
+  target : null,
+  notDraggableTagNames : null,
+}
+
+//
+//
+//
+
+function habitRightClick( targetSelector,onEvent )
+{
+
+  var touchSupported = ( 'ontouchstart' in window ) || ( 'onmsgesturechange' in window );
+  var eventName = _.eventName( touchSupported ? 'taphold' : 'mouseup' );
+
+
+  $( targetSelector ).on( eventName,function( event )
+  {
+
+    if( event.which !== 3 )
+    return;
+
+    var event = { mouse : event };
+
+    onEvent.call( this,event );
+
+  })
+
+}
+
+//
+
+function habitDropFile( targetDom,onEvent )
+{
+
+  _.assert( _.domableIs( targetDom ) )
+
+  var target = $( targetDom );
+
+  _.assert( targetDom.length === 1 );
+
+  target[ 0 ].addEventListener( 'dragover', function( event )
+  {
+
+    event.stopPropagation();
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+
+  }, false );
+
+  target[ 0 ].addEventListener( 'drop', function( event )
+  {
+
+    var self = this;
+
+    event.stopPropagation();
+    event.preventDefault();
+
+    var files = event.dataTransfer.files;
+    onEvent.call( this,files,event );
+
+  }, false );
+
+}
+
+// --
+// ui
+// --
+
+function uiPopupDefaults( dom )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( _.domableIs( dom ) );
+
+  /* console.log( 'popup :',_.domNickname( dom,'data-tab' ) ); */
+
+  var dom = $( dom );
+  var position = _.domAttrInherited( dom,'data-position' ) || 'bottom center';
+  var variation = _.domAttrInherited( dom,'data-variation' ) || '';
+
+  var hoverable = dom.hasClass( 'hoverable' );
+  var inline = dom.hasClass( 'inline' );
+
+  var defaults =
+  {
+    'exclusive' : true,
+    'position' : position,
+    'hoverable' : hoverable,
+    'inline' : inline,
+    'variation' : variation,
+    'delay' :
+    {
+      show : 750,
+      hide : hoverable ? 500 : 0,
+    }
+  }
+
+  return defaults;
+}
+
+//
+
+function uiInitPopups( dom )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( _.domableIs( dom ) );
+
+  dom = $( dom );
+
+  var popups = dom
+  .find( '[ title ],[ data-html ],[ data-content ]' )
+  .addBack( '[ title ],[ data-html ],[ data-content ]' )
+  ;
+
+  popups.each( function( k,e )
+  {
+
+    var e = $( e );
+    var thePopupOptions = uiPopupDefaults( e );
+
+    e.popup( thePopupOptions );
+    if( thePopupOptions[ 'inline' ] )
+    {
+      e.popup( 'show' ).popup( 'hide' );
+    }
+
+  });
+
+}
+
+//
+
+function uiInitDropdown( o )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.routineOptions( uiInitDropdown,o );
+  _.assert( _.domableIs( o.targetDom ) );
+
+  if( o.dropdownOptions === null )
+  o.dropdownOptions = Object.create( null );
+
+  o.targetDom = $( o.targetDom );
+
+  o.targetDom.find( '.ui.dropdown:not( .hoverable )' )
+  .dropdown( o.dropdownOptions );
+
+  o.targetDom.find( '.ui.dropdown.hoverable' )
+  .dropdown( _.mapExtend( { on : 'hover' },o.dropdownOptions || Object.create( null ) ) );
+
+}
+
+uiInitDropdown.defaults =
+{
+  targetDom : null,
+  dropdownOptions : null,
+}
+
+//
+
+var uiTabsInit = ( function uiTabsInit()
+{
+
+  var _currentTab = false;
+
+  return function uiTabsInit( o )
+  {
+
+    // if( arguments.length === 1 && _.mapIs( targetDom ) )
+    // o = targetDom;
+    // else if( arguments.length === 1 && _.domableIs( targetDom ) )
+    // o = { targetDom : targetDom };
+    // else if( arguments.length === 2 )
+    // o.targetDom = targetDom;
+
+    // var o = o || Object.create( null );
+
+    _.assert( arguments.length === 1, 'Expects single argument' );
+    _.assert( !o.targetDom || _.domableIs( o.targetDom ),'uiTabsInit :','Expects { targetDom } as first argument' );
+    _.assertMapHasNoUndefine( o );
+    _.routineOptions( uiTabsInit,o );
+
+    var body = $( document.body );
+    if( !o.targetDom ) o.targetDom = body;
+    o.targetDom = $( o.targetDom );
+
+    /* not dynamic */
+
+    o.targetDom.find( 'a[ data-tab ]:not( .dynamic ):not( .disabled )' )
+    .each( function( k,e )
+    {
+      var e = $( e );
+      var dataTabContext = e.parents( '[ data-tab-context ]' ).add( e ).attr( 'data-tab-context' );
+      var dataTabName = e.attr( 'data-tab' );
+      e.tab
+      ({
+        onLoad : o.onTabLoad,
+        context : ( dataTabContext ? dataTabContext : body ),
+      });
+      /*e.tab();*/
+    });
+
+    /* dynamic */
+
+    var dynamic = o.targetDom.find( 'a.dynamic[ data-tab ]:not( .disabled )' );
+
+    if( !dynamic.length )
+    return;
+
+    _.assert( o.onTabLoad );
+
+    var tabOptions =
+    {
+      /*auto : true,*/
+      cache : false,
+      history : true,
+      /*historyType : 'state',*/
+      /*historyType : dataHistoryType,*/
+      /*path : rootUrl,*/
+      /*context : ( dataTabContext ? dataTabContext : body ),*/
+      onLoad : function( tabPath, parameterArray, historyEvent )
+      {
+        var t = this;
+        if( t._tabOptions && t._tabOptions.loading )
+        return;
+        /*if( _currentTab !== tabPath || ( t._tabOptions && !t._tabOptions.cache ) )*/
+        if( !t._tabOptions || !t._tabOptions.cache )
+        {
+          tabOptions.onFirstLoad.call( t,tabPath, parameterArray, historyEvent, t._tabOptions.url );
+          return;
+        }
+        o.onTabLoad.call( t, tabPath, parameterArray, historyEvent, t._tabOptions.url );
+      },
+      onFirstLoad : function( tabPath, parameterArray, historyEvent )
+      {
+
+        if( _currentTab === tabPath )
+        {
+          debugger;
+          throw _.err( 'not expected' );
+          return;
+        }
+
+        var t = this;
+        var path = ( historyEvent && historyEvent.path !== '/' ) ? historyEvent.path : tabPath;
+        var dataTab = $( this ).attr( 'data-tab' );
+        var a = $( 'a[ data-tab=' + dataTab + ' ]' );
+        var rootUrl = a.attr( 'data-tab-url' ) || '';
+        var dataCache = a.attr( 'data-tab-cache' );
+        if( dataCache === undefined )
+        dataCache = true;
+        else
+        dataCache = _.boolFrom( dataCache );
+
+        var url = encodeURI( _.uri.join( rootUrl, path ) );
+
+        t._tabOptions = Object.create( null )
+        t._tabOptions.cache = dataCache;
+        t._tabOptions.url = url;
+        t._tabOptions.loading = true;
+
+        console.log( 'onFirstLoad :',dataTab );
+        $( this )
+        .load( url,function( responseData, status, xhr )
+        {
+          if ( status == 'error' )
+          {
+            var html;
+
+            debugger;
+
+            var reason;
+            if( _.objectIs( xhr ) )
+            reason = xhr.status + ' : ' + xhr.statusText;
+            else
+            reason = responseData.status + ' : ' + responseData.statusText;
+
+            var err = _.errLog( reason );
+
+            if( o.viewOnError )
+            html = o.viewOnError({ reason : reason });
+            else
+            html = 'Error ' + reason;
+
+            $( this ).html( html );
+
+          }
+          else
+          {
+          }
+
+          t._tabOptions.loading = false;
+          o.onTabLoad.call( t, tabPath, parameterArray, historyEvent );
+
+        });
+        _currentTab = tabPath;
+      },
+    }
+
+    //
+
+    dynamic.tab( tabOptions );
+    dynamic.each( function( k,e )
+    {
+
+      var e = $( e );
+      //var dataTabContext = e.parents().andSelf().filter( '[ data-tab-context ]' ).attr( 'data-tab-context' );
+      //var dataHistoryType = e.parents().andSelf().filter( '[ data-tab-history-type ]' ).attr( 'data-tab-history-type' ) || 'hash';
+      var dataTabContext = e.parents().add( e ).filter( '[ data-tab-context ]' ).attr( 'data-tab-context' );
+      var dataHistoryType = e.parents().add( e ).filter( '[ data-tab-history-type ]' ).attr( 'data-tab-history-type' ) || 'hash';
+
+      //var dataHistory = e.parents().andSelf().filter( '[ data-tab-history ]' ).attr( 'data-tab-history' );
+      var dataHistory = e.parents().add( e ).filter( '[ data-tab-history ]' ).attr( 'data-tab-history' );
+      if( dataHistory === undefined ) dataHistory = true;
+      else dataHistory = _.boolFrom( dataHistory );
+
+      //var dataCache = e.parents().andSelf().filter( '[ data-tab-cache ]' ).attr( 'data-tab-cache' );
+      var dataCache = e.parents().add( e ).filter( '[ data-tab-cache ]' ).attr( 'data-tab-cache' );
+      if( dataCache === undefined ) dataCache = true;
+      else dataCache = _.boolFrom( dataCache );
+
+      var dataTab = e.attr( 'data-tab' );
+      var rootUrl = e.attr( 'data-tab-url' ) || '';
+
+      var tabOptions =
+      {
+        auto : false,
+        cache : dataCache,
+        history : dataHistory,
+        /*historyType : 'state',*/
+        historyType : dataHistoryType,
+        path : rootUrl,
+        context : ( dataTabContext ? dataTabContext : body ),
+      }
+
+      e.tab( 'setting',tabOptions );
+
+    });
+
+  }
+
+})();
+
+uiTabsInit.defaults =
+{
+
+  targetDom : null,
+  viewOnError : null,
+
+  onTabLoad : null,
+  onFirstLoad : null,
+
+}
+
+//
+
+function uiInitGeneric( o )
+{
+
+  if( !_.mapIs( o ) )
+  o = { targetDom : o }
+
+  // if( arguments.length === 1 && _.mapIs( targetDom ) )
+  // o = targetDom;
+  // else if( arguments.length === 1 && _.domableIs( targetDom ) )
+  // o = { targetDom : targetDom };
+  // else if( arguments.length === 2 )
+  // o.targetDom = targetDom;
+
+  if( o.dropdownOptions === null )
+  o.dropdownOptions = Object.create( null );
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( !o.targetDom || _.domableIs( o.targetDom ),'uiInitGeneric :','Expects DOM {o.targetDom}' );
+  _.assertMapHasNoUndefine( o );
+  _.routineOptions( uiInitGeneric,o );
+
+  var body = $( document.body );
+  if( !o.targetDom )
+  o.targetDom = body;
+  o.targetDom = $( o.targetDom );
+
+  _.assert( o.targetDom.length );
+
+  // if( o.usingTabs )
+  // debugger;
+
+  if( o.usingTabs )
+  _.dom.uiTabsInit( _.mapOnly( o, _.dom.uiTabsInit.defaults ) );
+
+  _.dom.uiInitPopups( o.targetDom );
+
+  _.dom.uiInitDropdown( _.mapOnly( o, _.dom.uiInitDropdown.defaults ) );
+
+  _.dom.uiInitSimple( o.targetDom );
+
+}
+
+uiInitGeneric.defaults =
+{
+  targetDom : null,
+  dropdownOptions : null,
+  usingTabs : 1,
+}
+
+uiInitGeneric.defaults.__proto__ = uiTabsInit.defaults;
+
+//
+
+function uiInitSimple( dom )
+{
+
+  var o = o || Object.create( null );
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( _.domableIs( dom ) );
+
+  dom = $( dom );
+
+  dom.find( '.ui.rating' ).rating();
+  dom.find( '.ui.checkbox' ).checkbox();
+  dom.find( '.ui.accordion' ).accordion();
+
+}
+
+uiInitSimple.defaults =
+{
+  dom : null
+}
+
+//
+
+function uiShow( o )
+{
+  if( _.domIs( o ) )
+  o = { targetDom : o };
+
+  if( arguments[ 2 ] !== undefined )
+  o.value = arguments[ 2 ];
+
+  _.assert( _.domableIs( o.targetDom ) );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.routineOptions( uiShow,o );
+  _.assert( o.value !== undefined );
+
+  o.targetDom = $( o.targetDom );
+
+  if( !o.consequence )
+  o.consequence = new _.Consequence();
+
+  // console.log( 'uiShow',o.value );
+
+  if( !o.targetDom.length )
+  return o.consequence.take( null );
+
+  if( o.value === undefined )
+  //o.value = !o.targetDom.transition( 'is visible' );
+  o.value = !o.targetDom[ 0 ]._uiShowVisible;
+
+  // for( var i = 0 ; i < o.targetDom.length ; i++ )
+  // o.targetDom[ i ];
+
+  o.targetDom = o.targetDom.filter( function( k,e )
+  {
+    if( e._uiShowVisible === undefined )
+    return true;
+    return ( e._uiShowVisible ) ^ !!o.value;
+  });
+
+  // if( !( o.targetDom.transition( 'is visible' ) ^ !!o.value ) )
+  // return o.consequence.take( null );
+
+  if( !o.targetDom.length )
+  return o.consequence.take( null );
+
+  if( o.consequence.competitorsEarlyGet().length > 1 )
+  return o.consequence.take( null );
+
+  o.targetDom = o.targetDom.filter( function( k,e )
+  {
+    if( e._uiShowVisible === undefined )
+    if( o.value )
+    $( e ).transition( 'hide' );
+    else
+    $( e ).transition( 'show' );
+
+    e._uiShowVisible = !!o.value;
+    return true;;
+  });
+
+  o.targetDom
+  .transition
+  ({
+    animation : o.animation,
+    duration : o.duration,
+    onComplete : function()
+    {
+      o.consequence.take( null );
+    },
+  });
+
+  return o.consequence;
+}
+
+uiShow.defaults =
+{
+  targetDom : null,
+  consequence : null,
+  value : 1,
+  animation : 'fly right',
+  duration : 400,
+}
+
+//
+
+function uiIsShowed( dom )
+{
+  return dom.transition( 'is visible' );
 }
 
 // --
 // prototype
 // --
 
-var Proto =
+var Fields =
 {
+  _domBasel5Loaded : true
+}
 
+var Routines =
+{
 
   // dom
 
-  domCaretSelect : domCaretSelect,
-  domVal : domVal,
+  formationRadialSet,
 
-  domsVal : domsVal,
+  colorOnClick,
 
-  domClass : domClass,
-  domClasses : domClasses,
-  domAttrs : domAttrs,
+  msg,
 
-  domAttrHasAny : domAttrHasAny,
-  domAttrHasAll : domAttrHasAll,
-  domAttrHasNone : domAttrHasNone,
+  loadingMode,
 
-  domTextGet : domTextGet,
-  domAttrInherited : domAttrInherited,
+  scrollFix,
+  scrollFocus,
+  scrolable,
 
-  domNickname : domNickname,
-  domOf : domOf,
+  menuable,
+  resizable,
 
-  domLeftTopGet : domLeftTopGet,
-  domLeftTopSet : domLeftTopSet,
-  domCenterSet : domCenterSet,
+  cornersMake,
+  windowOpen,
 
-  domPositionGet : domPositionGet,
-  domBoundingBoxGet : domBoundingBoxGet,
-  domBoundingBoxGlobalGet : domBoundingBoxGlobalGet,
+  abilityRegister,
+  abilityUnregister,
+  abilityCssExport,
 
-  domSizeGet : domSizeGet,
-  domSizeFastGet : domSizeFastGet,
-  domsSizeGet : domsSizeGet,
-  domsSizeFastGet : domsSizeFastGet,
+  copyable,
+  copyableHtmlText,
+  pinnable,
+  subjective,
 
-  domRadiusGet : domRadiusGet,
-  domRadiusFastGet : domRadiusFastGet,
-  domsRadiusGet : domsRadiusGet,
-  domsRadiusFastGet : domsRadiusFastGet,
+  widgable,
 
-  domFirst : domFirst,
-  domFirstOf : domFirstOf,
+  tristatable,
 
-  domOwnIdentity : domOwnIdentity,
+  buttonMake,
 
-  domCssGet : domCssGet,
-  domCssSet : domCssSet,
-  domCssGlobal : domCssGlobal,
-  domCssExport : domCssExport,
+  panelMake,
+  totalPanelMake,
+  shut,
+  offscreenMake,
+  textEditMake,
 
-  domEmToPx : domEmToPx,
+  habbitMouseClick,
+  habbitKeyEnter,
 
-  domEach : domEach,
-  _domEach : _domEach,
+  habbitDrag,
+  draggable2,
+  draggable,
 
-  domClipboardCopy : domClipboardCopy,
-  domFullScreen : domFullScreen,
+  habitRightClick,
+  habitDropFile,
 
-  domLoad : domLoad,
+  // ui
 
-  // event
+  uiPopupDefaults,
+  uiInitPopups,
+  uiInitDropdown,
+  uiTabsInit,
+  uiInitGeneric,
+  uiInitSimple,
 
-  eventName : eventName,
-  eventClientPosition : eventClientPosition,
-  eventRedirect : eventRedirect,
-  eventMouse : eventMouse,
+  uiShow,
+  uiIsShowed
 
-  /*eventWheelZero : eventWheelZero,*/
-
-  domFromAtLeastOne : domFromAtLeastOne,
-  domWheelOn : domWheelOn,
-
-  eventWheelDelta : eventWheelDelta,
-  eventWheelDeltaScreen : eventWheelDeltaScreen,
-  eventSpecialMake : eventSpecialMake,
-
-  eventsObserver : eventsObserver,
-  eventsBindAll : eventsBindAll,
-  eventsBindWatcher : eventsBindWatcher,
-  eventFire : eventFire,
-  eventFire2 : eventFire2,
-
-  // on
-
-  _domBaselayer3Loaded : true,
 
 };
 
-_.mapExtend( _,Proto );
-_.mapExtend( Self,Proto );
+_.mapExtend( Self,Fields );
+_.mapExtend( Self,Routines );
 
 })();

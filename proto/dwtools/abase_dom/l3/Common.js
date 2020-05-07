@@ -16,12 +16,12 @@ var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 /**
  * @param {} dom
  * @param {} selection
- * @function domCaretSelect
+ * @function caretSelect
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domCaretSelect( dom, selection )
+function caretSelect( dom, selection )
 {
 
   if( _.dom.jqueryIs( dom ) )
@@ -83,12 +83,12 @@ function domCaretSelect( dom, selection )
  *  Returns previous value of element `dom`.
  * @param {String|Object} dom Target dom
  * @param {} val Value to set.
- * @function domVal
+ * @function val
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domVal( dom,val )
+function val( dom,val )
 {
 
   var result;
@@ -101,7 +101,7 @@ function domVal( dom,val )
 
     var caretSelected;
     if( document.activeElement == dom[ 0 ] )
-    caretSelected = domCaretSelect( dom[ 0 ] );
+    caretSelected = caretSelect( dom[ 0 ] );
 
     if( dom.is( 'input[ type=checkbox ]' ) )
     {
@@ -120,7 +120,7 @@ function domVal( dom,val )
     }
 
     if( caretSelected )
-    domCaretSelect( dom,caretSelected );
+    caretSelect( dom,caretSelected );
 
   }
   else
@@ -167,7 +167,7 @@ function domsVal( dom,vals )
   /* */
 
   if( arguments.length === 2  )
-  result = _.domEach
+  result = _.dom.each
   ({
     recursive : true,
     dom : dom,
@@ -184,12 +184,12 @@ function domsVal( dom,vals )
       if( val === undefined )
       return;
 
-      _.domVal( dom,val );
+      _.dom.val( dom,val );
 
     },
   });
   else
-  result = _.domEach
+  result = _.dom.each
   ({
     recursive : true,
     result : Object.create( null ),
@@ -197,13 +197,13 @@ function domsVal( dom,vals )
     onUp : function( dom,o )
     {
       var text = '';
-      var val = _.domVal( dom );
+      var val = _.dom.val( dom );
 
       if( val === undefined )
       return;
       // return result;
 
-      var val = _.domVal( dom );
+      var val = _.dom.val( dom );
 
       if( !isNaN( val ) )
       val = Number( val );
@@ -266,12 +266,12 @@ function domsVal( dom,vals )
  * @param {String|Object} dom Target dom.
  * @param {String} cssClass Name of class.
  * @param {Boolean} adding Controls adding/removing of the class.
- * @function domClass
+ * @function class
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domClass( dom,cssClass,adding )
+function _class( dom,cssClass,adding )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
@@ -292,7 +292,7 @@ function domClass( dom,cssClass,adding )
 
 //
 
-function domClasses( dom,classes,adding )
+function classes( dom,classes,adding )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 3 );
@@ -344,12 +344,12 @@ function domClasses( dom,classes,adding )
  * @param {String|Object} dom Target dom.
  * @param {String|Object} attrs Source attributes.
  * @param {Boolean} adding Controls adding/removing of the attributes.
- * @function domAttrs
+ * @function attrs
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domAttrs( dom,attrs,adding )
+function attrs( dom,attrs,adding )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
@@ -413,14 +413,14 @@ function domAttrs( dom,attrs,adding )
  * @summary Returns true if `dom` element has at least one attribute from `attrs`.
  * @param {String|Object} dom Target dom.
  * @param {Array} attrs Source attributes.
- * @function domAttrHasAny
+ * @function attrHasAny
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domAttrHasAny( dom,attrs )
+function attrHasAny( dom,attrs )
 {
-  var has = _.mapKeys( _.domAttrs( dom ) );
+  var has = _.mapKeys( _.dom.attrs( dom ) );
   return _.longHasAny( has,attrs );
 }
 
@@ -430,14 +430,14 @@ function domAttrHasAny( dom,attrs )
  * @summary Returns true if `dom` element has all attribute from `attrs`.
  * @param {String|Object} dom Target dom.
  * @param {Array} attrs Source attributes.
- * @function domAttrHasAny
+ * @function attrHasAny
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domAttrHasAll( dom,attrs )
+function attrHasAll( dom,attrs )
 {
-  var has = _.mapKeys( _.domAttrs( dom ) );
+  var has = _.mapKeys( _.dom.attrs( dom ) );
   debugger;
   return _.longHasAll( has,attrs );
 }
@@ -448,14 +448,14 @@ function domAttrHasAll( dom,attrs )
  * @summary Returns true if `dom` element doesn't have any attribute from `attrs`.
  * @param {String|Object} dom Target dom.
  * @param {Array} attrs Source attributes.
- * @function domAttrHasAny
+ * @function attrHasAny
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domAttrHasNone( dom,attrs )
+function attrHasNone( dom,attrs )
 {
-  var has = _.mapKeys( _.domAttrs( dom ) );
+  var has = _.mapKeys( _.dom.attrs( dom ) );
   debugger;
   return _.longHasNone( has,attrs );
 }
@@ -468,19 +468,19 @@ function domAttrHasNone( dom,attrs )
  * @param {Object|String} o.targetDom Dom element.
  * @param {Object} o.strippingEmptyLines Removes empty lines from text.
  * @param {Object} o.strippingEnds Removes empty whitespaces from the beginning/ending of the string.
- * @function domTextGet
+ * @function textGet
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domTextGet( o )
+function textGet( o )
 {
 
   if( _.dom.domableIs( o ) )
   o = { targetDom : o }
-  _.routineOptions( domTextGet,o );
+  _.routineOptions( textGet,o );
 
-  var result = _.domEach
+  var result = _.dom.each
   ({
     recursive : true,
     result : '',
@@ -511,7 +511,7 @@ function domTextGet( o )
   return result;
 }
 
-domTextGet.defaults =
+textGet.defaults =
 {
   targetDom : null,
   strippingEmptyLines : 1,
@@ -525,12 +525,12 @@ domTextGet.defaults =
  * @description Returns value of attribute of undefined if nothing found.
  * @param {Object|String} dom Dom element.
  * @param {String} attrName Attributes to find.
- * @function domAttrInherited
+ * @function attrInherited
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domAttrInherited( dom,attrName )
+function attrInherited( dom,attrName )
 {
   var result;
 
@@ -558,12 +558,12 @@ function domAttrInherited( dom,attrName )
  * @summary Generates selector for `dom` element using it properties.
  * @param {Object|String} dom Dom element.
  * @param {String} attrName Attributes to find.
- * @function domNickname
+ * @function nickname
  * @namespace Tools.dom
  * @module Tools/base/DomBasic
  */
 
-function domNickname( dom,attrName )
+function nickname( dom,attrName )
 {
 
   if( _.dom.jqueryIs( dom ) )
@@ -588,7 +588,7 @@ function domNickname( dom,attrName )
 
 //
 
-function domOf( parent,children )
+function of( parent,children )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -608,7 +608,7 @@ function domOf( parent,children )
 
 //
 
-function domLeftTopGet( dom )
+function leftTopGet( dom )
 {
 
   _.assert( _.dom.domableIs( dom ) );
@@ -631,7 +631,7 @@ function domLeftTopGet( dom )
 
 //
 
-function domLeftTopSet( dom,pos )
+function leftTopSet( dom,pos )
 {
 
   _.assert( _.dom.domableIs( dom ) );
@@ -650,7 +650,7 @@ function domLeftTopSet( dom,pos )
 
 //
 
-function domCenterSet( dom,pos )
+function centerSet( dom,pos )
 {
 
   _.assert( _.dom.domableIs( dom ) );
@@ -658,7 +658,7 @@ function domCenterSet( dom,pos )
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   var dom = $( dom );
-  var size = _.domSizeFastGet( dom );
+  var size = _.dom.sizeFastGet( dom );
 
   _.assert( dom.length === 1 );
 
@@ -674,7 +674,7 @@ function domCenterSet( dom,pos )
 
 //
 
-function domPositionGet( dom )
+function positionGet( dom )
 {
   var dom = $( dom );
 
@@ -684,14 +684,14 @@ function domPositionGet( dom )
 
   result = [ result.left,result.top ];
 
-  dom[ 0 ]._domPositionGet = result;
+  dom[ 0 ]._positionGet = result;
 
   return result;
 }
 
 //
 
-function domBoundingBoxGet( dom )
+function boundingBoxGet( dom )
 {
   var dom = $( dom );
 
@@ -707,7 +707,7 @@ function domBoundingBoxGet( dom )
 
 //
 
-function domBoundingBoxGlobalGet( dom )
+function boundingBoxGlobalGet( dom )
 {
   var dom = $( dom );
 
@@ -723,7 +723,7 @@ function domBoundingBoxGlobalGet( dom )
 
 //
 
-function domSizeGet( dom )
+function sizeGet( dom )
 {
   var result = [];
   var dom = $( dom );
@@ -731,21 +731,21 @@ function domSizeGet( dom )
   _.assert( dom.length === 1 );
 
   result = [ dom.outerWidth(),dom.outerHeight() ];
-  dom[ 0 ]._domSizeGet = result;
+  dom[ 0 ]._sizeGet = result;
 
   return result;
 }
 
 //
 
-function domSizeFastGet( dom )
+function sizeFastGet( dom )
 {
   var dom = $( dom );
 
-  if( dom[ 0 ]._domSizeGet )
-  return dom[ 0 ]._domSizeGet;
+  if( dom[ 0 ]._sizeGet )
+  return dom[ 0 ]._sizeGet;
 
-  return domSizeGet( dom );
+  return sizeGet( dom );
 
 }
 
@@ -757,7 +757,7 @@ function domsSizeGet( dom )
   var dom = $( dom );
 
   for( var i = 0 ; i < dom.length ; i++ )
-  result[ i ] = domSizeGet( dom[ i ] );
+  result[ i ] = sizeGet( dom[ i ] );
 
   return result;
 }
@@ -770,34 +770,34 @@ function domsSizeFastGet( dom )
   var dom = $( dom );
 
   for( var i = 0 ; i < dom.length ; i++ )
-  result[ i ] = domSizeFastGet( dom[ i ] );
+  result[ i ] = sizeFastGet( dom[ i ] );
 
   return result;
 }
 
 //
 
-function domRadiusGet( dom )
+function radiusGet( dom )
 {
   var result;
   var dom = $( dom );
 
   result = Math.min( dom.outerWidth(),dom.outerHeight() );
-  dom[ 0 ]._domRadiusGet = result;
+  dom[ 0 ]._radiusGet = result;
 
   return result;
 }
 
 //
 
-function domRadiusFastGet( dom )
+function radiusFastGet( dom )
 {
   var dom = $( dom );
 
-  if( dom[ 0 ]._domRadiusGet )
-  return dom[ 0 ]._domRadiusGet;
+  if( dom[ 0 ]._radiusGet )
+  return dom[ 0 ]._radiusGet;
 
-  return domSizeGet( dom );
+  return sizeGet( dom );
 
 }
 
@@ -809,7 +809,7 @@ function domsRadiusGet( dom )
   var dom = $( dom );
 
   for( var i = 0 ; i < dom.length ; i++ )
-  result[ i ] = domRadiusGet( dom[ i ] );
+  result[ i ] = radiusGet( dom[ i ] );
 
   return result;
 }
@@ -822,14 +822,14 @@ function domsRadiusFastGet( dom )
   var dom = $( dom );
 
   for( var i = 0 ; i < dom.length ; i++ )
-  result[ i ] = domRadiusFastGet( dom[ i ] );
+  result[ i ] = radiusFastGet( dom[ i ] );
 
   return result;
 }
 
 //
 
-function domFirst()
+function first()
 {
 
   for( var a = 0 ; a < arguments.length ; a++ )
@@ -851,7 +851,7 @@ function domFirst()
 
 //
 
-function domFirstOf( src,selector )
+function firstOf( src,selector )
 {
 
   _.assert( _.dom.domableIs( src ) );
@@ -873,7 +873,7 @@ function domFirstOf( src,selector )
 
 //
 
-function domOwnIdentity( dom,identity )
+function ownIdentity( dom,identity )
 {
 
   dom = $( dom );
@@ -930,7 +930,7 @@ function domOwnIdentity( dom,identity )
     else if( identity[ i-1 ] === '[' && identity[ i+1 ] === ']' )
     {
       var attrStrSplitted = _.strSplitNonPreserving({ src : identity[ i ], delimeter : '=' });
-      _.assert( attrStrSplitted.length === 2, 'domOwnIdentity expects attribute indentity of format: attr=val, got:', identity[ i ] );
+      _.assert( attrStrSplitted.length === 2, 'ownIdentity expects attribute indentity of format: attr=val, got:', identity[ i ] );
       dom.attr( attrStrSplitted[ 0 ], attrStrSplitted[ 1 ] );
       i += 1;
     }
@@ -945,7 +945,7 @@ function domOwnIdentity( dom,identity )
 
 //
 
-function domCssGet( dom,fields )
+function cssGet( dom,fields )
 {
   var result = Object.create( null );
 
@@ -977,7 +977,7 @@ function domCssGet( dom,fields )
 
 //
 
-function domCssSet( dom,fields )
+function cssSet( dom,fields )
 {
 
   dom = $( dom )
@@ -993,7 +993,7 @@ function domCssSet( dom,fields )
 
 //
 
-function domEmToPx( dom,em )
+function emToPx( dom,em )
 {
   var emSize = parseFloat( dom.css( 'font-size' ) );
   return( emSize * em );
@@ -1001,10 +1001,10 @@ function domEmToPx( dom,em )
 
 //
 
-function domEach( o )
+function each( o )
 {
 
-  _.routineOptions( domEach,o );
+  _.routineOptions( each,o );
   _.assert( _.dom.domableIs( o.dom ) );
 
   o.dom = $( o.dom );
@@ -1012,13 +1012,13 @@ function domEach( o )
   for( var d = 0 ; d < o.dom.length ; d++ )
   {
     // debugger
-    _domEach( o.dom[ d ],o );
+    _each( o.dom[ d ],o );
   }
 
   return o.result;
 }
 
-domEach.defaults =
+each.defaults =
 {
   dom : null,
   result : null,
@@ -1032,7 +1032,7 @@ domEach.defaults =
 
 //
 
-function _domEach( dom,o )
+function _each( dom,o )
 {
 
   _.assert( _.dom.is( dom ) );
@@ -1062,7 +1062,7 @@ function _domEach( dom,o )
   for( var d = 0 ; d < children.length ; d++ )
   {
     var dom = children[ d ];
-    _domEach( dom,o );
+    _each( dom,o );
   }
 
   var r = o.onDown( dom,o );
@@ -1074,13 +1074,13 @@ function _domEach( dom,o )
 //
 
 var _domGlobalCssKeysArray = [];
-function domCssGlobal( o )
+function cssGlobal( o )
 {
 
   if( _.strIs( o ) )
   o = { css : o }
 
-  _.routineOptions( domCssGlobal,o );
+  _.routineOptions( cssGlobal,o );
 
   if( o.document === null )
   o.document = document;
@@ -1105,7 +1105,7 @@ function domCssGlobal( o )
   return result;
 }
 
-domCssGlobal.defaults =
+cssGlobal.defaults =
 {
   document : null,
   css : null,
@@ -1115,12 +1115,12 @@ domCssGlobal.defaults =
 
 //
 
-function domCssExport( o )
+function cssExport( o )
 {
   if( o instanceof Document )
   o = { dstDocument : o }
 
-  _.routineOptions( domCssExport,o );
+  _.routineOptions( cssExport,o );
 
   if( o.srcDocument === null )
   o.srcDocument = document;
@@ -1140,7 +1140,7 @@ function domCssExport( o )
     // if( !css )
     // debugger;
 
-    _.domCssGlobal
+    _.dom.cssGlobal
     ({
       document : o.dstDocument,
       css : css,
@@ -1151,7 +1151,7 @@ function domCssExport( o )
 
 }
 
-domCssExport.defaults =
+cssExport.defaults =
 {
   dstDocument : null,
   srcDocument : null,
@@ -1159,7 +1159,7 @@ domCssExport.defaults =
 
 //
 
-function domClipboardCopy( text )
+function clipboardCopy( text )
 {
   var result = false;
   var textArea = document.createElement( 'textarea' );
@@ -1205,7 +1205,7 @@ function domClipboardCopy( text )
 
 //
 
-var domFullScreen = ( function domFullScreen()
+var fullScreen = ( function fullScreen()
 {
 
   var inFullscreen = 0;
@@ -1243,7 +1243,7 @@ var domFullScreen = ( function domFullScreen()
     }
   }
 
-  return function domFullScreen( src )
+  return function fullScreen( src )
   {
 
     _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -1284,10 +1284,10 @@ var domFullScreen = ( function domFullScreen()
 
 //
 
-function domLoad( o )
+function load( o )
 {
 
-  _.routineOptions( domLoad,o );
+  _.routineOptions( load,o );
 
   o.once = new _.Consequence();
   o.ready = new _.Consequence();
@@ -1327,7 +1327,7 @@ function domLoad( o )
   }
 
   if( o.targetClass )
-  _.domClasses( targetDom,o.targetClass,1 );
+  _.dom.classes( targetDom,o.targetClass,1 );
 
   /* */
 
@@ -1374,8 +1374,8 @@ function domLoad( o )
 
     if( o.replacing )
     {
-      var classes = _.domClasses( targetDom );
-      var attrs = _.domAttrs( targetDom );
+      var classes = _.dom.classes( targetDom );
+      var attrs = _.dom.attrs( targetDom );
 
       if( o.after || o.before )
       {
@@ -1395,11 +1395,11 @@ function domLoad( o )
       targetDom = responseData;
 
       if( o.targetClass )
-      _.domClasses( targetDom,o.targetClass,1 );
+      _.dom.classes( targetDom,o.targetClass,1 );
       if( o.preservingAttributes )
-      _.domAttrs( targetDom,attrs,1 );
+      _.dom.attrs( targetDom,attrs,1 );
       if( o.preservingClasses )
-      _.domClasses( targetDom,classes,1 );
+      _.dom.classes( targetDom,classes,1 );
     }
 
     o.parentDom.attr( 'dom-loaded',1 );
@@ -1421,7 +1421,7 @@ function domLoad( o )
   return o;
 }
 
-domLoad.defaults =
+load.defaults =
 {
   url : null,
   targetClass : null,
@@ -1545,7 +1545,7 @@ function eventClientPosition( o )
     if( !relative )
     throw _.err( 'not implemented' );
 
-    var size = _.domSizeGet( relative );
+    var size = _.dom.sizeGet( relative );
 
     if( o.flip[ 0 ] )
     result[ 0 ] = size[ 0 ] - result[ 0 ] - 1;
@@ -1712,7 +1712,7 @@ function eventWheelZero( event,x,y )
 
 //
 
-function domFromAtLeastOne( targetDom )
+function fromAtLeastOne( targetDom )
 {
   let wasDom = targetDom;
 
@@ -1726,16 +1726,16 @@ function domFromAtLeastOne( targetDom )
 
 //
 
-function domWheelOn( o )
+function wheelOn( o )
 {
 
   if( arguments.length === 2 )
   o = { targetDom : arguments[ 0 ], onWheel : arguments[ 1 ] }
 
-  _.routineOptions( domWheelOn, o );
+  _.routineOptions( wheelOn, o );
   _.assert( _.routineIs( o.onWheel ) );
 
-  o.targetDom = _.domFromAtLeastOne( o.targetDom );
+  o.targetDom = _.dom.fromAtLeastOne( o.targetDom );
 
   _.assert( _.routineIs( o.targetDom.mousewheel ), '"jQuery.mousewheel" was not included' );
 
@@ -1754,7 +1754,7 @@ function domWheelOn( o )
 
 }
 
-domWheelOn.defaults =
+wheelOn.defaults =
 {
   targetDom : null,
   onWheel : null,
@@ -2085,97 +2085,100 @@ function eventFire2( targetDom, event )
 // prototype
 // --
 
-var Proto =
+var Fields =
+{
+  _domBaselayer3Loaded : true
+}
+
+var Routines =
 {
 
   // dom
 
-  domCaretSelect : domCaretSelect,
-  domVal : domVal,
+  caretSelect,
+  val,
 
-  domsVal : domsVal,
+  domsVal,
 
-  domClass : domClass,
-  domClasses : domClasses,
-  domAttrs : domAttrs,
+  class : _class,
+  classes,
+  attrs,
 
-  domAttrHasAny : domAttrHasAny,
-  domAttrHasAll : domAttrHasAll,
-  domAttrHasNone : domAttrHasNone,
+  attrHasAny,
+  attrHasAll,
+  attrHasNone,
 
-  domTextGet : domTextGet,
-  domAttrInherited : domAttrInherited,
+  textGet,
+  attrInherited,
 
-  domNickname : domNickname,
-  domOf : domOf,
+  nickname,
+  of,
 
-  domLeftTopGet : domLeftTopGet,
-  domLeftTopSet : domLeftTopSet,
-  domCenterSet : domCenterSet,
+  leftTopGet,
+  leftTopSet,
+  centerSet,
 
-  domPositionGet : domPositionGet,
-  domBoundingBoxGet : domBoundingBoxGet,
-  domBoundingBoxGlobalGet : domBoundingBoxGlobalGet,
+  positionGet,
+  boundingBoxGet,
+  boundingBoxGlobalGet,
 
-  domSizeGet : domSizeGet,
-  domSizeFastGet : domSizeFastGet,
-  domsSizeGet : domsSizeGet,
-  domsSizeFastGet : domsSizeFastGet,
+  sizeGet,
+  sizeFastGet,
+  domsSizeGet,
+  domsSizeFastGet,
 
-  domRadiusGet : domRadiusGet,
-  domRadiusFastGet : domRadiusFastGet,
-  domsRadiusGet : domsRadiusGet,
-  domsRadiusFastGet : domsRadiusFastGet,
+  radiusGet,
+  radiusFastGet,
+  domsRadiusGet,
+  domsRadiusFastGet,
 
-  domFirst : domFirst,
-  domFirstOf : domFirstOf,
+  first,
+  firstOf,
 
-  domOwnIdentity : domOwnIdentity,
+  ownIdentity,
 
-  domCssGet : domCssGet,
-  domCssSet : domCssSet,
-  domCssGlobal : domCssGlobal,
-  domCssExport : domCssExport,
+  cssGet,
+  cssSet,
+  cssGlobal,
+  cssExport,
 
-  domEmToPx : domEmToPx,
+  emToPx,
 
-  domEach : domEach,
-  _domEach : _domEach,
+  each,
+  _each,
 
-  domClipboardCopy : domClipboardCopy,
-  domFullScreen : domFullScreen,
+  clipboardCopy,
+  fullScreen,
 
-  domLoad : domLoad,
+  load,
 
   // event
 
-  eventName : eventName,
-  eventClientPosition : eventClientPosition,
-  eventRedirect : eventRedirect,
-  eventMouse : eventMouse,
+  eventName,
+  eventClientPosition,
+  eventRedirect,
+  eventMouse,
 
   /*eventWheelZero : eventWheelZero,*/
 
-  domFromAtLeastOne : domFromAtLeastOne,
-  domWheelOn : domWheelOn,
+  fromAtLeastOne,
+  wheelOn,
 
-  eventWheelDelta : eventWheelDelta,
-  eventWheelDeltaScreen : eventWheelDeltaScreen,
-  eventSpecialMake : eventSpecialMake,
+  eventWheelDelta,
+  eventWheelDeltaScreen,
+  eventSpecialMake,
 
-  eventsObserver : eventsObserver,
-  eventsBindAll : eventsBindAll,
-  eventsBindWatcher : eventsBindWatcher,
-  eventFire : eventFire,
-  eventFire2 : eventFire2,
+  eventsObserver,
+  eventsBindAll,
+  eventsBindWatcher,
+  eventFire,
+  eventFire2,
 
   // on
 
-  _domBaselayer3Loaded : true,
-
 };
 
-_.mapExtend( _,Proto );
-_.mapExtend( Self,Proto );
+_.mapExtend( Self,Fields );
+_.mapExtend( Self,Routines );
 
 })();
