@@ -62,14 +62,14 @@ function formationRadialSet( o )
     else if( o.containerDom.css( 'display' ) === 'none' )
     {
       _.dom.offscreenMake( o.containerDom,1 );
-      sizes = _.dom.domsSizeGet( o.elementsDom );
+      sizes = _.dom.s.sizeGet( o.elementsDom );
       o.containerDom[ 0 ]._formationRadialSetSizes = sizes;
       _.dom.offscreenMake( o.containerDom,0 );
     }
   }
 
   if( !sizes )
-  sizes = _.dom.domsSizeGet( o.elementsDom );
+  sizes = _.dom.s.sizeGet( o.elementsDom );
 
   /* */
 
@@ -564,15 +564,15 @@ function menuable( o )
     o.iconParentDom.each( function( i,dom )
     {
       var icon = $( '<i>' ).appendTo( dom );
-      _.dom.classes( icon,[ 'wmenu-icon-open-default', 'wmenu-icon-open' ],1 );
+      _.dom.s.class( icon,[ 'wmenu-icon-open-default', 'wmenu-icon-open' ],1 );
       icon.attr( 'title','Associated Menu' );
     });
     o.iconOpenDom = o.iconParentDom.find( '.wmenu-icon-open' );
   }
 
-  // _.dom.classes( o.iconOpenDom,[ 'wmenu-icon-open','transition','hidden' ],1 );
-  _.dom.classes( o.iconOpenDom,[ 'wmenu-icon-open' ],1 );
-  _.dom.classes( o.iconOpenDom,[ 'visible' ],0 );
+  // _.dom.s.class( o.iconOpenDom,[ 'wmenu-icon-open','transition','hidden' ],1 );
+  _.dom.s.class( o.iconOpenDom,[ 'wmenu-icon-open' ],1 );
+  _.dom.s.class( o.iconOpenDom,[ 'visible' ],0 );
 
   /* menu */
 
@@ -713,8 +713,8 @@ function menuable( o )
 
   if( o.hidingIcon )
   {
-    _.dom.classes( o.iconParentDom,[ 'wmenu-icon-hiding' ],1 );
-    // _.dom.classes( o.iconOpenDom,[ 'transition','hidden' ],1 );
+    _.dom.s.class( o.iconParentDom,[ 'wmenu-icon-hiding' ],1 );
+    // _.dom.s.class( o.iconOpenDom,[ 'transition','hidden' ],1 );
     // o.iconParentDom
     // .on( _.eventName( 'mouseleave' ), function( e )
     // {
@@ -869,7 +869,7 @@ function resizable( o )
     o.state.start = _.dom.eventClientPosition( e );
     o.state.position = _.dom.positionGet( o.targetDom );
     o.state.size = _.dom.sizeGet( o.targetDom );
-    o.state.corner = _.dom.classes( target );
+    o.state.corner = _.dom.s.class( target );
     o.state.corner = _.arraySetIntersection( o.state.corner,[ 'lt','lb','rt','rb' ] );
     _.assert( o.state.corner.length === 1 );
     o.state.corner = o.state.corner[ 0 ];
@@ -1057,9 +1057,9 @@ function cornersMake( o )
 
     if( o.cssClass )
     {
-      _.dom.classes( cornerParentDom,o.cssClass,1 );
+      _.dom.s.class( cornerParentDom,o.cssClass,1 );
       if( o.makingChild )
-      _.dom.classes( cornerChildDom,o.cssClass,1 );
+      _.dom.s.class( cornerChildDom,o.cssClass,1 );
     }
 
     if( left === 'left' && top === 'top' )
@@ -1756,7 +1756,7 @@ function panelMake( o )
   $( document.body ).append( o.targetDom );
 
   if( o.cssClasses )
-  _.dom.classes( o.targetDom, o.cssClasses, 1 );
+  _.dom.s.class( o.targetDom, o.cssClasses, 1 );
 
   if( o.css )
   {
@@ -2451,7 +2451,7 @@ function habbitDrag( o )
   o.targetNewPosition = [ 0,0 ];
 
   if( o.draggableAttr )
-  _.dom.attrs( o.targetDom,o.draggableAttr,1 );
+  _.dom.s.attr( o.targetDom,o.draggableAttr,1 );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( o.targetDom.length === 1 );
@@ -2489,7 +2489,7 @@ function habbitDrag( o )
     console.log( 'habbitDrag : handleMouseDown' );
 
     if( o.draggingAttr )
-    _.dom.attrs( o.targetDom,o.draggingAttr,1 );
+    _.dom.s.attr( o.targetDom,o.draggingAttr,1 );
 
     o.down = _.dom.eventClientPosition
     ({
@@ -2518,7 +2518,7 @@ function habbitDrag( o )
     console.log( 'habbitDrag : handleMouseUp' );
 
     if( o.draggingAttr )
-    _.dom.attrs( o.targetDom,o.draggingAttr,0 );
+    _.dom.s.attr( o.targetDom,o.draggingAttr,0 );
 
     if( giveEvent( e,'dragEnd' ) !== false )
     o.down = null;
