@@ -1,4 +1,4 @@
-(function _DomBase_js_() {
+(function _Common_js_() {
 
 'use strict';
 
