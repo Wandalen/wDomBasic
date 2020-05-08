@@ -9,6 +9,7 @@
 
     require( '../l1/Common.js' );
     require( '../l3/Common.js' );
+    require( '../l4/Common.js' );
     require( '../l5/Common.js' );
 
     module.exports = _;

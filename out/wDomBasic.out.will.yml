@@ -166,6 +166,8 @@ module:
           - ../proto/dwtools/abase_dom/l1/Common.js
           - ../proto/dwtools/abase_dom/l3
           - ../proto/dwtools/abase_dom/l3/Common.js
+          - ../proto/dwtools/abase_dom/l4
+          - ../proto/dwtools/abase_dom/l4/Common.js
           - ../proto/dwtools/abase_dom/l5
           - ../proto/dwtools/abase_dom/l5/Common.js
           - ../proto/dwtools/amid
