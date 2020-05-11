@@ -130,6 +130,12 @@ function from( src )
 {
   _.assert( arguments.length === 1 );
 
+  if( _.dom.jqueryIs( src ) )//xxx:remove later
+  {
+    _.assert( src.length === 1 );
+    return src[ 0 ]
+  }
+
   if( _.dom.is( src ) )
   return src;
 

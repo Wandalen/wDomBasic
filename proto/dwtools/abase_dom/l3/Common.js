@@ -1384,6 +1384,24 @@ function eventMouse( type, cx, cy )
 }
 
 //
+
+function on( targetDom, eventName, eventHandler )
+{
+  _.assert( arguments.length === 3 );
+  _.assert( _.routineIs( eventHandler ) );
+
+  eventName = _.dom.eventName( eventName );
+  _.assert( _.strDefined( eventName ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.is( targetDom ) );
+
+  _.assert( _.routineIs( targetDom.addEventListener ) );
+
+  targetDom.addEventListener( eventName, eventHandler );
+}
+
+//
 /*
 function eventWheelZero( event,x,y )
 {
@@ -1452,6 +1470,27 @@ function fromAtLeastOne( targetDom )
   _.assert( targetDom.length > 0, 'Expects at least one DOM element, but found none for', wasDom );
 
   return targetDom;
+}
+
+//
+
+function mousewheel( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routineOptions( mousewheel, o );
+  _.assert( _.routineIs( o.onWheel ) );
+
+  let targetDom = _.dom.from( o.targetDom );
+  _.assert( _.dom.is( targetDom ) );
+
+  targetDom.addEventListener( 'mousewheel', o.onWheel, false );
+  targetDom.addEventListener( 'DOMMouseScroll', o.onWheel, false );
+}
+
+mousewheel.defaults =
+{
+  targetDom : null,
+  onWheel : null
 }
 
 //
@@ -1881,9 +1920,12 @@ var Routines =
   eventRedirect,
   eventMouse,
 
+  on,
+
   /*eventWheelZero : eventWheelZero,*/
 
   fromAtLeastOne,
+  mousewheel,
   wheelOn,
 
   eventWheelDelta,
