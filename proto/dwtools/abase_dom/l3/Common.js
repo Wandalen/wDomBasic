@@ -1474,6 +1474,7 @@ function fromAtLeastOne( targetDom )
 
 //
 
+let lowestDelta = null;
 function mousewheel( o )
 {
   _.assert( arguments.length === 1 );
@@ -1483,8 +1484,76 @@ function mousewheel( o )
   let targetDom = _.dom.from( o.targetDom );
   _.assert( _.dom.is( targetDom ) );
 
-  targetDom.addEventListener( 'mousewheel', o.onWheel, false );
-  targetDom.addEventListener( 'DOMMouseScroll', o.onWheel, false );
+  if( typeof document.onwheel !== undefined || document.documentMode >= 9 )
+  {
+    targetDom.addEventListener( 'wheel', _mousewheelHandler, false );
+  }
+  else
+  {
+    targetDom.addEventListener( 'mousewheel', _mousewheelHandler, false );
+    targetDom.addEventListener( 'DomMouseScroll', _mousewheelHandler, false );
+    targetDom.addEventListener( 'MozMousePixelScroll', _mousewheelHandler, false );
+  }
+
+  //
+
+  function _mousewheelHandler( e )
+  {
+    //based on https://github.com/jquery/jquery-mousewheel/blob/master/jquery.mousewheel.js
+
+    let delta = 0;
+    let deltaX = 0;
+    let deltaY = 0;
+
+    e.preventDefault();
+
+    if ( _.numberIs( e.detail ) )
+    deltaY = e.detail * -1;
+    if ( _.numberIs( e.wheelDelta ) )
+    deltaY = e.wheelDelta;
+    if ( _.numberIs( e.wheelDeltaY ) )
+    deltaY = e.wheelDeltaY;
+    if ( _.numberIs( e.wheelDeltaX ) )
+    deltaX = e.wheelDeltaX * -1;
+
+    delta = deltaY === 0 ? deltaX : deltaY;
+
+    if( _.numberIs( e.deltaY ) )
+    {
+      deltaY = e.deltaY * -1;
+      delta  = deltaY;
+    }
+    if( _.numberIs( e.deltaX ) )
+    {
+      deltaX = e.deltaX;
+      if ( deltaY === 0 )
+      delta  = deltaX * -1;
+    }
+
+    if ( deltaY === 0 && deltaX === 0 )
+    return;
+
+    let absDelta = Math.max( Math.abs( deltaY ), Math.abs( deltaX ) );
+
+    if( !lowestDelta || absDelta < lowestDelta )
+    lowestDelta = absDelta;
+
+    delta  = Math[ delta  >= 1 ? "floor" : "ceil" ]( delta  / lowestDelta );
+    deltaX = Math[ deltaX >= 1 ? "floor" : "ceil" ]( deltaX / lowestDelta );
+    deltaY = Math[ deltaY >= 1 ? "floor" : "ceil" ]( deltaY / lowestDelta );
+
+    let originalEvent = e;
+    e = new Event( originalEvent );
+    e.originalEvent = originalEvent;
+
+    e.deltaX = deltaX;
+    e.deltaY = deltaY;
+    e.deltaFactor = lowestDelta;
+
+    let r = o.onWheel( e );
+    return r;
+  }
+
 }
 
 mousewheel.defaults =
