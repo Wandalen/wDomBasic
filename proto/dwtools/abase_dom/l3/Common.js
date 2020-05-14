@@ -191,6 +191,51 @@ function _class( dom,cssClass,adding )
 
 //
 
+function addClass( targetDom, cssClass )
+{
+  _.assert( arguments.length === 2, 'Expects two arguments' );
+  _.assert( _.strDefined( cssClass ) || _.arrayIs( cssClass ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.is( targetDom ) );
+
+  if( _.strIs( cssClass ) );
+  cssClass = _.strSplitNonPreserving( cssClass, /\s+/g );
+  
+  targetDom.classList.add.apply( targetDom.classList, cssClass );
+}
+
+//
+
+function removeClass( targetDom, cssClass )
+{
+  _.assert( arguments.length === 2, 'Expects two arguments' );
+  _.assert( _.strDefined( cssClass ) || _.arrayIs( cssClass ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.is( targetDom ) );
+
+  if( _.strIs( cssClass ) );
+  cssClass = _.strSplitNonPreserving( cssClass, /\s+/g );
+  
+  targetDom.classList.remove.apply( targetDom.classList, cssClass );
+}
+
+//
+
+function hasClass( targetDom, cssClass )
+{
+  _.assert( arguments.length === 2, 'Expects two arguments' );
+  _.assert( _.strDefined( cssClass ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.is( targetDom ) );
+  
+  return targetDom.classList.contains( cssClass );
+}
+
+//
+
 /**
  * @summary Returns true if `dom` element has at least one attribute from `attrs`.
  * @param {String|Object} dom Target dom.
@@ -2119,6 +2164,9 @@ var Routines =
   val,
 
   class : _class,
+  addClass,
+  removeClass,
+  hasClass,
 
   attrHasAny,
   attrHasAll,
@@ -2157,7 +2205,7 @@ var Routines =
   cssGlobal,
   cssExport,
   css,
-
+  
   emToPx,
 
   each,
