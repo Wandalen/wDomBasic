@@ -579,6 +579,24 @@ function size2( dom )
 
 //
 
+function width( dom )
+{
+  var dom = _.dom.from( dom );
+  let style = window.getComputedStyle( dom, null );
+  return Number.parseFloat( style.width.replace( 'px', '' ) );
+}
+
+//
+
+function height( dom )
+{
+  var dom = _.dom.from( dom );
+  let style = window.getComputedStyle( dom, null );
+  return Number.parseFloat( style.height.replace( 'px', '' ) );
+}
+
+//
+
 function sizeFastGet( dom )
 {
   var dom = $( dom );
@@ -1502,7 +1520,7 @@ function on( targetDom, eventName, eventHandler )
   _.assert( _.strDefined( eventName ) );
 
   targetDom = _.dom.from( targetDom );
-  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.dom.like( targetDom ) );
 
   _.assert( _.routineIs( targetDom.addEventListener ) );
 
@@ -1581,7 +1599,7 @@ function off( targetDom, eventName, eventHandler )
   _.assert( arguments.length === 2 || _.routineIs( eventHandler ) );
 
   targetDom = _.dom.from( targetDom );
-  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.dom.like( targetDom ) );
 
   let namespaces = null;
 
@@ -2189,6 +2207,9 @@ var Routines =
   sizeGet,
   sizeFastGet,
   size2,
+  
+  width,
+  height,
 
   radiusGet,
   radiusFastGet,

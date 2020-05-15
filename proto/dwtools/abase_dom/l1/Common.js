@@ -36,6 +36,8 @@ function like( src )
   return false;
   if( src instanceof Node )
   return true;
+  if( src instanceof Window )
+  return true;
   return jqueryIs( src );
 }
 
@@ -136,9 +138,9 @@ function from( src )
     return src[ 0 ]
   }
 
-  if( _.dom.is( src ) )
+  if( _.dom.like( src ) )
   return src;
-
+  
   if( _.arrayIs( src ) )
   src = '.' + src.join( '.' );
 
