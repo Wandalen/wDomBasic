@@ -249,8 +249,8 @@ var msg = ( function msg()
 
     //
 
-    var dom = $( o.target );
-    if( !dom.length )
+    var dom = _.dom.from( o.target );
+    if( !dom )
     {
       var html =
       [
@@ -262,21 +262,28 @@ var msg = ( function msg()
           '</div>',
         '</div>',
       ].join( '\n' );
-      dom = $( html );
+      dom = _.dom.make({ html });
       var body = document.body;
-      var top = $( 'body > .panel.top' );
-      if( top.length === 1 ) top.after( dom );
-      else dom.prependTo( document.body );
-      dom.addClass( cssClass[ o.kind ] ).addClass( cssClassSemantic[ o.kind ] );
-      dom.find( '.smile' ).removeClass( 'smile' ).addClass( smiles[ o.kind ] )
+      var top = _.dom.from( 'body > .panel.top' );
+      if( top ) _.dom.after( top, dom );
+      else _.dom.prepend( document.body, dom );
+      _.dom.addClass( dom, [ cssClass[ o.kind ], cssClassSemantic[ o.kind ] ] )
+      // dom.find( '.smile' ).removeClass( 'smile' ).addClass( smiles[ o.kind ] )
+      let found = _.dom.find( dom, '.smile' );
+      _.dom.s.removeClass( found, 'smile' );
+      _.dom.s.addClass( found, smiles[ o.kind ] );
     }
 
     //
-
+    
     dom.find( 'p' ).text( o.msg ).css( 'white-space','pre' );
-    dom.find( '.header' ).text( o.title );
+    let p = _.dom.find( dom, 'p' );
+    _.dom.setText( p, o.msg );
+    _.dom.css( p, 'white-space','pre' );
+    
+    _.dom.text( _.dom.find( dom, '.header' ), o.title );
 
-    if( dom.hasClass( 'hidden' ) )
+    if( _.dom.hasClass( dom, 'hidden' ) )
     dom
     .transition
     ({
@@ -284,16 +291,14 @@ var msg = ( function msg()
       duration  : 500,
     });
 
-    if( dom[ 0 ]._domMsgInited ) return;
+    if( dom._domMsgInited ) return;
 
-    _.assert( dom.length );
-    dom[ 0 ]._domMsgInited = true;
+    _.assert( _.dom.is( dom ) );
+    dom._domMsgInited = true;
 
-    dom.find( '.close' )
-    .on( 'click', function()
+    _.dom.on( _.dom.find( dom, '.close' ), 'click', function()
     {
-      $( this )
-      .closest( '.message' )
+      this.closest( '.message' )
       .transition
       ({
         animation : 'fly down',
