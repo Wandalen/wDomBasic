@@ -319,6 +319,29 @@ function include( filePath )
 
 }
 
+//
+
+function closest( targetDom, src )
+{ 
+  _.assert( arguments.length === 2 );
+  
+  var targetDom = _.dom.from( targetDom );
+  
+  if( _.strIs( src ) )
+  return targetDom.closest( src );
+  
+  if( targetDom === src )
+  return targetDom;
+  
+  if( !targetDom.parentNode )
+  return null;
+  
+  if( targetDom.parentNode === src )
+  return targetDom.parentNode;
+  
+  return this.closest( targetDom.parentNode, src );   
+}
+
 // --
 // prototype
 // --
@@ -361,6 +384,7 @@ let Routines =
   append,
   preppend,
   find,
+  closest,
   
   include
 
