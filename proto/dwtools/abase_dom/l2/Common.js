@@ -48,6 +48,9 @@ Parent.Init = function Init()
 
 let DomsExtension =
 {
+  
+  _vectorize,
+  
   remove : _vectorize( 'remove', Infinity ),
   
   dom : Parent

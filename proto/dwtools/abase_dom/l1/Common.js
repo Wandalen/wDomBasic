@@ -236,6 +236,66 @@ function remove( src )
 
 //
 
+function after( dst, src )
+{
+  _.assert( arguments.length === 2 );
+  
+  let targetDom = _.dom.from( dst );
+  let srcDom = _.dom.from( src );
+  
+  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.dom.is( srcDom ) );
+  
+  targetDom.insertAdjacentElement( 'afterend', srcDom );
+}
+
+//
+
+function append( dst, src )
+{
+  _.assert( arguments.length === 2 );
+  
+  let targetDom = _.dom.from( dst );
+  let srcDom = _.dom.from( src );
+  
+  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.dom.is( srcDom ) );
+  
+  targetDom.appendChild( srcDom );
+}
+
+//
+
+function preppend( dst, src )
+{
+  _.assert( arguments.length === 2 );
+  
+  let targetDom = _.dom.from( dst );
+  let srcDom = _.dom.from( src );
+  
+  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.dom.is( srcDom ) );
+  
+  targetDom.insertBefore( srcDom, targetDom.firstChild );
+}
+
+//
+
+function find( src, selector )
+{
+  _.assert( arguments.length === 2 );
+  let targetDom = _.dom.from( src );
+  
+  if( _.arrayIs( selector ) )
+  selector = '.' + selector.join( '.' );
+
+  _.assert( _.strIs( selector ) );
+
+  return targetDom.querySelector( selector );
+}
+
+//
+
 function include( filePath )
 {
 
@@ -297,7 +357,11 @@ let Routines =
   empty,
   parse,
   remove,
-
+  after,
+  append,
+  preppend,
+  find,
+  
   include
 
 }

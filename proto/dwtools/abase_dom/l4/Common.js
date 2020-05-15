@@ -2,13 +2,12 @@
 
 'use strict';
 
-
-
-var _ = wTools;
-var $ = jQuery;
-_.assert( !!_.dom )
+let _global = _global_;
+let _ = _global.wTools;
+_.assert( !!_.dom );
+_.assert( !!_.dom.s );
 let Parent = _.dom;
-let Self = _.dom.s = _.dom.s || Object.create( Parent );
+let Self = _.dom.s
 var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 //
@@ -297,6 +296,9 @@ var DomsExtension =
 
   class : _class,
   attr,
+  
+  addClass : Self._vectorize( 'addClass', 2 ),
+  removeClass : Self._vectorize( 'removeClass', 2 ),
 
   sizeGet,
   sizeFastGet,

@@ -347,6 +347,20 @@ textGet.defaults =
 
 //
 
+function setText( dst, text )
+{
+  _.assert( arguments.length === 2 );
+  
+  let targetDom = _.dom.from( dst );
+  
+  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.strIs( text ) );
+  
+  targetDom.textContent = text;
+}
+
+//
+
 /**
  * @summary Looks for attribute `attrName` on `dom` element and it parents.
  * @description Returns value of attribute of undefined if nothing found.
@@ -2191,6 +2205,7 @@ var Routines =
   attrHasNone,
 
   textGet,
+  setText,
   attrInherited,
 
   nickname,
