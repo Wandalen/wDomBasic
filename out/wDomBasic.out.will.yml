@@ -158,23 +158,19 @@ module:
           - ../proto
           - ../proto/dwtools
           - ../proto/dwtools/Tools.s
-          - ../proto/dwtools/abase
-          - ../proto/dwtools/abase/.DS_Store
-          - ../proto/dwtools/abase/rbrowser
-          - ../proto/dwtools/abase/rbrowser/.DS_Store
           - ../proto/dwtools/abase_dom
           - ../proto/dwtools/abase_dom/include
           - ../proto/dwtools/abase_dom/include/DomBase.js
           - ../proto/dwtools/abase_dom/l1
           - ../proto/dwtools/abase_dom/l1/Common.js
+          - ../proto/dwtools/abase_dom/l2
+          - ../proto/dwtools/abase_dom/l2/Common.js
           - ../proto/dwtools/abase_dom/l3
           - ../proto/dwtools/abase_dom/l3/Common.js
           - ../proto/dwtools/abase_dom/l4
           - ../proto/dwtools/abase_dom/l4/Common.js
           - ../proto/dwtools/abase_dom/l5
           - ../proto/dwtools/abase_dom/l5/Common.js
-          - ../proto/dwtools/amid
-          - ../proto/dwtools/atop
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -1530,6 +1526,4 @@ module:
       ../.im.will.yml:
         hash: 8c59b507233b050a782349b1c2497553
         size: 4872
-      wDomBasic.out.will.yml:
-        hash: cff5813275910c141544ab32ac232423
-        size: 39627
+      wDomBasic.out.will.yml: *ref_0

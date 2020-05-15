@@ -17,6 +17,11 @@ let _global = _global_;
 let _ = _global.wTools;
 let Self = _.dom = _.dom || Object.create( null );
 
+function Init()
+{
+  let self = this;
+}
+
 // --
 // checkers
 // --
@@ -159,27 +164,27 @@ function make( o )
   _.assert( o.class === null || _.strDefined( o.class ) || _.arrayIs( o.class ) );
   _.assert( o.class === null || _.strDefined( o.class ) );
   _.assert( o.targetDom === null || _.strDefined( o.targetDom ) || _.dom.is( o.targetDom ) );
-
-  if( !o.targetDom )
-  o.targetDom = document.body;
-  else if( _.strIs( o.targetDom ) )
-  o.targetDom = document.querySelector( o.targetDom );
-
-  _.assert( _.dom.is( o.targetDom ) );
-
-  if( o.empty )
-  _.dom.empty( o.targetDom );
-
+  
   let result = document.createElement( 'div' );
   result.innerHTML = o.html.trim();
   result = result.firstChild;
 
   if( o.class )
-  result.className = _.arrayAs( o.class ).join( ' ' );
+  _.dom.addClass( result, o.class );
 
   if( o.id )
   result.id = o.id;
+  
+  if( o.targetDom === null )
+  return result;
+  
+  o.targetDom = _.dom.from( o.targetDom );
 
+  _.assert( _.dom.is( o.targetDom ) );
+  
+  if( o.empty )
+  _.dom.empty( o.targetDom );
+  
   o.targetDom.appendChild( result );
 
   return result;
@@ -203,6 +208,30 @@ function empty( targetDom )
 
   while ( targetDom.firstChild )
   targetDom.removeChild( targetDom.firstChild );
+}
+
+//
+
+function parse( src )
+{ 
+  _.assert( _.strDefined( src ) );
+  
+  let tmp = document.implementation.createHTMLDocument();
+  tmp.body.innerHTML = src;
+  
+  if( !tmp.body.children.length )
+  return [ document.createTextNode( src ) ];
+  
+  return [].slice.call( tmp.body.children );
+}
+
+//
+
+function remove( src )
+{
+  let dom = _.dom.from( src );
+  _.assert( _.dom.is( dom ) );
+  dom.parentNode.removeChild( dom );
 }
 
 //
@@ -236,12 +265,17 @@ function include( filePath )
 
 let Fields =
 {
-  _domBaselayer1Loaded : true
+  _domBaselayer1Loaded : true,
+
+  dom : Self,
+  single : Self,
+  s : null,
 }
 
 let Routines =
 {
-
+  Init, 
+  
   // checkers
 
   is,
@@ -261,6 +295,8 @@ let Routines =
   from,
   make,
   empty,
+  parse,
+  remove,
 
   include
 
@@ -268,5 +304,7 @@ let Routines =
 
 _.mapExtend( Self,Fields );
 _.mapExtend( Self,Routines );
+
+Self.Init();
 
 })();

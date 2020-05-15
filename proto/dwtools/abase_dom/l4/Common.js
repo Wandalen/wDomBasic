@@ -7,7 +7,8 @@
 var _ = wTools;
 var $ = jQuery;
 _.assert( !!_.dom )
-let Self = _.dom.s = _.dom.s || Object.create( null );
+let Parent = _.dom;
+let Self = _.dom.s = _.dom.s || Object.create( Parent );
 var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 //
@@ -287,12 +288,7 @@ function radiusFastGet( dom )
 // prototype
 // --
 
-var Fields =
-{
-  _domBaselayer3Loaded : true
-}
-
-var Routines =
+var DomsExtension =
 {
 
   // dom
@@ -310,7 +306,6 @@ var Routines =
 
 };
 
-_.mapExtend( Self,Fields );
-_.mapExtend( Self,Routines );
+_.mapSupplementOwn( Self, DomsExtension );
 
 })();
