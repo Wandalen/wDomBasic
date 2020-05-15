@@ -109,15 +109,13 @@ function colorOnClick( o )
 
   _.assert( _.dom.domableIs( o.canvas ) );
 
-  o.canvas = $( o.canvas );
+  o.canvas = _.dom.from( o.canvas );
 
-  _.assert( o.canvas.length === 1, 'Expects exactly one canvas' );
-  _.assert( o.canvas[ 0 ] instanceof HTMLCanvasElement, 'Expects exactly one canvas' );
+  _.assert( o.canvas instanceof HTMLCanvasElement, 'Expects exactly one canvas' );
 
-  var canvas = o.canvas[ 0 ];
+  var canvas = o.canvas;
 
-  o.canvas
-  .on( _.eventName( 'mousemove' ), function( event )
+  _.dom.on( o.canvas, _.eventName( 'mousemove' ), function( event )
   {
 
     if( !event.ctrlKey || !event.altKey )
