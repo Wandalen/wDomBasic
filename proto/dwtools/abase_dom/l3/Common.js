@@ -155,6 +155,21 @@ function val( dom,val )
 
 //
 
+function attr( dom, attr, value )
+{
+  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
+  _.assert( _.strDefined( attr ) );
+
+  var dom = _.dom.from( dom );
+  
+  if( arguments.length === 2 )
+  return dom.getAttribute( attr );
+  
+  dom.setAttribute( attr, value );
+}
+
+//
+
 /**
  * @summary Changes className property of `dom` element.
  * @description
@@ -2194,6 +2209,8 @@ var Routines =
 
   caretSelect,
   val,
+  
+  attr,
 
   class : _class,
   addClass,
