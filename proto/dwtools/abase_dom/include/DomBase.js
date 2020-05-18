@@ -8,6 +8,7 @@
     let _ = require( '../../../dwtools/Tools.s' );
 
     require( '../l1/Common.js' );
+    require( '../l2/Common.js' );
     require( '../l3/Common.js' );
     require( '../l4/Common.js' );
     require( '../l5/Common.js' );

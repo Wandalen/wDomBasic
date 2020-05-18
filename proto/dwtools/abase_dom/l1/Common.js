@@ -17,6 +17,11 @@ let _global = _global_;
 let _ = _global.wTools;
 let Self = _.dom = _.dom || Object.create( null );
 
+function Init()
+{
+  let self = this;
+}
+
 // --
 // checkers
 // --
@@ -35,6 +40,8 @@ function like( src )
   if( !_global.Node )
   return false;
   if( src instanceof Node )
+  return true;
+  if( src instanceof Window )
   return true;
   return jqueryIs( src );
 }
@@ -130,9 +137,15 @@ function from( src )
 {
   _.assert( arguments.length === 1 );
 
-  if( _.dom.is( src ) )
-  return src;
+  if( _.dom.jqueryIs( src ) )//xxx:remove later
+  {
+    _.assert( src.length === 1 );
+    return src[ 0 ]
+  }
 
+  if( _.dom.like( src ) )
+  return src;
+  
   if( _.arrayIs( src ) )
   src = '.' + src.join( '.' );
 
@@ -151,27 +164,27 @@ function make( o )
   _.assert( o.class === null || _.strDefined( o.class ) || _.arrayIs( o.class ) );
   _.assert( o.class === null || _.strDefined( o.class ) );
   _.assert( o.targetDom === null || _.strDefined( o.targetDom ) || _.dom.is( o.targetDom ) );
-
-  if( !o.targetDom )
-  o.targetDom = document.body;
-  else if( _.strIs( o.targetDom ) )
-  o.targetDom = document.querySelector( o.targetDom );
-
-  _.assert( _.dom.is( o.targetDom ) );
-
-  if( o.empty )
-  _.dom.empty( o.targetDom );
-
+  
   let result = document.createElement( 'div' );
   result.innerHTML = o.html.trim();
   result = result.firstChild;
 
   if( o.class )
-  result.className = _.arrayAs( o.class ).join( ' ' );
+  _.dom.addClass( result, o.class );
 
   if( o.id )
   result.id = o.id;
+  
+  if( o.targetDom === null )
+  return result;
+  
+  o.targetDom = _.dom.from( o.targetDom );
 
+  _.assert( _.dom.is( o.targetDom ) );
+  
+  if( o.empty )
+  _.dom.empty( o.targetDom );
+  
   o.targetDom.appendChild( result );
 
   return result;
@@ -199,6 +212,90 @@ function empty( targetDom )
 
 //
 
+function parse( src )
+{ 
+  _.assert( _.strDefined( src ) );
+  
+  let tmp = document.implementation.createHTMLDocument();
+  tmp.body.innerHTML = src;
+  
+  if( !tmp.body.children.length )
+  return [ document.createTextNode( src ) ];
+  
+  return [].slice.call( tmp.body.children );
+}
+
+//
+
+function remove( src )
+{
+  let dom = _.dom.from( src );
+  _.assert( _.dom.is( dom ) );
+  dom.parentNode.removeChild( dom );
+}
+
+//
+
+function after( dst, src )
+{
+  _.assert( arguments.length === 2 );
+  
+  let targetDom = _.dom.from( dst );
+  let srcDom = _.dom.from( src );
+  
+  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.dom.is( srcDom ) );
+  
+  targetDom.insertAdjacentElement( 'afterend', srcDom );
+}
+
+//
+
+function append( dst, src )
+{
+  _.assert( arguments.length === 2 );
+  
+  let targetDom = _.dom.from( dst );
+  let srcDom = _.dom.from( src );
+  
+  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.dom.is( srcDom ) );
+  
+  targetDom.appendChild( srcDom );
+}
+
+//
+
+function preppend( dst, src )
+{
+  _.assert( arguments.length === 2 );
+  
+  let targetDom = _.dom.from( dst );
+  let srcDom = _.dom.from( src );
+  
+  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.dom.is( srcDom ) );
+  
+  targetDom.insertBefore( srcDom, targetDom.firstChild );
+}
+
+//
+
+function find( src, selector )
+{
+  _.assert( arguments.length === 2 );
+  let targetDom = _.dom.from( src );
+  
+  if( _.arrayIs( selector ) )
+  selector = '.' + selector.join( '.' );
+
+  _.assert( _.strIs( selector ) );
+
+  return targetDom.querySelector( selector );
+}
+
+//
+
 function include( filePath )
 {
 
@@ -222,18 +319,46 @@ function include( filePath )
 
 }
 
+//
+
+function closest( targetDom, src )
+{ 
+  _.assert( arguments.length === 2 );
+  
+  var targetDom = _.dom.from( targetDom );
+  
+  if( _.strIs( src ) )
+  return targetDom.closest( src );
+  
+  if( targetDom === src )
+  return targetDom;
+  
+  if( !targetDom.parentNode )
+  return null;
+  
+  if( targetDom.parentNode === src )
+  return targetDom.parentNode;
+  
+  return this.closest( targetDom.parentNode, src );   
+}
+
 // --
 // prototype
 // --
 
 let Fields =
 {
-  _domBaselayer1Loaded : true
+  _domBaselayer1Loaded : true,
+
+  dom : Self,
+  single : Self,
+  s : null,
 }
 
 let Routines =
 {
-
+  Init, 
+  
   // checkers
 
   is,
@@ -253,12 +378,21 @@ let Routines =
   from,
   make,
   empty,
-
+  parse,
+  remove,
+  after,
+  append,
+  preppend,
+  find,
+  closest,
+  
   include
 
 }
 
 _.mapExtend( Self,Fields );
 _.mapExtend( Self,Routines );
+
+Self.Init();
 
 })();

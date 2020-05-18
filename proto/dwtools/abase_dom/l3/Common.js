@@ -155,6 +155,21 @@ function val( dom,val )
 
 //
 
+function attr( dom, attr, value )
+{
+  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
+  _.assert( _.strDefined( attr ) );
+
+  var dom = _.dom.from( dom );
+  
+  if( arguments.length === 2 )
+  return dom.getAttribute( attr );
+  
+  dom.setAttribute( attr, value );
+}
+
+//
+
 /**
  * @summary Changes className property of `dom` element.
  * @description
@@ -187,6 +202,51 @@ function _class( dom,cssClass,adding )
   else
   dom.removeClass( cssClass );
 
+}
+
+//
+
+function addClass( targetDom, cssClass )
+{
+  _.assert( arguments.length === 2, 'Expects two arguments' );
+  _.assert( _.strDefined( cssClass ) || _.arrayIs( cssClass ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.is( targetDom ) );
+
+  if( _.strIs( cssClass ) );
+  cssClass = _.strSplitNonPreserving( cssClass, /\s+/g );
+  
+  targetDom.classList.add.apply( targetDom.classList, cssClass );
+}
+
+//
+
+function removeClass( targetDom, cssClass )
+{
+  _.assert( arguments.length === 2, 'Expects two arguments' );
+  _.assert( _.strDefined( cssClass ) || _.arrayIs( cssClass ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.is( targetDom ) );
+
+  if( _.strIs( cssClass ) );
+  cssClass = _.strSplitNonPreserving( cssClass, /\s+/g );
+  
+  targetDom.classList.remove.apply( targetDom.classList, cssClass );
+}
+
+//
+
+function hasClass( targetDom, cssClass )
+{
+  _.assert( arguments.length === 2, 'Expects two arguments' );
+  _.assert( _.strDefined( cssClass ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.is( targetDom ) );
+  
+  return targetDom.classList.contains( cssClass );
 }
 
 //
@@ -298,6 +358,20 @@ textGet.defaults =
   targetDom : null,
   strippingEmptyLines : 1,
   strippingEnds : 1,
+}
+
+//
+
+function setText( dst, text )
+{
+  _.assert( arguments.length === 2 );
+  
+  let targetDom = _.dom.from( dst );
+  
+  _.assert( _.dom.is( targetDom ) );
+  _.assert( _.strIs( text ) );
+  
+  targetDom.textContent = text;
 }
 
 //
@@ -520,6 +594,38 @@ function sizeGet( dom )
 
 //
 
+function size2( dom )
+{
+  var dom = _.dom.from( dom );
+  let style = window.getComputedStyle( dom, null );
+  let result = [ 0, 0 ];
+
+  result[ 0 ] = Number.parseFloat( style.width.replace( 'px', '' ) );
+  result[ 1 ] = Number.parseFloat( style.height.replace( 'px', '' ) );
+
+  return result;
+}
+
+//
+
+function width( dom )
+{
+  var dom = _.dom.from( dom );
+  let style = window.getComputedStyle( dom, null );
+  return Number.parseFloat( style.width.replace( 'px', '' ) );
+}
+
+//
+
+function height( dom )
+{
+  var dom = _.dom.from( dom );
+  let style = window.getComputedStyle( dom, null );
+  return Number.parseFloat( style.height.replace( 'px', '' ) );
+}
+
+//
+
 function sizeFastGet( dom )
 {
   var dom = $( dom );
@@ -555,6 +661,24 @@ function radiusFastGet( dom )
 
   return sizeGet( dom );
 
+}
+
+//
+
+function offset( dom )
+{
+  var dom = _.dom.from( dom );
+
+  if( !dom.getClientRects().length ) return { top: 0, left: 0 };
+
+  let rect = dom.getBoundingClientRect();
+  let win = dom.ownerDocument.defaultView;
+  let result =
+  {
+    top: rect.top + win.pageYOffset,
+    left: rect.left + win.pageXOffset
+  };
+  return result;
 }
 
 //
@@ -885,6 +1009,36 @@ cssExport.defaults =
 {
   dstDocument : null,
   srcDocument : null,
+}
+
+//
+
+function css( targetDom, property, value, priority )
+{
+  _.assert( arguments.length >= 2, 'Expects at least two arguments' );
+
+  targetDom = _.dom.from( targetDom );
+
+  _.assert( _.dom.is( targetDom ) );
+
+  if( arguments.length === 2 )
+  {
+    if( _.objectIs( property ) )
+    {
+      for( let key in property )
+      targetDom.style.setProperty( key, property[ key ] )
+    }
+    else
+    {
+      _.assert( _.strIs( property ) );
+      return window.getComputedStyle( targetDom ).getPropertyValue( property );
+    }
+  }
+  else
+  {
+    targetDom.style.setProperty( property, value, priority );
+  }
+
 }
 
 //
@@ -1260,11 +1414,12 @@ function eventClientPosition( o )
   if( event.changedTouches && event.changedTouches.length )
   result = [ event.changedTouches[ 0 ].clientX,event.changedTouches[ 0 ].clientY ];
 
-  _.assert( !relative || _.dom.jqueryIs( relative ),'eventClientPosition :','relative must be jQuery object if defined' );
+  _.assert( !relative || _.dom.is( relative ),'eventClientPosition :','relative must be jQuery object if defined' );
+
 
   if( relative && result )
   {
-    var offset = relative.offset();
+    var offset = _.dom.offset( relative );
     result[ 0 ] -= offset.left;
     result[ 1 ] -= offset.top;
   }
@@ -1384,6 +1539,143 @@ function eventMouse( type, cx, cy )
 }
 
 //
+
+function on( targetDom, eventName, eventHandler )
+{
+  _.assert( arguments.length === 3 );
+  _.assert( _.routineIs( eventHandler ) );
+
+  eventName = _.dom.eventName( eventName );
+  _.assert( _.strDefined( eventName ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.like( targetDom ) );
+
+  _.assert( _.routineIs( targetDom.addEventListener ) );
+
+  let namespaces = null;
+
+  if( _.strHas( eventName, '.' ) )
+  {
+    namespaces = _.strSplitNonPreserving( eventName, '.' );
+    eventName = namespaces.shift();
+  }
+
+  if( !targetDom._eventHandler )
+  _eventHandlerAdd( targetDom );
+
+  targetDom.addEventListener( eventName, targetDom._eventHandler );
+
+  _.assert( _.strDefined( eventName ) );
+
+  namespaces = _.arrayAs( namespaces );
+  if( !namespaces.length )
+  namespaces.push( null );
+
+  if( !targetDom._events )
+  {
+    targetDom._events = Object.create( null );
+    targetDom._eventsCount = 0;
+  }
+  if( !targetDom._events[ eventName ] )
+  {
+    targetDom._events[ eventName ] = [];
+    targetDom._eventsCount += 1;
+  }
+
+  namespaces.forEach( ( namespace ) =>
+  {
+    targetDom._events[ eventName ].push({ eventHandler, namespace })
+  })
+}
+
+//
+
+function _eventHandlerAdd( targetDom )
+{
+  targetDom._eventHandler = function( event )
+  {
+    event._stopImmediatePropagation = event.stopImmediatePropagation;
+    event.stopImmediatePropagation = function()
+    {
+      this._stopImmediatePropagation();
+      this.immediatePropagationStopped = true;
+    };
+
+    let descriptors = this._events[ event.type ].slice();
+    for( let i = 0, l = descriptors.length; i < l ; i++ )
+    {
+      if( event.immediatePropagationStopped )
+      break;
+
+      let current = descriptors[ i ];
+      event.namespace = current.namespace;
+      event.result = current.eventHandler.apply( this, arguments );
+
+      if( event.result !== false )
+      continue;
+
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+}
+
+//
+
+function off( targetDom, eventName, eventHandler )
+{
+  _.assert( arguments.length === 2 || _.routineIs( eventHandler ) );
+
+  targetDom = _.dom.from( targetDom );
+  _.assert( _.dom.like( targetDom ) );
+
+  let namespaces = null;
+
+  if( _.strHas( eventName, '.' ) )
+  {
+    namespaces = _.strSplitNonPreserving( eventName, '.' );
+    eventName = namespaces.shift();
+  }
+
+  eventName = _.dom.eventName( eventName );
+  _.assert( _.strDefined( eventName ) );
+
+  if( !targetDom._events )
+  return;
+  if( !targetDom._events[ eventName ])
+  return;
+
+  namespaces = _.arrayAs( namespaces );
+
+  if( !namespaces.length )
+  namespaces.push( null );
+
+  let descriptors = targetDom._events[ eventName ];
+
+  for( var i = descriptors.length - 1; i >= 0; i-- )
+  {
+    let descriptor = descriptors[ i ];
+    if( !eventHandler || descriptor.eventHandler === eventHandler )
+    if( _.longHas( namespaces, descriptor.namespace ) )
+    descriptors.splice( i, 1 );
+  }
+
+  if( !descriptors.length )
+  {
+    targetDom.removeEventListener( eventName, targetDom._eventHandler );
+    delete targetDom._events[ eventName ];
+    targetDom._eventsCount -= 1;
+    if( !targetDom._eventsCount )
+    {
+      delete targetDom._events;
+      delete targetDom._eventsCount;
+      delete targetDom._eventHandler;
+    }
+  }
+}
+
+//
 /*
 function eventWheelZero( event,x,y )
 {
@@ -1452,6 +1744,96 @@ function fromAtLeastOne( targetDom )
   _.assert( targetDom.length > 0, 'Expects at least one DOM element, but found none for', wasDom );
 
   return targetDom;
+}
+
+//
+
+let lowestDelta = null;
+function mousewheel( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routineOptions( mousewheel, o );
+  _.assert( _.routineIs( o.onWheel ) );
+
+  let targetDom = _.dom.from( o.targetDom );
+  _.assert( _.dom.is( targetDom ) );
+
+  if( typeof document.onwheel !== undefined || document.documentMode >= 9 )
+  {
+    targetDom.addEventListener( 'wheel', _mousewheelHandler, false );
+  }
+  else
+  {
+    targetDom.addEventListener( 'mousewheel', _mousewheelHandler, false );
+    targetDom.addEventListener( 'DomMouseScroll', _mousewheelHandler, false );
+    targetDom.addEventListener( 'MozMousePixelScroll', _mousewheelHandler, false );
+  }
+
+  //
+
+  function _mousewheelHandler( e )
+  {
+    //based on https://github.com/jquery/jquery-mousewheel/blob/master/jquery.mousewheel.js
+
+    let delta = 0;
+    let deltaX = 0;
+    let deltaY = 0;
+
+    e.preventDefault();
+
+    if ( _.numberIs( e.detail ) )
+    deltaY = e.detail * -1;
+    if ( _.numberIs( e.wheelDelta ) )
+    deltaY = e.wheelDelta;
+    if ( _.numberIs( e.wheelDeltaY ) )
+    deltaY = e.wheelDeltaY;
+    if ( _.numberIs( e.wheelDeltaX ) )
+    deltaX = e.wheelDeltaX * -1;
+
+    delta = deltaY === 0 ? deltaX : deltaY;
+
+    if( _.numberIs( e.deltaY ) )
+    {
+      deltaY = e.deltaY * -1;
+      delta  = deltaY;
+    }
+    if( _.numberIs( e.deltaX ) )
+    {
+      deltaX = e.deltaX;
+      if ( deltaY === 0 )
+      delta  = deltaX * -1;
+    }
+
+    if ( deltaY === 0 && deltaX === 0 )
+    return;
+
+    let absDelta = Math.max( Math.abs( deltaY ), Math.abs( deltaX ) );
+
+    if( !lowestDelta || absDelta < lowestDelta )
+    lowestDelta = absDelta;
+
+    delta  = Math[ delta  >= 1 ? "floor" : "ceil" ]( delta  / lowestDelta );
+    deltaX = Math[ deltaX >= 1 ? "floor" : "ceil" ]( deltaX / lowestDelta );
+    deltaY = Math[ deltaY >= 1 ? "floor" : "ceil" ]( deltaY / lowestDelta );
+
+    let originalEvent = e;
+    e = new Event( originalEvent );
+    e.originalEvent = originalEvent;
+
+    e.deltaX = deltaX;
+    e.deltaY = deltaY;
+    e.deltaFactor = lowestDelta;
+
+    let r = o.onWheel( e );
+    return r;
+  }
+
+}
+
+mousewheel.defaults =
+{
+  targetDom : null,
+  onWheel : null
 }
 
 //
@@ -1827,14 +2209,20 @@ var Routines =
 
   caretSelect,
   val,
+  
+  attr,
 
   class : _class,
+  addClass,
+  removeClass,
+  hasClass,
 
   attrHasAny,
   attrHasAll,
   attrHasNone,
 
   textGet,
+  setText,
   attrInherited,
 
   nickname,
@@ -1850,9 +2238,15 @@ var Routines =
 
   sizeGet,
   sizeFastGet,
+  size2,
+  
+  width,
+  height,
 
   radiusGet,
   radiusFastGet,
+
+  offset,
 
   first,
   firstOf,
@@ -1863,7 +2257,8 @@ var Routines =
   cssSet,
   cssGlobal,
   cssExport,
-
+  css,
+  
   emToPx,
 
   each,
@@ -1881,9 +2276,13 @@ var Routines =
   eventRedirect,
   eventMouse,
 
+  on,
+  off,
+
   /*eventWheelZero : eventWheelZero,*/
 
   fromAtLeastOne,
+  mousewheel,
   wheelOn,
 
   eventWheelDelta,
