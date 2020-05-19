@@ -115,7 +115,7 @@ function colorOnClick( o )
 
   var canvas = o.canvas;
 
-  _.dom.on( o.canvas, _.eventName( 'mousemove' ), function( event )
+  _.dom.on( o.canvas, _.dom.eventName( 'mousemove' ), function( event )
   {
 
     if( !event.ctrlKey || !event.altKey )
@@ -667,7 +667,7 @@ function menuable( o )
 
   }
 
-  /*o.itemsDom.on( _.eventName( 'click' ), handleItemSelect );*/
+  /*o.itemsDom.on( _.dom.eventName( 'click' ), handleItemSelect );*/
 
   _dom.habbitMouseClick
   ({
@@ -687,7 +687,7 @@ function menuable( o )
 
   /* icon handler */
 
-  o.iconOpenDom.on( _.eventName( 'click' ), function( e )
+  o.iconOpenDom.on( _.dom.eventName( 'click' ), function( e )
   {
 
     console.log( 'menuable.click' );
@@ -719,7 +719,7 @@ function menuable( o )
     _.dom.s.class( o.iconParentDom,[ 'wmenu-icon-hiding' ],1 );
     // _.dom.s.class( o.iconOpenDom,[ 'transition','hidden' ],1 );
     // o.iconParentDom
-    // .on( _.eventName( 'mouseleave' ), function( e )
+    // .on( _.dom.eventName( 'mouseleave' ), function( e )
     // {
     //   var t = $( this ).children();
     //   t.transition
@@ -728,7 +728,7 @@ function menuable( o )
     //     displayType : 'flex',
     //   });
     // })
-    // .on( _.eventName( 'mouseenter' ), function( e )
+    // .on( _.dom.eventName( 'mouseenter' ), function( e )
     // {
     //   var t = $( this ).children();
     //   t.transition
@@ -853,7 +853,7 @@ function resizable( o )
   /* handler */
 
   o.handleParentDom
-  .on( _.eventName( 'mousedown' ), function( e )
+  .on( _.dom.eventName( 'mousedown' ), function( e )
   {
     var target = $( e.target );
 
@@ -892,7 +892,7 @@ function resizable( o )
   o.target
 
   o.targetDom
-  .on( _.eventName( 'drag' ), function( e )
+  .on( _.dom.eventName( 'drag' ), function( e )
   {
     if( !o.state.start ) return;
     e.preventDefault();
@@ -911,7 +911,7 @@ function resizable( o )
   {
 
     o.containerDom
-    .on( _.eventName( 'mouseup' ), function( e )
+    .on( _.dom.eventName( 'mouseup' ), function( e )
     {
       if( !o.state.start )
       return;
@@ -922,7 +922,7 @@ function resizable( o )
       o.containerDom.removeAttr( 'wdraggable-not' );
 
     })
-    .on( _.eventName( 'mousemove' ), function( e )
+    .on( _.dom.eventName( 'mousemove' ), function( e )
     {
       if( !o.state.start )
       return;
@@ -1338,7 +1338,7 @@ function copyable( o )
   /* */
 
   o.targetDom
-  .on( _.eventName( 'click' ), function( e )
+  .on( _.dom.eventName( 'click' ), function( e )
   {
     var dom = $( this );
     var val = this.value;
@@ -1392,7 +1392,7 @@ function copyableHtmlText( o )
   /* */
 
   o.targetDom
-  .on( _.eventName( 'click' ), function( e )
+  .on( _.dom.eventName( 'click' ), function( e )
   {
     var dom = $( this ).closest( '[ wcopyable-html-text ]' );
     _.dom.clipboardCopy( _.dom.textGet( dom ) );
@@ -1484,7 +1484,7 @@ function pinnable( o )
   /* */
 
   o.targetDom
-  .on( _.eventName( 'click' ),handlePin );
+  .on( _.dom.eventName( 'click' ),handlePin );
 
   _.dom.abilityRegister
   ({
@@ -1536,7 +1536,7 @@ var subjective = (function()
     //
 
     o.target
-    .on( _.eventName( 'mouseleave' ), function( event )
+    .on( _.dom.eventName( 'mouseleave' ), function( event )
     {
       var icon = $( this );
       var dom = icon.closest( '[ wsubjective ]' );
@@ -1668,7 +1668,7 @@ function tristatable( o )
 
   if( o.eventForActivation )
   o.items
-  .on( _.eventName( o.eventForActivation ), function( event )
+  .on( _.dom.eventName( o.eventForActivation ), function( event )
   {
     var t = $( this );
     var state = Object.create( null );
@@ -1718,7 +1718,7 @@ function buttonMake( o )
   o.buttonDom.appendTo( o.parentDom );
 
   if( o.onClick ) {
-    o.buttonDom.on( _.eventName( 'mouseup' ),( e ) => o.onClick.call( o.context || this,e ) );
+    o.buttonDom.on( _.dom.eventName( 'mouseup' ),( e ) => o.onClick.call( o.context || this,e ) );
     if( o.keyboard && _global_.Mousetrap )
     _global_.Mousetrap.bind( o.keyboard,( e ) => o.onClick.call( o.context || this,e ) );
   }
@@ -2027,9 +2027,9 @@ textEditMake.defaults =
 function habbitMouseClick( o )
 {
 
-  var mouseup = _.eventName( 'mouseup' );
-  var mousedown = _.eventName( 'mousedown' );
-  var mousemove = _.eventName( 'mousemove' );
+  var mouseup = _.dom.eventName( 'mouseup' );
+  var mousedown = _.dom.eventName( 'mousedown' );
+  var mousemove = _.dom.eventName( 'mousemove' );
 
   _.routineOptions( habbitMouseClick,o );
 
@@ -2426,10 +2426,10 @@ habbitKeyEnter.defaults =
 
 function habbitDrag( o )
 {
-  var mouseup = _.eventName( 'mouseup' );
-  var mousedown = _.eventName( 'mousedown' );
-  var mousemove = _.eventName( 'mousemove' );
-  var mouseleave = _.eventName( 'mouseleave' );
+  var mouseup = _.dom.eventName( 'mouseup' );
+  var mousedown = _.dom.eventName( 'mousedown' );
+  var mousemove = _.dom.eventName( 'mousemove' );
+  var mouseleave = _.dom.eventName( 'mouseleave' );
   var value = '';
   var lastEvent = null;
 
@@ -2751,7 +2751,7 @@ var draggable = (function()
     /* */
 
     o.target
-    .on( _.eventName( 'mousedown' ), function( event )
+    .on( _.dom.eventName( 'mousedown' ), function( event )
     {
 
       // debugger;
@@ -2774,7 +2774,7 @@ var draggable = (function()
       o.container.attr( 'wdragging',1 );
       dom.attr( 'wdragging',1 );
     })
-    .on( _.eventName( 'drag' ), function( event )
+    .on( _.dom.eventName( 'drag' ), function( event )
     {
       event.preventDefault();
       return false;
@@ -2784,14 +2784,14 @@ var draggable = (function()
     /* */
 
     o.container
-    .on( _.eventName( 'mouseup' ), function( event )
+    .on( _.dom.eventName( 'mouseup' ), function( event )
     {
       if( !o.state.start ) return;
       o.state.start = null;
       o.state.target.removeAttr( 'wdragging' );
       o.container.removeAttr( 'wdragging' );
     })
-    .on( _.eventName( 'mousemove' ), function( event )
+    .on( _.dom.eventName( 'mousemove' ), function( event )
     {
       if( !o.state.start ) return;
       var dom = o.state.target;
@@ -2822,7 +2822,7 @@ function habitRightClick( targetSelector,onEvent )
 {
 
   var touchSupported = ( 'ontouchstart' in window ) || ( 'onmsgesturechange' in window );
-  var eventName = _.eventName( touchSupported ? 'taphold' : 'mouseup' );
+  var eventName = _.dom.eventName( touchSupported ? 'taphold' : 'mouseup' );
 
 
   $( targetSelector ).on( eventName,function( event )
