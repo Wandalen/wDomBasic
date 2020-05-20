@@ -1396,6 +1396,9 @@ function eventClientPosition( o )
 
   var event = o.event;
   var relative = o.relative;
+  
+  if( relative )
+  relative = _.dom.from( relative );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.dom.eventIs( event ) );
@@ -1611,6 +1614,7 @@ function _eventHandlerAdd( targetDom )
       let current = descriptors[ i ];
       event.namespace = current.namespace;
       event.result = current.eventHandler.apply( this, arguments );
+      event.originalEvent = event;
 
       if( event.result !== false )
       continue;
