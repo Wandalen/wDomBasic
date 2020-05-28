@@ -291,7 +291,12 @@ function find( src, selector )
 
   _.assert( _.strIs( selector ) );
 
-  return targetDom.querySelector( selector );
+  let result = targetDom.querySelectorAll( selector );
+  
+  if( result.length === 1 )
+  return result[ 0 ];
+  
+  return result;
 }
 
 //

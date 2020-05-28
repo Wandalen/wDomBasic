@@ -5,7 +5,7 @@
 
 
 var _ = wTools;
-var $ = jQuery;
+var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 let Self = _.dom = _.dom || Object.create( null );
 var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
@@ -1396,6 +1396,9 @@ function eventClientPosition( o )
 
   var event = o.event;
   var relative = o.relative;
+  
+  if( relative )
+  relative = _.dom.from( relative );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.dom.eventIs( event ) );
@@ -1611,6 +1614,7 @@ function _eventHandlerAdd( targetDom )
       let current = descriptors[ i ];
       event.namespace = current.namespace;
       event.result = current.eventHandler.apply( this, arguments );
+      event.originalEvent = event;
 
       if( event.result !== false )
       continue;
@@ -2064,21 +2068,21 @@ eventsBindAll.defaults =
 
 //
 
-var _jqueryOriginalOn = jQuery.fn.on;
+var _jqueryOriginalOn = $ ? $.fn.on : null;
 function eventsBindWatcher( o )
 {
   o = _.routineOptions( eventsBindWatcher,o )
 
-  _.assert( _jqueryOriginalOn === jQuery.fn.on,'on of jQuery is already overwritten' );
+  _.assert( _jqueryOriginalOn === $.fn.on,'on of jQuery is already overwritten' );
 
   o.result = o.result || [];
   o.close = function close()
   {
-    jQuery.fn.on = _jqueryOriginalOn;
+    $.fn.on = _jqueryOriginalOn;
     return o.result;
   }
 
-  jQuery.fn.on = function on( eventName,handler )
+  $.fn.on.fn.on = function on( eventName,handler )
   {
     var dom = $( this );
     var selector;
@@ -2137,8 +2141,8 @@ function eventFire( o )
 {
   _.routineOptions( eventFire,o );
   _.assert( _.dom.domableIs( o.targetDom ) );
-
-  o.targetDom = $( o.targetDom );
+  
+  o.targetDom = _.dom.from( o.targetDom );
 
   var event = new Event( o.kind,
   {
@@ -2152,16 +2156,27 @@ function eventFire( o )
   if( o.extendMap )
   _.mapExtend( event,o.extendMap );
 
+  // if( !o.informingDescandants )
+  // o.targetDom.each( function( k,dom )
+  // {
+  //   dom.dispatchEvent( event );
+  // });
+  // else
+  // o.targetDom.find( '*' ).addBack().each( function( k,dom )
+  // {
+  //   dom.dispatchEvent( event );
+  // });
+  
   if( !o.informingDescandants )
-  o.targetDom.each( function( k,dom )
   {
-    dom.dispatchEvent( event );
-  });
+    o.targetDom.dispatchEvent( event );
+  }
   else
-  o.targetDom.find( '*' ).addBack().each( function( k,dom )
   {
-    dom.dispatchEvent( event );
-  });
+    let descandants = _.dom.find( o.targetDom, '*' );
+    descandants = _.arrayAs( descandants );
+    descandants.forEach( ( dom ) => dom.dispatchEvent( event ) )
+  }
 
 }
 
