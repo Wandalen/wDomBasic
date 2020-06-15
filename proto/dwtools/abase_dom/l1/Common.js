@@ -145,7 +145,7 @@ function from( src )
 
   if( _.dom.like( src ) )
   return src;
-  
+
   if( _.arrayIs( src ) )
   src = '.' + src.join( '.' );
 
@@ -164,7 +164,7 @@ function make( o )
   _.assert( o.class === null || _.strDefined( o.class ) || _.arrayIs( o.class ) );
   _.assert( o.class === null || _.strDefined( o.class ) );
   _.assert( o.targetDom === null || _.strDefined( o.targetDom ) || _.dom.is( o.targetDom ) );
-  
+
   let result = document.createElement( 'div' );
   result.innerHTML = o.html.trim();
   result = result.firstChild;
@@ -174,17 +174,17 @@ function make( o )
 
   if( o.id )
   result.id = o.id;
-  
+
   if( o.targetDom === null )
   return result;
-  
+
   o.targetDom = _.dom.from( o.targetDom );
 
   _.assert( _.dom.is( o.targetDom ) );
-  
+
   if( o.empty )
   _.dom.empty( o.targetDom );
-  
+
   o.targetDom.appendChild( result );
 
   return result;
@@ -213,15 +213,15 @@ function empty( targetDom )
 //
 
 function parse( src )
-{ 
+{
   _.assert( _.strDefined( src ) );
-  
+
   let tmp = document.implementation.createHTMLDocument();
   tmp.body.innerHTML = src;
-  
+
   if( !tmp.body.children.length )
   return [ document.createTextNode( src ) ];
-  
+
   return [].slice.call( tmp.body.children );
 }
 
@@ -239,13 +239,13 @@ function remove( src )
 function after( dst, src )
 {
   _.assert( arguments.length === 2 );
-  
+
   let targetDom = _.dom.from( dst );
   let srcDom = _.dom.from( src );
-  
+
   _.assert( _.dom.is( targetDom ) );
   _.assert( _.dom.is( srcDom ) );
-  
+
   targetDom.insertAdjacentElement( 'afterend', srcDom );
 }
 
@@ -254,13 +254,13 @@ function after( dst, src )
 function append( dst, src )
 {
   _.assert( arguments.length === 2 );
-  
+
   let targetDom = _.dom.from( dst );
   let srcDom = _.dom.from( src );
-  
+
   _.assert( _.dom.is( targetDom ) );
   _.assert( _.dom.is( srcDom ) );
-  
+
   targetDom.appendChild( srcDom );
 }
 
@@ -269,13 +269,13 @@ function append( dst, src )
 function preppend( dst, src )
 {
   _.assert( arguments.length === 2 );
-  
+
   let targetDom = _.dom.from( dst );
   let srcDom = _.dom.from( src );
-  
+
   _.assert( _.dom.is( targetDom ) );
   _.assert( _.dom.is( srcDom ) );
-  
+
   targetDom.insertBefore( srcDom, targetDom.firstChild );
 }
 
@@ -285,17 +285,17 @@ function find( src, selector )
 {
   _.assert( arguments.length === 2 );
   let targetDom = _.dom.from( src );
-  
+
   if( _.arrayIs( selector ) )
   selector = '.' + selector.join( '.' );
 
   _.assert( _.strIs( selector ) );
 
   let result = targetDom.querySelectorAll( selector );
-  
+
   if( result.length === 1 )
   return result[ 0 ];
-  
+
   return result;
 }
 
@@ -304,11 +304,11 @@ function find( src, selector )
 function include( filePath )
 {
 
-  var ext = _.uri.ext( filePath );
+  let ext = _.uri.ext( filePath );
 
   if( _.longHas( [ 'css', 'less' ], ext ) )
   {
-    var link = document.createElement( 'link' );
+    let link = document.createElement( 'link' );
     link.href = filePath;
     link.type = 'text/' + ext;
     link.rel = 'stylesheet';
@@ -317,7 +317,7 @@ function include( filePath )
   }
   else
   {
-    var script = document.createElement( 'script' );
+    let script = document.createElement( 'script' );
     script.src = filePath;
     document.head.appendChild( script );
   }
@@ -327,24 +327,24 @@ function include( filePath )
 //
 
 function closest( targetDom, src )
-{ 
+{
   _.assert( arguments.length === 2 );
-  
-  var targetDom = _.dom.from( targetDom );
-  
+
+  targetDom = _.dom.from( targetDom );
+
   if( _.strIs( src ) )
   return targetDom.closest( src );
-  
+
   if( targetDom === src )
   return targetDom;
-  
+
   if( !targetDom.parentNode )
   return null;
-  
+
   if( targetDom.parentNode === src )
   return targetDom.parentNode;
-  
-  return this.closest( targetDom.parentNode, src );   
+
+  return this.closest( targetDom.parentNode, src );
 }
 
 // --
@@ -362,8 +362,8 @@ let Fields =
 
 let Routines =
 {
-  Init, 
-  
+  Init,
+
   // checkers
 
   is,
@@ -390,7 +390,7 @@ let Routines =
   preppend,
   find,
   closest,
-  
+
   include
 
 }

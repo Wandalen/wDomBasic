@@ -8,7 +8,7 @@ _.assert( !!_.dom );
 _.assert( !!_.dom.s );
 let Parent = _.dom;
 let Self = _.dom.s
-var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
+let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 //
 // dom
@@ -35,12 +35,12 @@ function val( dom,vals )
     onUp : function( dom )
     {
 
-      var selector = dom.name;
+      let selector = dom.name;
 
       if( !_.strDefined( selector ) )
       return;
 
-      var val = _.select( vals,selector );
+      let val = _.select( vals,selector );
 
       if( val === undefined )
       return;
@@ -57,21 +57,21 @@ function val( dom,vals )
     dom : dom,
     onUp : function( dom,o )
     {
-      var text = '';
-      var val = _.dom.val( dom );
+      let text = '';
+      let val = _.dom.val( dom );
 
       if( val === undefined )
       return;
       // return result;
 
-      var val = _.dom.val( dom );
+      // let val = _.dom.val( dom );
 
       if( !isNaN( val ) )
       val = Number( val );
 
-      var selector = dom.name;
+      let selector = dom.name;
 
-      var parts = _.strSplit
+      let parts = _.strSplit
       ({
         src : selector,
         delimeter : [ '.', '[', ']' ],
@@ -146,7 +146,7 @@ function _class( dom,classes,adding )
       else
       dom.removeClass( classes );
     }
-    else for( var c = 0 ; c < classes.length ; c++ )
+    else for( let c = 0 ; c < classes.length ; c++ )
     {
       if( adding )
       dom.addClass( classes[ c ] );
@@ -190,8 +190,8 @@ function attr( dom,attrs,adding )
 
     _.assert( dom.length === 1 );
 
-    var result = Object.create( null );
-    for( var a = 0 ; a < dom[ 0 ].attributes.length ; a++ )
+    let result = Object.create( null );
+    for( let a = 0 ; a < dom[ 0 ].attributes.length ; a++ )
     {
       if( dom[ 0 ].attributes[ a ].name === 'class' )
       continue;
@@ -235,10 +235,10 @@ function attr( dom,attrs,adding )
 
 function sizeGet( dom )
 {
-  var result = [];
-  var dom = $( dom );
+  let result = [];
+  dom = $( dom );
 
-  for( var i = 0 ; i < dom.length ; i++ )
+  for( let i = 0 ; i < dom.length ; i++ )
   result[ i ] = _.dom.sizeGet( dom[ i ] );
 
   return result;
@@ -248,10 +248,10 @@ function sizeGet( dom )
 
 function sizeFastGet( dom )
 {
-  var result = [];
-  var dom = $( dom );
+  let result = [];
+  dom = $( dom );
 
-  for( var i = 0 ; i < dom.length ; i++ )
+  for( let i = 0 ; i < dom.length ; i++ )
   result[ i ] = _.dom.sizeFastGet( dom[ i ] );
 
   return result;
@@ -261,10 +261,10 @@ function sizeFastGet( dom )
 
 function radiusGet( dom )
 {
-  var result = [];
-  var dom = $( dom );
+  let result = [];
+  dom = $( dom );
 
-  for( var i = 0 ; i < dom.length ; i++ )
+  for( let i = 0 ; i < dom.length ; i++ )
   result[ i ] = _.dom.radiusGet( dom[ i ] );
 
   return result;
@@ -274,10 +274,10 @@ function radiusGet( dom )
 
 function radiusFastGet( dom )
 {
-  var result = [];
-  var dom = $( dom );
+  let result = [];
+  dom = $( dom );
 
-  for( var i = 0 ; i < dom.length ; i++ )
+  for( let i = 0 ; i < dom.length ; i++ )
   result[ i ] = _.dom.radiusFastGet( dom[ i ] );
 
   return result;
@@ -287,7 +287,7 @@ function radiusFastGet( dom )
 // prototype
 // --
 
-var DomsExtension =
+let DomsExtension =
 {
 
   // dom
@@ -296,7 +296,7 @@ var DomsExtension =
 
   class : _class,
   attr,
-  
+
   addClass : Self._vectorize( 'addClass', 2 ),
   removeClass : Self._vectorize( 'removeClass', 2 ),
 

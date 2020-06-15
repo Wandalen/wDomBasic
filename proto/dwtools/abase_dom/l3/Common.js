@@ -4,10 +4,10 @@
 
 
 
-var _ = wTools;
-var $ = typeof jQuery !== 'undefined' ? jQuery : null;
+let _ = wTools;
+let $ = typeof jQuery !== 'undefined' ? jQuery : null;
 let Self = _.dom = _.dom || Object.create( null );
-var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
+let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 //
 // dom
@@ -43,7 +43,7 @@ function caretSelect( dom, selection )
     }
     else if( dom.createTextRange )
     {
-      var range = dom.createTextRange();
+      let range = dom.createTextRange();
       range.collapse( true );
       range.moveEnd( 'character',selection[ 1 ] );
       range.moveStart( 'character',selection[ 0 ] );
@@ -64,7 +64,7 @@ function caretSelect( dom, selection )
     }
     else if( dom.createTextRange )
     {
-      var range = dom.createTextRange();
+      let range = dom.createTextRange();
       return [ range.startOffset,range.endOffset ];
     }
   }
@@ -92,7 +92,7 @@ function val( dom,val )
 {
 
   var result;
-  var dom = $( dom );
+  dom = $( dom );
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
@@ -160,11 +160,11 @@ function attr( dom, attr, value )
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
   _.assert( _.strDefined( attr ) );
 
-  var dom = _.dom.from( dom );
-  
+  dom = _.dom.from( dom );
+
   if( arguments.length === 2 )
   return dom.getAttribute( attr );
-  
+
   dom.setAttribute( attr, value );
 }
 
@@ -216,7 +216,7 @@ function addClass( targetDom, cssClass )
 
   if( _.strIs( cssClass ) );
   cssClass = _.strSplitNonPreserving( cssClass, /\s+/g );
-  
+
   targetDom.classList.add.apply( targetDom.classList, cssClass );
 }
 
@@ -232,7 +232,7 @@ function removeClass( targetDom, cssClass )
 
   if( _.strIs( cssClass ) );
   cssClass = _.strSplitNonPreserving( cssClass, /\s+/g );
-  
+
   targetDom.classList.remove.apply( targetDom.classList, cssClass );
 }
 
@@ -245,7 +245,7 @@ function hasClass( targetDom, cssClass )
 
   targetDom = _.dom.from( targetDom );
   _.assert( _.dom.is( targetDom ) );
-  
+
   return targetDom.classList.contains( cssClass );
 }
 
@@ -262,7 +262,7 @@ function hasClass( targetDom, cssClass )
 
 function attrHasAny( dom,attrs )
 {
-  var has = _.mapKeys( _.dom.s.attr( dom ) );
+  let has = _.mapKeys( _.dom.s.attr( dom ) );
   return _.longHasAny( has,attrs );
 }
 
@@ -279,7 +279,7 @@ function attrHasAny( dom,attrs )
 
 function attrHasAll( dom,attrs )
 {
-  var has = _.mapKeys( _.dom.s.attr( dom ) );
+  let has = _.mapKeys( _.dom.s.attr( dom ) );
   debugger;
   return _.longHasAll( has,attrs );
 }
@@ -297,7 +297,7 @@ function attrHasAll( dom,attrs )
 
 function attrHasNone( dom,attrs )
 {
-  var has = _.mapKeys( _.dom.s.attr( dom ) );
+  let has = _.mapKeys( _.dom.s.attr( dom ) );
   debugger;
   return _.longHasNone( has,attrs );
 }
@@ -322,14 +322,14 @@ function textGet( o )
   o = { targetDom : o }
   _.routineOptions( textGet,o );
 
-  var result = _.dom.each
+  let result = _.dom.each
   ({
     recursive : true,
     result : '',
     dom : o.targetDom,
     onUp : function( dom,iterator )
     {
-      var text = '';
+      let text = '';
 
       if( dom.nodeType === Node.TEXT_NODE )
       text = dom.nodeValue;
@@ -365,12 +365,12 @@ textGet.defaults =
 function setText( dst, text )
 {
   _.assert( arguments.length === 2 );
-  
+
   let targetDom = _.dom.from( dst );
-  
+
   _.assert( _.dom.is( targetDom ) );
   _.assert( _.strIs( text ) );
-  
+
   targetDom.textContent = text;
 }
 
@@ -397,7 +397,7 @@ function attrInherited( dom,attrName )
   _.assert( _.dom.is( dom ) );
   _.assert( _.strIs( attrName ) );
 
-  var p = dom;
+  let p = dom;
   do
   {
     result = p.getAttribute( attrName );
@@ -428,7 +428,7 @@ function nickname( dom,attrName )
   _.assert( arguments.length <= 2 );
   _.assert( _.dom.is( dom ) );
 
-  var name = dom.tagName.toLowerCase();
+  let name = dom.tagName.toLowerCase();
 
   if( dom.id )
   name += '#' + dom.id;
@@ -470,13 +470,13 @@ function leftTopGet( dom )
   _.assert( _.dom.domableIs( dom ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  var dom = $( dom );
-  var result = [];
+  dom = $( dom );
+  let result = [];
 
   result[ 0 ] = dom.css( 'left' );
   result[ 1 ] = dom.css( 'top' );
 
-  for( var i = 0 ; i < 2 ; i++ )
+  for( let i = 0 ; i < 2 ; i++ )
   if( _.strIs( result[ i ] ) )
   result[ i ] = _.strRemoveEnd( result[ i ],'px' );
 
@@ -494,7 +494,7 @@ function leftTopSet( dom,pos )
   _.assert( pos.length === 2 );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
-  var dom = $( dom );
+  dom = $( dom );
 
   dom.css
   ({
@@ -513,8 +513,8 @@ function centerSet( dom,pos )
   _.assert( pos.length === 2 );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
-  var dom = $( dom );
-  var size = _.dom.sizeFastGet( dom );
+  dom = $( dom );
+  let size = _.dom.sizeFastGet( dom );
 
   _.assert( dom.length === 1 );
 
@@ -532,11 +532,11 @@ function centerSet( dom,pos )
 
 function positionGet( dom )
 {
-  var dom = $( dom );
+  dom = $( dom );
 
   _.assert( dom.length === 1 );
 
-  var result = dom.position();
+  let result = dom.position();
 
   result = [ result.left,result.top ];
 
@@ -549,14 +549,14 @@ function positionGet( dom )
 
 function boundingBoxGet( dom )
 {
-  var dom = $( dom );
+  dom = $( dom );
 
   _.assert( dom.length === 1 );
 
-  var child = dom[ 0 ].getBoundingClientRect();
-  var parent = dom[ 0 ].parentNode.getBoundingClientRect();
+  let child = dom[ 0 ].getBoundingClientRect();
+  let parent = dom[ 0 ].parentNode.getBoundingClientRect();
 
-  var result = [ child.left-parent.left,child.top-parent.top,child.right-parent.left,child.bottom-parent.top ];
+  let result = [ child.left-parent.left,child.top-parent.top,child.right-parent.left,child.bottom-parent.top ];
 
   return result;
 }
@@ -565,12 +565,12 @@ function boundingBoxGet( dom )
 
 function boundingBoxGlobalGet( dom )
 {
-  var dom = $( dom );
+  dom = $( dom );
 
   _.assert( dom.length === 1 );
 
-  var child = dom[ 0 ].getBoundingClientRect();
-  var result = [ child.left,child.top,child.right,child.bottom ];
+  let child = dom[ 0 ].getBoundingClientRect();
+  let result = [ child.left,child.top,child.right,child.bottom ];
 
   dom[ 0 ]._domBondingBoxGet = result;
 
@@ -581,8 +581,8 @@ function boundingBoxGlobalGet( dom )
 
 function sizeGet( dom )
 {
-  var result = [];
-  var dom = $( dom );
+  let result = [];
+  dom = $( dom );
 
   _.assert( dom.length === 1 );
 
@@ -596,7 +596,7 @@ function sizeGet( dom )
 
 function size2( dom )
 {
-  var dom = _.dom.from( dom );
+  dom = _.dom.from( dom );
   let style = window.getComputedStyle( dom, null );
   let result = [ 0, 0 ];
 
@@ -610,7 +610,7 @@ function size2( dom )
 
 function width( dom )
 {
-  var dom = _.dom.from( dom );
+  dom = _.dom.from( dom );
   let style = window.getComputedStyle( dom, null );
   return Number.parseFloat( style.width.replace( 'px', '' ) );
 }
@@ -619,7 +619,7 @@ function width( dom )
 
 function height( dom )
 {
-  var dom = _.dom.from( dom );
+  dom = _.dom.from( dom );
   let style = window.getComputedStyle( dom, null );
   return Number.parseFloat( style.height.replace( 'px', '' ) );
 }
@@ -628,7 +628,7 @@ function height( dom )
 
 function sizeFastGet( dom )
 {
-  var dom = $( dom );
+  dom = $( dom );
 
   if( dom[ 0 ]._sizeGet )
   return dom[ 0 ]._sizeGet;
@@ -642,7 +642,7 @@ function sizeFastGet( dom )
 function radiusGet( dom )
 {
   var result;
-  var dom = $( dom );
+  dom = $( dom );
 
   result = Math.min( dom.outerWidth(),dom.outerHeight() );
   dom[ 0 ]._radiusGet = result;
@@ -654,7 +654,7 @@ function radiusGet( dom )
 
 function radiusFastGet( dom )
 {
-  var dom = $( dom );
+  dom = $( dom );
 
   if( dom[ 0 ]._radiusGet )
   return dom[ 0 ]._radiusGet;
@@ -667,7 +667,7 @@ function radiusFastGet( dom )
 
 function offset( dom )
 {
-  var dom = _.dom.from( dom );
+  dom = _.dom.from( dom );
 
   if( !dom.getClientRects().length ) return { top: 0, left: 0 };
 
@@ -686,10 +686,10 @@ function offset( dom )
 function first()
 {
 
-  for( var a = 0 ; a < arguments.length ; a++ )
+  for( let a = 0 ; a < arguments.length ; a++ )
   {
 
-    var src = arguments[ a ];
+    let src = arguments[ a ];
     if( !_.dom.domableIs( src ) )
     continue;
 
@@ -715,7 +715,7 @@ function firstOf( src,selector )
   selector += ':first';
   src = $( src );
 
-  var result = src.filter( selector );
+  let result = src.filter( selector );
 
   if( result.length )
   return result[ 0 ];
@@ -739,8 +739,8 @@ function ownIdentity( dom,identity )
   if( identity === undefined )
   {
 
-    var cssClasses = dom[ 0 ].className;
-    var result = '';
+    let cssClasses = dom[ 0 ].className;
+    let result = '';
 
     if( cssClasses.length )
     {
@@ -771,7 +771,7 @@ function ownIdentity( dom,identity )
     preservingEmpty : 0,
   });
 
-  for( var i = 1 ; i < identity.length ; i+=2 )
+  for( let i = 1 ; i < identity.length ; i+=2 )
   {
     if( identity[ i-1 ] === '.' )
     {
@@ -783,7 +783,7 @@ function ownIdentity( dom,identity )
     }
     else if( identity[ i-1 ] === '[' && identity[ i+1 ] === ']' )
     {
-      var attrStrSplitted = _.strSplitNonPreserving({ src : identity[ i ], delimeter : '=' });
+      let attrStrSplitted = _.strSplitNonPreserving({ src : identity[ i ], delimeter : '=' });
       _.assert( attrStrSplitted.length === 2, 'ownIdentity expects attribute indentity of format: attr=val, got:', identity[ i ] );
       dom.attr( attrStrSplitted[ 0 ], attrStrSplitted[ 1 ] );
       i += 1;
@@ -801,7 +801,7 @@ function ownIdentity( dom,identity )
 
 function cssGet( dom,fields )
 {
-  var result = Object.create( null );
+  let result = Object.create( null );
 
   dom = $( dom )
 
@@ -816,7 +816,7 @@ function cssGet( dom,fields )
   }
   else if( _.arrayIs( fields ) )
   {
-    for( var f = 0 ; f < fields.length ; f++ )
+    for( let f = 0 ; f < fields.length ; f++ )
     result[ fields[ f ] ] = dom.css( fields[ f ] );
   }
   else if( _.mapIs( fields ) )
@@ -849,7 +849,7 @@ function cssSet( dom,fields )
 
 function emToPx( dom,em )
 {
-  var emSize = parseFloat( dom.css( 'font-size' ) );
+  let emSize = parseFloat( dom.css( 'font-size' ) );
   return( emSize * em );
 }
 
@@ -863,7 +863,7 @@ function each( o )
 
   o.dom = $( o.dom );
 
-  for( var d = 0 ; d < o.dom.length ; d++ )
+  for( let d = 0 ; d < o.dom.length ; d++ )
   {
     // debugger
     _each( o.dom[ d ],o );
@@ -909,17 +909,17 @@ function _each( dom,o )
 
   /* */
 
-  var r = o.onUp( dom,o );
+  let r = o.onUp( dom,o );
   _.assert( r === undefined );
 
-  var children = dom.childNodes;
-  for( var d = 0 ; d < children.length ; d++ )
+  let children = dom.childNodes;
+  for( let d = 0 ; d < children.length ; d++ )
   {
-    var dom = children[ d ];
+    let dom = children[ d ];
     _each( dom,o );
   }
 
-  var r = o.onDown( dom,o );
+  r = o.onDown( dom,o );
   _.assert( r === undefined );
 
   return o.context;
@@ -927,7 +927,7 @@ function _each( dom,o )
 
 //
 
-var _domGlobalCssKeysArray = [];
+let _domGlobalCssKeysArray = [];
 function cssGlobal( o )
 {
 
@@ -954,7 +954,7 @@ function cssGlobal( o )
 
   }
 
-  var result = $( '<style>' + o.css + '<style>' ).appendTo( o.document.head );
+  let result = $( '<style>' + o.css + '<style>' ).appendTo( o.document.head );
 
   return result;
 }
@@ -983,12 +983,12 @@ function cssExport( o )
   _.assert( o.dstDocument.head );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  var styles = o.srcDocument.getElementsByTagName( 'style' );
+  let styles = o.srcDocument.getElementsByTagName( 'style' );
 
-  for( var s = 0 ; s < styles.length ; s++ )
+  for( let s = 0 ; s < styles.length ; s++ )
   {
-    var style = styles[ s ];
-    var css = style.textContent;
+    let style = styles[ s ];
+    let css = style.textContent;
 
     // console.log( 'css',css.length );
     // if( !css )
@@ -1045,8 +1045,8 @@ function css( targetDom, property, value, priority )
 
 function clipboardCopy( text )
 {
-  var result = false;
-  var textArea = document.createElement( 'textarea' );
+  let result = false;
+  let textArea = document.createElement( 'textarea' );
 
   textArea.style.position = 'fixed';
   textArea.style.padding = 0;
@@ -1089,12 +1089,12 @@ function clipboardCopy( text )
 
 //
 
-var fullScreen = ( function fullScreen()
+let fullScreen = ( function fullScreen()
 {
 
-  var inFullscreen = 0;
-  var requestFullScreen = null;
-  var cancelFullScreen = null;
+  let inFullscreen = 0;
+  let requestFullScreen = null;
+  let cancelFullScreen = null;
 
   /* */
 
@@ -1177,7 +1177,7 @@ function load( o )
   o.ready = new _.Consequence();
 
   o.parentDom = $( o.parentDom );
-  var targetDom = o.parentDom;
+  let targetDom = o.parentDom;
   if( o.targetClass )
   targetDom = o.parentDom.find( '.' + o.targetClass ).addBack( '.' + o.targetClass );
 
@@ -1248,9 +1248,9 @@ function load( o )
       else
       reason = responseData.status + ' : ' + responseData.statusText;
       reason += ' : ' + o.url;
-      var html = 'Error ' + reason;
+      let html = 'Error ' + reason;
       targetDom.html( html );
-      var err = _.errLogOnce( reason );
+      let err = _.errLogOnce( reason );
       o.ready.error( err );
       o.once.error( err );
       return;
@@ -1258,8 +1258,8 @@ function load( o )
 
     if( o.replacing )
     {
-      var classes = _.dom.s.class( targetDom );
-      var attrs = _.dom.s.attr( targetDom );
+      let classes = _.dom.s.class( targetDom );
+      let attrs = _.dom.s.attr( targetDom );
 
       if( o.after || o.before )
       {
@@ -1322,18 +1322,18 @@ load.defaults =
 // event
 // --
 
-var eventName = ( function eventName()
+let eventName = ( function eventName()
 {
-  var _eventMap = null;
+  let _eventMap = null;
 
   return function( name )
   {
 
     if( _.arrayIs( name ) )
     {
-      var result = [ ];
+      let result = [ ];
 
-      for( var n = 0 ; n < name.length ; n++ )
+      for( let n = 0 ; n < name.length ; n++ )
       result[ n ] = this.eventName( name[ n ] );
 
       return result;
@@ -1341,7 +1341,7 @@ var eventName = ( function eventName()
     else if( !_.strIs( name ) )
     throw _.err( 'eventName :','expect string or array as argument' );
 
-    var touchSupported = ( 'ontouchstart' in window ) || ( 'onmsgesturechange' in window );
+    let touchSupported = ( 'ontouchstart' in window ) || ( 'onmsgesturechange' in window );
     if( !_eventMap )
     {
       _eventMap = Object.create( null );
@@ -1394,9 +1394,9 @@ function eventClientPosition( o )
   if( _.dom.eventIs( o ) )
   o = { event : o };
 
-  var event = o.event;
-  var relative = o.relative;
-  
+  let event = o.event;
+  let relative = o.relative;
+
   if( relative )
   relative = _.dom.from( relative );
 
@@ -1422,7 +1422,7 @@ function eventClientPosition( o )
 
   if( relative && result )
   {
-    var offset = _.dom.offset( relative );
+    let offset = _.dom.offset( relative );
     result[ 0 ] -= offset.left;
     result[ 1 ] -= offset.top;
   }
@@ -1433,7 +1433,7 @@ function eventClientPosition( o )
     if( !relative )
     throw _.err( 'not implemented' );
 
-    var size = _.dom.sizeGet( relative );
+    let size = _.dom.sizeGet( relative );
 
     if( o.flip[ 0 ] )
     result[ 0 ] = size[ 0 ] - result[ 0 ] - 1;
@@ -1499,11 +1499,11 @@ function eventMouse( type, cx, cy )
   if( cx === undefined ) cx = 0;
   if( cy === undefined ) cy = 0;
 
-  var sx = cx + window.screenX;
-  var sy = cy + window.screenY;
+  let sx = cx + window.screenX;
+  let sy = cy + window.screenY;
 
   var event;
-  var e = {
+  let e = {
     bubbles : true,
     cancelable : ( type != "mousemove" ),
     view : window,
@@ -1657,7 +1657,7 @@ function off( targetDom, eventName, eventHandler )
 
   let descriptors = targetDom._events[ eventName ];
 
-  for( var i = descriptors.length - 1; i >= 0; i-- )
+  for( let i = descriptors.length - 1; i >= 0; i-- )
   {
     let descriptor = descriptors[ i ];
     if( !eventHandler || descriptor.eventHandler === eventHandler )
@@ -1685,7 +1685,7 @@ function eventWheelZero( event,x,y )
 {
   _.assert( arguments.length === 3, 'Expects exactly three argument' );
   var wrap;
-  var o = Object.create( null );
+  let o = Object.create( null );
 
   if( event.originalEvent )
   {
@@ -1719,11 +1719,11 @@ function eventWheelZero( event,x,y )
     o.detail = y ? 0 : event.detail;
   }
 
-  var result = new event.constructor( o );
+  let result = new event.constructor( o );
 
   if( wrap )
   {
-    var o = Object.create( null );
+    let o = Object.create( null );
     if( _.numberIs( event.deltaX ) )
     o.deltaX = y ? 0 : event.deltaX;
     if( _.numberIs( event.deltaY ) )
@@ -1922,7 +1922,7 @@ function eventWheelDelta( e, usingOne )
 
 //
 
-var eventWheelDeltaScreen = ( function eventWheelDeltaScreen()
+let eventWheelDeltaScreen = ( function eventWheelDeltaScreen()
 {
 
   var screenSize;
@@ -1931,7 +1931,7 @@ var eventWheelDeltaScreen = ( function eventWheelDeltaScreen()
   {
     if( !screenSize )
     screenSize = [ screen.width / 250 , screen.height / 250 ];
-    var result = eventWheelDelta( e );
+    let result = eventWheelDelta( e );
     result[ 0 ] *= screenSize[ 0 ];
     result[ 1 ] *= screenSize[ 1 ];
     return result;
@@ -1951,7 +1951,7 @@ function eventSpecialMake( o )
 
   _.assertMapHasOnly( o,eventSpecialMake.defaults );
 
-  var event = new CustomEvent
+  let event = new CustomEvent
   (
     'resize',
     {
@@ -1986,7 +1986,7 @@ function eventsObserver( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( eventsObserver,o );
 
-  var observer = new MutationObserver( function( mutations )
+  let observer = new MutationObserver( function( mutations )
   {
     mutations.forEach( function( mutation )
     {
@@ -1997,7 +1997,7 @@ function eventsObserver( o )
     });
   });
 
-  var config =
+  let config =
   {
     childList : true,
     attributes : true,
@@ -2052,7 +2052,7 @@ function eventsBindAll( o )
     continue;
 
     debugger;
-    var name = _.strRemoveBegin( e,'on' );
+    let name = _.strRemoveBegin( e,'on' );
 
     o.targetDom.addEventListener( name,o.onEvent );
 
@@ -2068,7 +2068,7 @@ eventsBindAll.defaults =
 
 //
 
-var _jqueryOriginalOn = $ ? $.fn.on : null;
+let _jqueryOriginalOn = $ ? $.fn.on : null;
 function eventsBindWatcher( o )
 {
   o = _.routineOptions( eventsBindWatcher,o )
@@ -2084,11 +2084,11 @@ function eventsBindWatcher( o )
 
   $.fn.on.fn.on = function on( eventName,handler )
   {
-    var dom = $( this );
+    let dom = $( this );
     var selector;
     var data;
 
-    var argumentsLength = arguments.length;
+    let argumentsLength = arguments.length;
     if( arguments[ argumentsLength-1 ] === undefined )
     argumentsLength -= 1;
     if( arguments[ argumentsLength-1 ] === undefined )
@@ -2114,7 +2114,7 @@ function eventsBindWatcher( o )
     _.assert( arguments.length === 2 || arguments.length === 3 || arguments.length === 4 );
     _.assert( _.routineIs( handler ) );
 
-    var e = Object.create( null )
+    let e = Object.create( null )
     e.dom = dom;
     e.eventName = eventName;
     e.selector = selector;
@@ -2123,7 +2123,7 @@ function eventsBindWatcher( o )
 
     o.result.push( e );
 
-    var result = _jqueryOriginalOn.call( this,eventName,handler );
+    let result = _jqueryOriginalOn.call( this,eventName,handler );
     return result;
   }
 
@@ -2141,10 +2141,10 @@ function eventFire( o )
 {
   _.routineOptions( eventFire,o );
   _.assert( _.dom.domableIs( o.targetDom ) );
-  
+
   o.targetDom = _.dom.from( o.targetDom );
 
-  var event = new Event( o.kind,
+  let event = new Event( o.kind,
   {
     // 'bubbles' : true,
     'cancelable' : true,
@@ -2166,7 +2166,7 @@ function eventFire( o )
   // {
   //   dom.dispatchEvent( event );
   // });
-  
+
   if( !o.informingDescandants )
   {
     o.targetDom.dispatchEvent( event );
@@ -2212,19 +2212,19 @@ function eventFire2( targetDom, event )
 // prototype
 // --
 
-var Fields =
+let Fields =
 {
   _domBaselayer3Loaded : true
 }
 
-var Routines =
+let Routines =
 {
 
   // dom
 
   caretSelect,
   val,
-  
+
   attr,
 
   class : _class,
@@ -2254,7 +2254,7 @@ var Routines =
   sizeGet,
   sizeFastGet,
   size2,
-  
+
   width,
   height,
 
@@ -2273,7 +2273,7 @@ var Routines =
   cssGlobal,
   cssExport,
   css,
-  
+
   emToPx,
 
   each,
