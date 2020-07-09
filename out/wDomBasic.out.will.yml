@@ -114,7 +114,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/abase/rbrowser/DomBase.js
+        path: ../proto/wtools/abase/rbrowser/DomBase.js
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -157,23 +157,23 @@ module:
         path:
           - ../proto
           - ../proto/Integration.test.s
-          - ../proto/dwtools
-          - ../proto/dwtools/Tools.s
-          - ../proto/dwtools/abase_dom
-          - ../proto/dwtools/abase_dom/include
-          - ../proto/dwtools/abase_dom/include/DomBase.js
-          - ../proto/dwtools/abase_dom/l1
-          - ../proto/dwtools/abase_dom/l1/Common.js
-          - ../proto/dwtools/abase_dom/l2
-          - ../proto/dwtools/abase_dom/l2/Common.js
-          - ../proto/dwtools/abase_dom/l3
-          - ../proto/dwtools/abase_dom/l3/Common.js
-          - ../proto/dwtools/abase_dom/l4
-          - ../proto/dwtools/abase_dom/l4/Common.js
-          - ../proto/dwtools/abase_dom/l5
-          - ../proto/dwtools/abase_dom/l5/Common.js
-          - ../proto/dwtools/amid
-          - ../proto/dwtools/atop
+          - ../proto/wtools
+          - ../proto/wtools/Tools.s
+          - ../proto/wtools/abase_dom
+          - ../proto/wtools/abase_dom/include
+          - ../proto/wtools/abase_dom/include/DomBase.js
+          - ../proto/wtools/abase_dom/l1
+          - ../proto/wtools/abase_dom/l1/Common.js
+          - ../proto/wtools/abase_dom/l2
+          - ../proto/wtools/abase_dom/l2/Common.js
+          - ../proto/wtools/abase_dom/l3
+          - ../proto/wtools/abase_dom/l3/Common.js
+          - ../proto/wtools/abase_dom/l4
+          - ../proto/wtools/abase_dom/l4/Common.js
+          - ../proto/wtools/abase_dom/l5
+          - ../proto/wtools/abase_dom/l5/Common.js
+          - ../proto/wtools/amid
+          - ../proto/wtools/atop
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -909,7 +909,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/abase/rbrowser/DomBase.js
+        path: proto/wtools/abase/rbrowser/DomBase.js
       entry.proto.only.tests:
         criterion:
           tests: only.tests
