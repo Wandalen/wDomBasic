@@ -4,7 +4,7 @@
 
 
 
-var _ = wTools;
+let _ = wTools;
 var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 let Self = _.dom = _.dom || Object.create( null );
 var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );

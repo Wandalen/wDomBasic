@@ -2,8 +2,8 @@
 
 'use strict';
 
-var _global = _global_;
-var _ = _global.wTools;
+let _global = _global_;
+let _ = _global.wTools;
 var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 let Self = _.dom = _.dom || Object.create( null );
 var isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
@@ -121,52 +121,24 @@ function colorOnClick( o )
     if( !event.ctrlKey || !event.altKey )
     return;
 
-    //if( event.target !== canvas )
-    //return;
-
     var color = null;
 
-    if( canvas.renderer )
-    {
+    throw _.err( 'not tested' );
 
-      var position = _.dom.eventClientPosition
-      ({
-        event : event,
-        relative : o.canvas,
-        flip : [ 0,1 ],
-      });
+    var position = _.dom.eventClientPosition
+    ({
+      event : event,
+      relative : o.canvas,
+      flip : [ 0,0 ],
+    });
 
-      var renderer = canvas.renderer;
-      // w4d.RenderTarget.prototype._webglRendertargetActivate_static.call( null,null,renderer );
-      debugger;
-      // gRenderTarget.screen.webglRenderTargetActivate( renderer );
-      // renderer.renderTarget = gRenderTarget.screen;
-      renderer.renderTarget = renderer.screen;
-      color = renderer.readPixel( position );
-
-    }
-    else
-    {
-
-      throw _.err( 'not tested' );
-
-      var position = _.dom.eventClientPosition
-      ({
-        event : event,
-        relative : o.canvas,
-        flip : [ 0,0 ],
-      });
-
-      var context = canvas.getContext( '2d' );
-      color = context.getImageData( position[ 0 ], position[ 1 ], 1, 1 ).data;
-
-    }
+    var context = canvas.getContext( '2d' );
+    color = context.getImageData( position[ 0 ], position[ 1 ], 1, 1 ).data;
 
     var colorFloat = [ ];
     for( var i = 0 ; i < color.length ; i++ )
     colorFloat[ i ] = color[ i ] / 255;
 
-    //console.log( 'position :',_.toStr( position ) );
     console.log( 'color',' :',_.toStr( color ),' :',_.toStr( colorFloat,{ precision : 3 } ) );
 
   });
@@ -273,12 +245,12 @@ var msg = ( function msg()
     }
 
     //
-    
+
     dom.find( 'p' ).text( o.msg ).css( 'white-space','pre' );
     let p = _.dom.find( dom, 'p' );
     _.dom.setText( p, o.msg );
     _.dom.css( p, 'white-space','pre' );
-    
+
     _.dom.text( _.dom.find( dom, '.header' ), o.title );
 
     if( _.dom.hasClass( dom, 'hidden' ) )
