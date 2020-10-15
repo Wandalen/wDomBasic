@@ -2,13 +2,10 @@ format: outwillfile-2.0
 root:
   - wDomBasic.out
 consistency:
-  wDomBasic.out.will.yml: &ref_0
-    hash: e655401ad12b99f05117865d357d4f79
-    size: 38603
-  ../.ex.will.yml: &ref_1
-    hash: 6b7a6a022a03d24c6d9f35f7cf04e958
-    size: 1988
-  ../.im.will.yml: &ref_2
+  ../.ex.will.yml: &ref_0
+    hash: 3e2894a071b5f34feb2422527da32d1f
+    size: 2003
+  ../.im.will.yml: &ref_1
     hash: 599ca2a650dda56fee7bc15767a1dea8
     size: 4870
 module:
@@ -17,26 +14,26 @@ module:
       name: wDomBasic
       org: noorg
       description: >-
-        Collection of cross-platform routines for a browser to operate DOM elements and its
-        events. No matter whatever problem in a browser you are trying to solve
-        several routines of DomBase would help you to solve it faster. It has
-        something in common with Jquery, but no significant overlap. Use the
-        module to get access to shortcuts for a browser.
+        Collection of cross-platform routines for a browser to operate DOM
+        elements and its events. No matter whatever problem in a browser you are
+        trying to solve several routines of DomBase would help you to solve it
+        faster. It has something in common with Jquery, but no significant
+        overlap. Use the module to get access to shortcuts for a browser.
       enabled: 1
       version: 0.4.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
         - DOM
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wdombasic
-      npm.scripts:
+      npm.scripts: &ref_5
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -698,24 +695,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -804,36 +783,27 @@ module:
           content: proto
           export: 1
     consistency:
-      wDomBasic.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: wDomBasic
       org: noorg
       description: >-
-        Collection of cross-platform routines for a browser to operate DOM elements and its
-        events. No matter whatever problem in a browser you are trying to solve
-        several routines of DomBase would help you to solve it faster. It has
-        something in common with Jquery, but no significant overlap. Use the
-        module to get access to shortcuts for a browser.
+        Collection of cross-platform routines for a browser to operate DOM
+        elements and its events. No matter whatever problem in a browser you are
+        trying to solve several routines of DomBase would help you to solve it
+        faster. It has something in common with Jquery, but no significant
+        overlap. Use the module to get access to shortcuts for a browser.
       enabled: 1
       version: 0.4.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
-        - DOM
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+      contributors: *ref_4
       npm.name: wdombasic
-      npm.scripts:
-        test: wtest .run proto/**
-        docgen: wdocgen .build proto
+      npm.scripts: *ref_5
     path:
       module.willfiles:
         criterion:
@@ -1487,9 +1457,8 @@ module:
           - 'build::npm'
     consistency:
       ../.ex.will.yml:
-        hash: 6b7a6a022a03d24c6d9f35f7cf04e958
-        size: 1988
+        hash: 3e2894a071b5f34feb2422527da32d1f
+        size: 2003
       ../.im.will.yml:
         hash: 599ca2a650dda56fee7bc15767a1dea8
         size: 4870
-      wDomBasic.out.will.yml: *ref_0
