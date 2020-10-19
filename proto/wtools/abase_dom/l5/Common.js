@@ -160,15 +160,13 @@ function colorOnClick( o )
       let context = canvas.getContext( '2d' );
       color = context.getImageData( position[ 0 ], position[ 1 ], 1, 1 ).data;
 
-    var context = canvas.getContext( '2d' );
-    color = context.getImageData( position[ 0 ], position[ 1 ], 1, 1 ).data;
+      let colorFloat = [ ];
+      for( let i = 0 ; i < color.length ; i++ )
+      colorFloat[ i ] = color[ i ] / 255;
 
-    let colorFloat = [ ];
-    for( let i = 0 ; i < color.length ; i++ )
-    colorFloat[ i ] = color[ i ] / 255;
+      console.log( 'color',' :',_.toStr( color ),' :',_.toStr( colorFloat,{ precision : 3 } ) );
 
-    console.log( 'color',' :',_.toStr( color ),' :',_.toStr( colorFloat,{ precision : 3 } ) );
-
+    }
   });
 
 }
