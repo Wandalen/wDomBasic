@@ -2272,7 +2272,7 @@ function habbitMouseClick( o )
 
   }
 
-  o.dom = $( o.dom );
+  o.dom = _.dom.from( o.dom );
 
   if( !o.usingManualEventsOnly )
   {

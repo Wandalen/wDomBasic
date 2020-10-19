@@ -161,10 +161,10 @@ function attr( dom, attr, value )
   _.assert( _.strDefined( attr ) );
 
   var dom = _.dom.from( dom );
-  
+
   if( arguments.length === 2 )
   return dom.getAttribute( attr );
-  
+
   dom.setAttribute( attr, value );
 }
 
@@ -216,7 +216,7 @@ function addClass( targetDom, cssClass )
 
   if( _.strIs( cssClass ) );
   cssClass = _.strSplitNonPreserving( cssClass, /\s+/g );
-  
+
   targetDom.classList.add.apply( targetDom.classList, cssClass );
 }
 
@@ -232,7 +232,7 @@ function removeClass( targetDom, cssClass )
 
   if( _.strIs( cssClass ) );
   cssClass = _.strSplitNonPreserving( cssClass, /\s+/g );
-  
+
   targetDom.classList.remove.apply( targetDom.classList, cssClass );
 }
 
@@ -245,7 +245,7 @@ function hasClass( targetDom, cssClass )
 
   targetDom = _.dom.from( targetDom );
   _.assert( _.dom.is( targetDom ) );
-  
+
   return targetDom.classList.contains( cssClass );
 }
 
@@ -365,12 +365,12 @@ textGet.defaults =
 function setText( dst, text )
 {
   _.assert( arguments.length === 2 );
-  
+
   let targetDom = _.dom.from( dst );
-  
+
   _.assert( _.dom.is( targetDom ) );
   _.assert( _.strIs( text ) );
-  
+
   targetDom.textContent = text;
 }
 
@@ -861,7 +861,7 @@ function each( o )
   _.routineOptions( each,o );
   _.assert( _.dom.domableIs( o.dom ) );
 
-  o.dom = $( o.dom );
+  o.dom = _.dom.from( o.dom );
 
   for( var d = 0 ; d < o.dom.length ; d++ )
   {
@@ -1396,7 +1396,7 @@ function eventClientPosition( o )
 
   var event = o.event;
   var relative = o.relative;
-  
+
   if( relative )
   relative = _.dom.from( relative );
 
@@ -2141,7 +2141,7 @@ function eventFire( o )
 {
   _.routineOptions( eventFire,o );
   _.assert( _.dom.domableIs( o.targetDom ) );
-  
+
   o.targetDom = _.dom.from( o.targetDom );
 
   var event = new Event( o.kind,
@@ -2166,7 +2166,7 @@ function eventFire( o )
   // {
   //   dom.dispatchEvent( event );
   // });
-  
+
   if( !o.informingDescandants )
   {
     o.targetDom.dispatchEvent( event );
@@ -2224,7 +2224,7 @@ var Routines =
 
   caretSelect,
   val,
-  
+
   attr,
 
   class : _class,
@@ -2254,7 +2254,7 @@ var Routines =
   sizeGet,
   sizeFastGet,
   size2,
-  
+
   width,
   height,
 
@@ -2273,7 +2273,7 @@ var Routines =
   cssGlobal,
   cssExport,
   css,
-  
+
   emToPx,
 
   each,
