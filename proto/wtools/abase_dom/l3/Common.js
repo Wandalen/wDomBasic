@@ -13,6 +13,65 @@ let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 // dom
 //
 
+// function strToDom( xmlStr )
+function fromStr( xmlStr )
+{
+
+  let xmlDoc = null;
+  let isIEParser = window.ActiveXObject || 'ActiveXObject' in window;
+
+  if( xmlStr === undefined )
+  return xmlDoc;
+
+  if( window.DOMParser )
+  {
+
+    let parser = new window.DOMParser();
+    let parsererrorNS = null;
+
+    if( !isIEParser )
+    {
+      try
+      {
+        parsererrorNS = parser.parseFromString( 'INVALID', 'text/xml' ).childNodes[ 0 ].namespaceURI;
+      }
+      catch( err )
+      {
+        parsererrorNS = null;
+      }
+    }
+
+    try
+    {
+      xmlDoc = parser.parseFromString( xmlStr, 'text/xml' );
+      if( parsererrorNS !== null && xmlDoc.getElementsByTagNameNS( parsererrorNS, 'parsererror' ).length > 0 )
+      {
+        throw Error( 'Error parsing XML' );
+        xmlDoc = null;
+      }
+    }
+    catch( err )
+    {
+      throw Error( 'Error parsing XML' );
+      xmlDoc = null;
+    }
+  }
+  else
+  {
+    if( xmlStr.indexOf( '<?' ) === 0 )
+    {
+      xmlStr = xmlStr.substr( xmlStr.indexOf( '?>' ) + 2 );
+    }
+    xmlDoc = new ActiveXObject( 'Microsoft.XMLDOM' );
+    xmlDoc.async = 'false';
+    xmlDoc.loadXML( xmlStr );
+  }
+
+  return xmlDoc;
+}
+
+//
+
 /**
  * @param {} dom
  * @param {} selection
@@ -2221,6 +2280,8 @@ let Routines =
 {
 
   // dom
+
+  fromStr,
 
   caretSelect,
   val,
