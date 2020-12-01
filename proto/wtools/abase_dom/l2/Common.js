@@ -56,7 +56,7 @@ let DomsExtension =
   dom : Parent
 }
 
-_.mapSupplementOwn( Self, DomsExtension );
+_.mapExtendDstNotOwn( Self, DomsExtension );
 
 Self.Init();
 

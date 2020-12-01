@@ -308,6 +308,6 @@ let DomsExtension =
 
 };
 
-_.mapSupplementOwn( Self, DomsExtension );
+_.mapExtendDstNotOwn( Self, DomsExtension );
 
 })();
