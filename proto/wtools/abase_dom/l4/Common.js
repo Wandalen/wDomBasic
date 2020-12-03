@@ -1,4 +1,5 @@
-(function _Common_js_() {
+(function _Common_js_()
+{
 
 'use strict';
 
@@ -16,7 +17,7 @@ let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 //
 
-function val( dom,vals )
+function val( dom, vals )
 {
   var result;
 
@@ -27,11 +28,11 @@ function val( dom,vals )
 
   /* */
 
-  if( arguments.length === 2  )
+  if( arguments.length === 2 )
   result = _.dom.each
   ({
     recursive : true,
-    dom : dom,
+    dom,
     onUp : function( dom )
     {
 
@@ -40,12 +41,12 @@ function val( dom,vals )
       if( !_.strDefined( selector ) )
       return;
 
-      let val = _.select( vals,selector );
+      let val = _.select( vals, selector );
 
       if( val === undefined )
       return;
 
-      _.dom.val( dom,val );
+      _.dom.val( dom, val );
 
     },
   });
@@ -54,8 +55,8 @@ function val( dom,vals )
   ({
     recursive : true,
     result : Object.create( null ),
-    dom : dom,
-    onUp : function( dom,o )
+    dom,
+    onUp : function( dom, o )
     {
       let text = '';
       let val = _.dom.val( dom );
@@ -91,7 +92,7 @@ function val( dom,vals )
 
         if( i === parts.length - 1 )
         set = val;
-        else if( _.select( o.result, query ) != undefined )
+        else if( _.select( o.result, query ) !== undefined )
         continue;
         else if( !isNaN( _.numberFromStr( parts[ i + 1 ] ) ) )
         set = [];
@@ -100,7 +101,7 @@ function val( dom,vals )
         ({
           src : o.result,
           selector : query,
-          set : set
+          set
         });
       }
 
@@ -117,7 +118,7 @@ function val( dom,vals )
 
 //
 
-function _class( dom,classes,adding )
+function _class( dom, classes, adding )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 3 );
@@ -174,7 +175,7 @@ function _class( dom,classes,adding )
  * @module Tools/base/DomBasic
  */
 
-function attr( dom,attrs,adding )
+function attr( dom, attrs, adding )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
@@ -214,7 +215,7 @@ function attr( dom,attrs,adding )
       // if( !adding )
       // debugger;
       if( adding )
-      dom.attr( attrs,1 );
+      dom.attr( attrs, 1 );
       else
       dom.removeAttr( attrs );
     }
@@ -222,9 +223,9 @@ function attr( dom,attrs,adding )
     {
       _.assert( _.primitiveIs( attrs[ c ] ) );
       if( adding )
-      dom.attr( c,attrs[ c ] );
+      dom.attr( c, attrs[ c ] );
       else
-      dom.removeAttr( c,attrs[ c ] );
+      dom.removeAttr( c, attrs[ c ] );
     }
 
   }

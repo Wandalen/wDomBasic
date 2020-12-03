@@ -1,4 +1,5 @@
-(function _Common_js_() {
+(function _Common_js_()
+{
 
 'use strict';
 
@@ -9,7 +10,7 @@ let Parent = _.dom;
 let Self = _.dom.s = _.dom.s || Object.create( Parent );
 
 // --
-// 
+//
 // --
 
 function _vectorize( routine, select )
@@ -33,7 +34,7 @@ let OriginalInit = Parent.Init;
 Parent.Init = function Init()
 {
   let result = OriginalInit.apply( this, arguments );
-  
+
   _.assert( _.objectIs( this.s ) );
   _.assert( this.s.single !== undefined );
   this.s = Object.create( this.s );
@@ -48,11 +49,11 @@ Parent.Init = function Init()
 
 let DomsExtension =
 {
-  
+
   _vectorize,
-  
+
   remove : _vectorize( 'remove', Infinity ),
-  
+
   dom : Parent
 }
 

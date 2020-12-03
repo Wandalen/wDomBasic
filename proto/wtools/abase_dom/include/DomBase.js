@@ -1,6 +1,7 @@
-( function _DomBase_js_( ) {
+( function _DomBase_js_( )
+{
 
-  'use strict';
+'use strict';
 
   if( typeof module !== 'undefined' )
   {
