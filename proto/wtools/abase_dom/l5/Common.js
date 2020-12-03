@@ -871,7 +871,7 @@ function resizable( o )
     o.state.position = _.dom.positionGet( o.targetDom );
     o.state.size = _.dom.sizeGet( o.targetDom );
     o.state.corner = _.dom.s.class( target );
-    o.state.corner = _.arraySetIntersection( o.state.corner,[ 'lt','lb','rt','rb' ] );
+    o.state.corner = _.arraySetIntersection_( null, o.state.corner,[ 'lt','lb','rt','rb' ] );
     _.assert( o.state.corner.length === 1 );
     o.state.corner = o.state.corner[ 0 ];
 
