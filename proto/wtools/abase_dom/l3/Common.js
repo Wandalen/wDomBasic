@@ -1204,7 +1204,8 @@ let fullScreen = ( function fullScreen()
       else
       {
         inFullscreen = false;
-        alert( 'Fullscreen is not supported.' );
+        // alert( 'Fullscreen is not supported.' );
+        console.warn( 'Fullscreen is not supported.' );
       }
     }
     else
@@ -1216,7 +1217,8 @@ let fullScreen = ( function fullScreen()
       }
       else
       {
-        alert( 'Fullscreen is not supported.' );
+        // alert( 'Fullscreen is not supported.' );
+        console.warn( 'Fullscreen is not supported.' );
       }
 
     }
