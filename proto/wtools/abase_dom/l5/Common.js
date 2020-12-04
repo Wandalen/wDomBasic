@@ -1,4 +1,5 @@
-(function _Common_js_() {
+(function _Common_js_()
+{
 
 'use strict';
 
@@ -33,9 +34,9 @@ function formationRadialSet( o )
   {
     let size = _.dom.sizeFastGet( o.containerDom );
     if( o.containerCenter === null || o.containerCenter === undefined )
-    o.containerCenter = [ size[ 0 ]/2,size[ 1 ]/2 ];
+    o.containerCenter = [ size[ 0 ]/2, size[ 1 ]/2 ];
     if( o.containerRadius === null || o.containerRadius === undefined )
-    o.containerRadius = Math.min( size[ 0 ]/2,size[ 1 ]/2 );
+    o.containerRadius = Math.min( size[ 0 ]/2, size[ 1 ]/2 );
   }
 
   /* */
@@ -44,7 +45,7 @@ function formationRadialSet( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.arrayIs( o.containerCenter ) );
   _.assert( _.numberIs( o.containerRadius ) );
-  _.routineOptions( formationRadialSet,o );
+  _.routineOptions( formationRadialSet, o );
 
   if( !o.elementsDom.length )
   return;
@@ -61,10 +62,10 @@ function formationRadialSet( o )
     }
     else if( o.containerDom.css( 'display' ) === 'none' )
     {
-      _.dom.offscreenMake( o.containerDom,1 );
+      _.dom.offscreenMake( o.containerDom, 1 );
       sizes = _.dom.s.sizeGet( o.elementsDom );
       o.containerDom[ 0 ]._formationRadialSetSizes = sizes;
-      _.dom.offscreenMake( o.containerDom,0 );
+      _.dom.offscreenMake( o.containerDom, 0 );
     }
   }
 
@@ -82,7 +83,7 @@ function formationRadialSet( o )
     pos[ 0 ] = o.containerCenter[ 0 ] + Math.cos( o.phase + radiansPerElement*i ) * radius;
     pos[ 1 ] = o.containerCenter[ 1 ] + Math.sin( o.phase + radiansPerElement*i ) * radius;
     // logger.log( 'element',i,pos );
-    _.dom.centerSet( o.elementsDom[ i ],pos )
+    _.dom.centerSet( o.elementsDom[ i ], pos )
   }
 
   /* */
@@ -131,9 +132,9 @@ function colorOnClick( o )
 
       let position = _.dom.eventClientPosition
       ({
-        event : event,
+        event,
         relative : o.canvas,
-        flip : [ 0,1 ],
+        flip : [ 0, 1 ],
       });
 
       let renderer = canvas.renderer;
@@ -152,9 +153,9 @@ function colorOnClick( o )
 
       let position = _.dom.eventClientPosition
       ({
-        event : event,
+        event,
         relative : o.canvas,
-        flip : [ 0,0 ],
+        flip : [ 0, 0 ],
       });
 
       let context = canvas.getContext( '2d' );
@@ -164,7 +165,7 @@ function colorOnClick( o )
       for( let i = 0 ; i < color.length ; i++ )
       colorFloat[ i ] = color[ i ] / 255;
 
-      console.log( 'color',' :',_.toStr( color ),' :',_.toStr( colorFloat,{ precision : 3 } ) );
+      console.log( 'color', ' :', _.toStr( color ), ' :', _.toStr( colorFloat, { precision : 3 } ) );
 
     }
   });
@@ -187,7 +188,7 @@ function colorOnClick( o )
 let msg = ( function msg()
 {
 
-  let kinds = [ 'neutral','positive','negative' ];
+  let kinds = [ 'neutral', 'positive', 'negative' ];
   let titles =
   {
     'neutral' : 'Info :',
@@ -228,14 +229,14 @@ let msg = ( function msg()
     if( o.kind === undefined )
     o.kind = 'neutral';
 
-    _.assertMapHasOnly( o,optionsDefault );
-    _.assert( kinds.indexOf( o.kind ) !== -1,'dom.msg :','unknown type' );
+    _.assertMapHasOnly( o, optionsDefault );
+    _.assert( kinds.indexOf( o.kind ) !== -1, 'dom.msg :', 'unknown type' );
 
     if( o.msg === undefined )
     o.msg = '';
 
     if( !_.strIs( o.msg ) )
-    o.msg = _.toStr( o.msg,{ levels : 2 } );
+    o.msg = _.toStr( o.msg, { levels : 2 } );
 
     if( o.title === undefined )
     o.title = titles[ o.kind ];
@@ -251,11 +252,11 @@ let msg = ( function msg()
       let html =
       [
         '<div class="ui message icon hidden layout">',
-          '<i class="smile icon"></i><i class="close icon"></i>',
-          '<div class="content">',
-            '<div class="header"></div>',
-            '<p class="text"></p>',
-          '</div>',
+        '<i class="smile icon"></i><i class="close icon"></i>',
+        '<div class="content">',
+        '<div class="header"></div>',
+        '<p class="text"></p>',
+        '</div>',
         '</div>',
       ].join( '\n' );
       dom = _.dom.make({ html });
@@ -272,10 +273,13 @@ let msg = ( function msg()
 
     //
 
-    dom.find( 'p' ).text( o.msg ).css( 'white-space','pre' );
+    dom
+    .find( 'p' )
+    .text( o.msg )
+    .css( 'white-space', 'pre' );
     let p = _.dom.find( dom, 'p' );
     _.dom.setText( p, o.msg );
-    _.dom.css( p, 'white-space','pre' );
+    _.dom.css( p, 'white-space', 'pre' );
 
     _.dom.text( _.dom.find( dom, '.header' ), o.title );
 
@@ -287,7 +291,7 @@ let msg = ( function msg()
       duration  : 500,
     });
 
-    if( dom._domMsgInited ) return;
+    if( dom._domMsgInited )return;
 
     _.assert( _.dom.is( dom ) );
     dom._domMsgInited = true;
@@ -299,10 +303,8 @@ let msg = ( function msg()
       ({
         animation : 'fly down',
         duration  : 400,
-      })
-      ;
-    })
-    ;
+      });
+    });
 
   }
 
@@ -330,11 +332,14 @@ function loadingMode( value )
 
   }
 
-  if( _domLoadingModeLoading ) {
+  if( _domLoadingModeLoading )
+  {
 
     $( '.panel-loading' ).removeClass( 'layout-invisible' );
 
-  } else {
+  }
+  else
+  {
 
     $( '.panel-loading' ).addClass( 'layout-invisible' );
 
@@ -348,13 +353,13 @@ function scrollFix( o )
 {
   o = o || Object.create( null );
 
-  _.assert( _.dom.is( o.target ) || _.dom.jqueryIs( o.target ), 'scrollFix','Expects o.target' );
+  _.assert( _.dom.is( o.target ) || _.dom.jqueryIs( o.target ), 'scrollFix', 'Expects o.target' );
 
   o.target = $( o.target );
   let xFix = o.xFix !== undefined ? !!o.xFix : true;
   let yFix = o.yFix !== undefined ? !!o.yFix : true;
 
-  o.target.each( function( k,element )
+  o.target.each( function( k, element )
   {
 
     element = $( element );
@@ -391,8 +396,8 @@ function scrollFocus( o )
   else
   o.contentDom = $( o.contentDom );
 
-  _.routineOptions( scrollFocus,o );
-  _.assert( [ 'center','begin','end' ].indexOf( o.mode ) !== -1 );
+  _.routineOptions( scrollFocus, o );
+  _.assert( [ 'center', 'begin', 'end' ].indexOf( o.mode ) !== -1 );
   _.assert( o.contentDom.length === 1 );
   _.assert( o.elementDom.length === 1 );
   _.assert( o.contentDom[ 0 ] !== window && o.contentDom[ 0 ] !== document );
@@ -433,7 +438,7 @@ function scrolable( o )
 function menuable( o )
 {
 
-  _.routineOptions( menuable,o );
+  _.routineOptions( menuable, o );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
   o.targetDom = $( o.targetDom );
@@ -450,7 +455,7 @@ function menuable( o )
   o.contentHide.addClass( 'wmenu-conent-hide' );
 
   if( o.firingEventsForDom )
-  o.firingEventsForDom = _.dom.of( o.targetDom,o.firingEventsForDom );
+  o.firingEventsForDom = _.dom.of( o.targetDom, o.firingEventsForDom );
 
   /* */
 
@@ -536,7 +541,7 @@ function menuable( o )
     }
   `
 
-  _.dom.cssGlobal({ css : css, key : menuable });
+  _.dom.cssGlobal({ css, key : menuable });
 
   /* */
 
@@ -562,18 +567,18 @@ function menuable( o )
   }
   else
   {
-    o.iconParentDom.each( function( i,dom )
+    o.iconParentDom.each( function( i, dom )
     {
       let icon = $( '<i>' ).appendTo( dom );
-      _.dom.s.class( icon,[ 'wmenu-icon-open-default', 'wmenu-icon-open' ],1 );
-      icon.attr( 'title','Associated Menu' );
+      _.dom.s.class( icon, [ 'wmenu-icon-open-default', 'wmenu-icon-open' ], 1 );
+      icon.attr( 'title', 'Associated Menu' );
     });
     o.iconOpenDom = o.iconParentDom.find( '.wmenu-icon-open' );
   }
 
   // _.dom.s.class( o.iconOpenDom,[ 'wmenu-icon-open','transition','hidden' ],1 );
-  _.dom.s.class( o.iconOpenDom,[ 'wmenu-icon-open' ],1 );
-  _.dom.s.class( o.iconOpenDom,[ 'visible' ],0 );
+  _.dom.s.class( o.iconOpenDom, [ 'wmenu-icon-open' ], 1 );
+  _.dom.s.class( o.iconOpenDom, [ 'visible' ], 0 );
 
   /* menu */
 
@@ -585,7 +590,7 @@ function menuable( o )
 
     if( o.addingStockItems )
     {
-      _.arrayAppendArrayOnceStrictly( o.items, [ 'Maximize','Window','Close','Resume' ] );
+      _.arrayAppendArrayOnceStrictly( o.items, [ 'Maximize', 'Window', 'Close', 'Resume' ] );
     }
 
     for( let i = 0 ; i < o.items.length ; i++ )
@@ -593,7 +598,7 @@ function menuable( o )
       let item = $( '<div>' ).appendTo( o.menuDom );
       item.text( o.items[ i ] );
       item.addClass( 'wmenu-item' );
-      item.attr( 'item',o.items[ i ] );
+      item.attr( 'item', o.items[ i ] );
     }
 
   }
@@ -618,7 +623,7 @@ function menuable( o )
     {
       dom : t,
       kind : 'item-selected',
-      item : item,
+      item,
     }
 
     if( o.addingStockItems )
@@ -642,7 +647,7 @@ function menuable( o )
       else if( e.item === 'Maximize' )
       {
         o.targetDom.addClass( 'wmaximized' );
-        e.dom.attr( 'item','Minimize' );
+        e.dom.attr( 'item', 'Minimize' );
         e.dom.text( 'Minimize' );
         if( o.firingEventsForDom )
         _.dom.eventFire({ targetDom : o.firingEventsForDom, kind : 'resize' });
@@ -650,7 +655,7 @@ function menuable( o )
       else if( e.item === 'Minimize' )
       {
         o.targetDom.removeClass( 'wmaximized' );
-        e.dom.attr( 'item','Maximize' );
+        e.dom.attr( 'item', 'Maximize' );
         e.dom.text( 'Maximize' );
         if( o.firingEventsForDom )
         _.dom.eventFire({ targetDom : o.firingEventsForDom, kind : 'resize' });
@@ -674,11 +679,11 @@ function menuable( o )
     onEvent : function handleHold( e )
     {
 
-      console.log( 'kindOfMouseEvent',e.kindOfMouseEvent );
+      console.log( 'kindOfMouseEvent', e.kindOfMouseEvent );
       // debugger;
       // if( e.kindOfMouseEvent !== 'repeat' )
       // return;
-      handleItemSelect.call( this,e );
+      handleItemSelect.call( this, e );
 
     },
   });
@@ -714,7 +719,7 @@ function menuable( o )
 
   if( o.hidingIcon )
   {
-    _.dom.s.class( o.iconParentDom,[ 'wmenu-icon-hiding' ],1 );
+    _.dom.s.class( o.iconParentDom, [ 'wmenu-icon-hiding' ], 1 );
     // _.dom.s.class( o.iconOpenDom,[ 'transition','hidden' ],1 );
     // o.iconParentDom
     // .on( _.dom.eventName( 'mouseleave' ), function( e )
@@ -742,7 +747,7 @@ function menuable( o )
     targetDom : o.targetDom,
     settings : o,
     maker : menuable,
-    css : css,
+    css,
   });
 
   return o;
@@ -761,7 +766,7 @@ menuable.defaults =
   addingStockItems : 1,
   hidingIcon : 1,
   firingEventsForDom : 'canvas',
-  corners : [ 'lt','lb','rt','rb' ],
+  corners : [ 'lt', 'lb', 'rt', 'rb' ],
 }
 
 //
@@ -769,7 +774,7 @@ menuable.defaults =
 function resizable( o )
 {
 
-  _.routineOptions( resizable,o );
+  _.routineOptions( resizable, o );
 
   o.containerDom = $( o.containerDom );
   o.targetDom = $( o.targetDom );
@@ -777,7 +782,7 @@ function resizable( o )
   // _.dom.eventsObserver( o.targetDom[ 0 ] ); // xxx
 
   if( o.firingEventsForDom )
-  o.firingEventsForDom = _.dom.of( o.targetDom,o.firingEventsForDom );
+  o.firingEventsForDom = _.dom.of( o.targetDom, o.firingEventsForDom );
 
   _.assert( o.containerDom.length >= 1 );
   _.assert( o.targetDom.length >= 1 );
@@ -827,7 +832,7 @@ function resizable( o )
     }
     `
 
-    _.dom.cssGlobal({ css : css, key : resizable });
+    _.dom.cssGlobal({ css, key : resizable });
 
     let corners = _.dom.cornersMake
     ({
@@ -861,7 +866,7 @@ function resizable( o )
     ({
       event : e,
       relative : o.targetDom,
-      flip : [ 1,1 ],
+      flip : [ 1, 1 ],
     });
 
     pos = _.dom.eventClientPosition( e );
@@ -871,13 +876,13 @@ function resizable( o )
     o.state.position = _.dom.positionGet( o.targetDom );
     o.state.size = _.dom.sizeGet( o.targetDom );
     o.state.corner = _.dom.s.class( target );
-    o.state.corner = _.arraySetIntersection_( null, o.state.corner,[ 'lt','lb','rt','rb' ] );
+    o.state.corner = _.arraySetIntersection_( null, o.state.corner, [ 'lt', 'lb', 'rt', 'rb' ] );
     _.assert( o.state.corner.length === 1 );
     o.state.corner = o.state.corner[ 0 ];
 
-    o.targetDom.attr( 'wresizing',1 );
-    o.containerDom.attr( 'wresizing',1 );
-    o.containerDom.attr( 'wdraggable-not',1 );
+    o.targetDom.attr( 'wresizing', 1 );
+    o.containerDom.attr( 'wresizing', 1 );
+    o.containerDom.attr( 'wdraggable-not', 1 );
 
     e.preventDefault();
     e.stopPropagation();
@@ -892,7 +897,7 @@ function resizable( o )
   o.targetDom
   .on( _.dom.eventName( 'drag' ), function( e )
   {
-    if( !o.state.start ) return;
+    if( !o.state.start )return;
     e.preventDefault();
     return false;
   })
@@ -900,8 +905,7 @@ function resizable( o )
   {
     o.containerDom = $( this ).parent();
     bindContainer();
-  })
-  ;
+  });
 
   /* */
 
@@ -970,14 +974,14 @@ function resizable( o )
     targetDom : o.targetDom,
     settings : o,
     maker : resizable,
-    css : css,
+    css,
   });
 
 }
 
 resizable.defaults =
 {
-  corners : [ 'lt','lb','rt','rb' ],
+  corners : [ 'lt', 'lb', 'rt', 'rb' ],
   makingHandles : 1,
   firingEventsForDom : 'canvas',
   handleParentDom : null,
@@ -992,7 +996,7 @@ resizable.defaults =
 function cornersMake( o )
 {
 
-  _.routineOptions( cornersMake,o );
+  _.routineOptions( cornersMake, o );
 
   o.targetDom = $( o.targetDom );
 
@@ -1024,13 +1028,13 @@ function cornersMake( o )
 
   `
 
-  _.dom.cssGlobal({ css : css, key : cornersMake });
+  _.dom.cssGlobal({ css, key : cornersMake });
 
   o.cornerParentDom = $();
   if( o.makingChild )
   o.cornerChildDom = $();
 
-  var cornerParentDom,cornerChildDom;
+  var cornerParentDom, cornerChildDom;
   for( var side of o.corners )
   {
 
@@ -1042,8 +1046,8 @@ function cornersMake( o )
     if( o.makingChild )
     cornerChildDom = cornerParentDom.children( '.wcorner-child' );
 
-    let left = _.strHas( side,'l' ) ? 'left' : 'right';
-    let top = _.strHas( side,'t' ) ? 'top' : 'bottom';
+    let left = _.strHas( side, 'l' ) ? 'left' : 'right';
+    let top = _.strHas( side, 't' ) ? 'top' : 'bottom';
     cornerParentDom.css
     ({
       [ left ] : '0',
@@ -1058,9 +1062,9 @@ function cornersMake( o )
 
     if( o.cssClass )
     {
-      _.dom.s.class( cornerParentDom,o.cssClass,1 );
+      _.dom.s.class( cornerParentDom, o.cssClass, 1 );
       if( o.makingChild )
-      _.dom.s.class( cornerChildDom,o.cssClass,1 );
+      _.dom.s.class( cornerChildDom, o.cssClass, 1 );
     }
 
     if( left === 'left' && top === 'top' )
@@ -1099,7 +1103,7 @@ function cornersMake( o )
     targetDom : o.targetDom,
     settings : o,
     maker : cornersMake,
-    css : css,
+    css,
     combining : 'rewriting',
   });
 
@@ -1109,7 +1113,7 @@ function cornersMake( o )
 cornersMake.defaults =
 {
   targetDom : null,
-  corners : [ 'lt','lb','rt','rb' ],
+  corners : [ 'lt', 'lb', 'rt', 'rb' ],
   cssClass : null,
   makingChild : 1,
 }
@@ -1218,7 +1222,7 @@ function abilityRegister( o )
 
   o.name = o.maker.name;
 
-  o.targetDom.each( function( k,e )
+  o.targetDom.each( function( k, e )
   {
 
     if( !e._abilities )
@@ -1253,7 +1257,7 @@ function abilityUnregister( o )
 
   debugger
 
-  o.targetDom.each( function( k,e )
+  o.targetDom.each( function( k, e )
   {
 
     _.assert( e._abilities );
@@ -1279,11 +1283,11 @@ abilityUnregister.defaults =
 
 function abilityCssExport( o )
 {
-  _.routineOptions( abilityCssExport,o );
+  _.routineOptions( abilityCssExport, o );
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.dom.jqueryIs( o.targetDom )
 
-  o.targetDom.each( function( k,e )
+  o.targetDom.each( function( k, e )
   {
 
     if( !e._abilities )
@@ -1318,7 +1322,7 @@ function copyable( o )
 {
   o = o || Object.create( null );
 
-  _.routineOptions( copyable,o );
+  _.routineOptions( copyable, o );
   _.assert( _.dom.domableIs( o.containerDom ) );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
@@ -1348,7 +1352,7 @@ function copyable( o )
     let successful = document.execCommand( 'copy' );
 
     if( !successful )
-    _.errLog( 'copyable :','fail to copy into clipboard' );
+    _.errLog( 'copyable :', 'fail to copy into clipboard' );
 
     if( !val.length )
     this.value = val;
@@ -1369,7 +1373,7 @@ function copyableHtmlText( o )
 {
   o = o || Object.create( null );
 
-  _.routineOptions( copyableHtmlText,o );
+  _.routineOptions( copyableHtmlText, o );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
   /* */
@@ -1380,7 +1384,7 @@ function copyableHtmlText( o )
   else
   o.targetDom = $( o.targetDom );
 
-  o.containerDom.attr( 'wcopyable-html-text',1 );
+  o.containerDom.attr( 'wcopyable-html-text', 1 );
 
   /* */
 
@@ -1410,10 +1414,10 @@ function pinnable( o )
 {
   o = o || Object.create( null );
 
-  _.routineOptions( pinnable,o );
+  _.routineOptions( pinnable, o );
 
-    if( o.makingTargetDom && !o.targetDom )
-    o.targetDom = o.containerDom;
+  if( o.makingTargetDom && !o.targetDom )
+  o.targetDom = o.containerDom;
 
   _.assert( _.dom.domableIs( o.targetDom ) );
 
@@ -1433,7 +1437,7 @@ function pinnable( o )
     // o.targetDom.css();
   }
 
-  o.containerDom.attr( 'wpinnable',1 );
+  o.containerDom.attr( 'wpinnable', 1 );
 
   /* */
 
@@ -1441,7 +1445,7 @@ function pinnable( o )
   {
     let icon = $( this );
     let dom = icon.closest( '[ wpinnable ]' );
-    let value = o.onPin.call( dom,!dom.attr( 'wpinned' ) );
+    let value = o.onPin.call( dom, !dom.attr( 'wpinned' ) );
 
     if( value )
     {
@@ -1455,7 +1459,7 @@ function pinnable( o )
     }
 
     if( value )
-    dom.attr( 'wpinned',1 );
+    dom.attr( 'wpinned', 1 );
     else
     dom.removeAttr( 'wpinned' );
 
@@ -1482,7 +1486,7 @@ function pinnable( o )
   /* */
 
   o.targetDom
-  .on( _.dom.eventName( 'click' ),handlePin );
+  .on( _.dom.eventName( 'click' ), handlePin );
 
   _.dom.abilityRegister
   ({
@@ -1517,8 +1521,8 @@ let subjective = (function()
       onFocus : function( value ){ return value },
     }
 
-    _.assertMapHasOnly( o,optionsDefault );
-    _.mapSupplement( o,optionsDefault );
+    _.assertMapHasOnly( o, optionsDefault );
+    _.mapSupplement( o, optionsDefault );
     _.assert( _.dom.domableIs( o.target ) );
 
     //
@@ -1529,7 +1533,7 @@ let subjective = (function()
     else
     o.target = $( o.target );
 
-    o.target.attr( 'wsubjective',1 );
+    o.target.attr( 'wsubjective', 1 );
 
     //
 
@@ -1539,10 +1543,9 @@ let subjective = (function()
       let icon = $( this );
       let dom = icon.closest( '[ wsubjective ]' );
 
-      o.onFocus.call( dom,false );
+      o.onFocus.call( dom, false );
 
-    })
-    ;
+    });
 
   }
 
@@ -1554,7 +1557,7 @@ function widgable( o )
 {
   o = o || Object.create( null );
 
-  _.routineOptions( widgable,o );
+  _.routineOptions( widgable, o );
 
   o.targetDom = $( o.targetDom );
   if( !o.containerDom )
@@ -1597,7 +1600,7 @@ function widgable( o )
   ({
     targetDom : o.targetDom,
     manualDragApplication : 0,
-    nonDraggableAttr : _.arrayFlatten( [ 'wresizing' ] , [ o.nonDraggableAttr ] ),
+    nonDraggableAttr : _.arrayFlatten( [ 'wresizing' ], [ o.nonDraggableAttr ] ),
   });
 
 }
@@ -1616,8 +1619,8 @@ function tristatable( o )
 {
   o = o || Object.create( null );
 
-  _.assertMapHasOnly( o,tristatable.defaults );
-  _.mapSupplement( o,tristatable.defaults );
+  _.assertMapHasOnly( o, tristatable.defaults );
+  _.mapSupplement( o, tristatable.defaults );
   _.assert( _.dom.domableIs( o.items ) );
 
   //
@@ -1629,7 +1632,7 @@ function tristatable( o )
 
   o.itemSet = function( state )
   {
-    let stateWas = _.mapExtend( null,o.state );
+    let stateWas = _.mapExtend( null, o.state );
 
     _.assert( _.strIs( state.name ) );
 
@@ -1641,7 +1644,7 @@ function tristatable( o )
 
     /*Object.freeze( state );*/
 
-    if( o.onChange( state,stateWas ) === false )
+    if( o.onChange( state, stateWas ) === false )
     {
       o.state = stateWas;
       return false;
@@ -1654,8 +1657,8 @@ function tristatable( o )
       ({
         kind : 'tristateChange',
         tristate : o,
-        state : state,
-        stateWas : stateWas,
+        state,
+        stateWas,
       });
 
       return true;
@@ -1670,7 +1673,7 @@ function tristatable( o )
   {
     let t = $( this );
     let state = Object.create( null );
-    state.name = o.onStateNameOf( t,event );
+    state.name = o.onStateNameOf( t, event );
     state.dom = t;
 
     _.assert( _.strIs( state.name ) );
@@ -1691,8 +1694,8 @@ tristatable.defaults =
   state : {},
   context : null,
   eventForActivation : 'click',
-  onChange : function( state,stateWas ){ return true; },
-  onStateNameOf : function( dom,event ){ throw _.err( 'no assigned' ); },
+  onChange : function( state, stateWas ){ return true; },
+  onStateNameOf : function( dom, event ){ throw _.err( 'no assigned' ); },
 }
 
 // --
@@ -1703,22 +1706,23 @@ function buttonMake( o )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( buttonMake,o );
+  _.routineOptions( buttonMake, o );
 
   o.parentDom = $( o.parentDom );
   let html = o.onHtmlGet( o );
   o.buttonDom = $( html );
 
-  _.assert( o.parentDom.length,'DOM with selector ".buttons-container" not found' );
+  _.assert( o.parentDom.length, 'DOM with selector ".buttons-container" not found' );
   _.assert( o.buttonDom.length );
 
   _.dom.uiInitPopups( o.buttonDom );
   o.buttonDom.appendTo( o.parentDom );
 
-  if( o.onClick ) {
-    o.buttonDom.on( _.dom.eventName( 'mouseup' ),( e ) => o.onClick.call( o.context || this,e ) );
+  if( o.onClick )
+  {
+    o.buttonDom.on( _.dom.eventName( 'mouseup' ), ( e ) => o.onClick.call( o.context || this, e ) );
     if( o.keyboard && _global_.Mousetrap )
-    _global_.Mousetrap.bind( o.keyboard,( e ) => o.onClick.call( o.context || this,e ) );
+    _global_.Mousetrap.bind( o.keyboard, ( e ) => o.onClick.call( o.context || this, e ) );
   }
 
   return o;
@@ -1744,7 +1748,7 @@ function panelMake( o )
   if( !_.objectIs( o ) )
   o = { targetDom : o }
 
-  _.routineOptions( panelMake,o );
+  _.routineOptions( panelMake, o );
   o.targetDom = $( o.targetDom );
 
   if( !o.targetDom.length )
@@ -1808,7 +1812,7 @@ function totalPanelMake( o )
 
   o.total = 1;
   if( !o.cssClasses )
-  o.cssClasses = [ 'layout-stretch','panel-total' ];
+  o.cssClasses = [ 'layout-stretch', 'panel-total' ];
 
   return _.dom.panelMake( o );
 }
@@ -1818,11 +1822,12 @@ totalPanelMake.defaults =
   total : 1,
 }
 
-totalPanelMake.defaults.__proto__ = panelMake.defaults;
+// totalPanelMake.defaults.__proto__ = panelMake.defaults;
+Object.setPrototypeOf( totalPanelMake.defaults, panelMake.defaults )
 
 //
 
-function shut( down,container,imageUrl )
+function shut( down, container, imageUrl )
 {
 
   if( container === undefined ) container = $( 'body' );
@@ -1833,31 +1838,31 @@ function shut( down,container,imageUrl )
   if( down )
   {
     if( typeof Mousetrap !== 'undefined' ) Mousetrap.pause();
-    let result = $( '.dom-shut-down',container );
-    if( result.length ) return result;
-    result = $('<div>')
-      .addClass( 'dom-shut-down' )
-      .css( 'z-index',1000 )
-      .css( 'position','fixed' )
-      .css( 'left','0' )
-      .css( 'top','0' )
-      .css( 'width','100%' )
-      .css( 'height','100%' )
+    let result = $( '.dom-shut-down', container );
+    if( result.length )return result;
+    result = $( '<div>' )
+    .addClass( 'dom-shut-down' )
+    .css( 'z-index', 1000 )
+    .css( 'position', 'fixed' )
+    .css( 'left', '0' )
+    .css( 'top', '0' )
+    .css( 'width', '100%' )
+    .css( 'height', '100%' )
 
-      .css( 'background','rgba(0,0,0,0.2)' )
-      .css( 'background-image','url(' + imageUrl + ')' )
-      .css( 'background-repeat','no-repeat' )
-      .css( 'background-repeat','no-repeat' )
-      .css( 'background-position','center' )
-      .css( 'background-size','80px 80px' )
+    .css( 'background', 'rgba(0,0,0,0.2)' )
+    .css( 'background-image', 'url(' + imageUrl + ')' )
+    .css( 'background-repeat', 'no-repeat' )
+    .css( 'background-repeat', 'no-repeat' )
+    .css( 'background-position', 'center' )
+    .css( 'background-size', '80px 80px' )
 
-      .appendTo( container );
+    .appendTo( container );
     return result;
   }
   else
   {
     if( Mousetrap ) Mousetrap.unpause();
-    let result = $( '.dom-shut-down',container );
+    let result = $( '.dom-shut-down', container );
     return result.remove();
   }
 
@@ -1877,17 +1882,16 @@ function offscreenMake()
     {
       result = $( '<div>' )
       .addClass( 'offscreen' )
-      .css( 'display','fixed' )
-      .css( 'position','absolute' )
-      .css( 'left','1000000px' )
-      .css( 'top','1000000px' )
-      .css( 'z-index','-10' )
-      .css( 'width','auto' )
-      .css( 'height','auto' )
-      .css( 'opacity','1' )
-      .css( 'overflow','visible' )
-      .appendTo( 'body' )
-      ;
+      .css( 'display', 'fixed' )
+      .css( 'position', 'absolute' )
+      .css( 'left', '1000000px' )
+      .css( 'top', '1000000px' )
+      .css( 'z-index', '-10' )
+      .css( 'width', 'auto' )
+      .css( 'height', 'auto' )
+      .css( 'opacity', '1' )
+      .css( 'overflow', 'visible' )
+      .appendTo( 'body' );
     }
 
     return result;
@@ -1902,7 +1906,7 @@ function offscreenMake()
     if( value )
     {
 
-      dst[ 0 ]._domOffscreenOriginalCss = _.dom.cssGet( dst,[ 'display','left','top' ] );
+      dst[ 0 ]._domOffscreenOriginalCss = _.dom.cssGet( dst, [ 'display', 'left', 'top' ] );
 
       let css =
       {
@@ -1911,7 +1915,7 @@ function offscreenMake()
         'top' : '100000px',
       }
 
-      _.dom.cssSet( dst,css );
+      _.dom.cssSet( dst, css );
 
     }
     else
@@ -1920,8 +1924,9 @@ function offscreenMake()
       _.assert( dst[ 0 ]._domOffscreenOriginalCss );
 
       if( dst[ 0 ]._domOffscreenOriginalCss )
-      _.dom.cssSet( dst,dst[ 0 ]._domOffscreenOriginalCss );
-      dst,dst[ 0 ]._domOffscreenOriginalCss = null;
+      _.dom.cssSet( dst, dst[ 0 ]._domOffscreenOriginalCss );
+      // dst, dst[ 0 ]._domOffscreenOriginalCss = null;
+      dst[ 0 ]._domOffscreenOriginalCss = null;
 
     }
 
@@ -1944,7 +1949,7 @@ function textEditMake( o )
   if( _.strIs( o ) )
   o = { text : o };
 
-  _.routineOptions( textEditMake,o );
+  _.routineOptions( textEditMake, o );
 
   o.container = $( o.container );
 
@@ -1992,15 +1997,15 @@ function textEditMake( o )
 
   /* */
 
-/*
-  o.container = $( '<div>' ).appendTo( o.container );
-  o.container.css
-  ({
-    'overflow' : 'hidden',
-    'width' : '100%',
-    'height' : '100%',
-  });
-*/
+  /*
+    o.container = $( '<div>' ).appendTo( o.container );
+    o.container.css
+    ({
+      'overflow' : 'hidden',
+      'width' : '100%',
+      'height' : '100%',
+    });
+  */
 
   /* */
 
@@ -2029,17 +2034,17 @@ function habbitMouseClick( o )
   let mousedown = _.dom.eventName( 'mousedown' );
   let mousemove = _.dom.eventName( 'mousemove' );
 
-  _.routineOptions( habbitMouseClick,o );
+  _.routineOptions( habbitMouseClick, o );
 
   _.assert( _.objectIs( o.onEvent ) || _.routineIs( o.onEvent ) );
   _.assert( !!o.dom );
 
-  o.down = [ null,null ];
-  o.up = [ null,null ];
+  o.down = [ null, null ];
+  o.up = [ null, null ];
 
   // give click
 
-  function giveEvent( kindOfMouseEvent,down,up )
+  function giveEvent( kindOfMouseEvent, down, up )
   {
 
     if( !o.givingSingleClick && kindOfMouseEvent === 'single' )
@@ -2050,7 +2055,7 @@ function habbitMouseClick( o )
     let e =
     {
       kind : 'mouseEvent',
-      kindOfMouseEvent : kindOfMouseEvent,
+      kindOfMouseEvent,
       clickHandler : o,
       target : down.mouseEvent.target,
       mouse : down.mouseEvent,
@@ -2062,7 +2067,7 @@ function habbitMouseClick( o )
     }
 
     if( _.routineIs( o.onEvent ) )
-    o.onEvent.call( o,e );
+    o.onEvent.call( o, e );
     else
     o.onEvent.eventGive( e );
 
@@ -2083,7 +2088,7 @@ function habbitMouseClick( o )
     if( tooFar )
     {
       debugger;
-      giveEvent( 'single',o.down[ 1 ],o.up[ 1 ] );
+      giveEvent( 'single', o.down[ 1 ], o.up[ 1 ] );
       o.down[ 1 ] = null;
       o.up[ 1 ] = null;
     }
@@ -2092,7 +2097,7 @@ function habbitMouseClick( o )
 
   // handle mousedown
 
-  function handleMouseDown( event,extendingEvent )
+  function handleMouseDown( event, extendingEvent )
   {
 
     o.down[ 1 ] = o.down[ 0 ];
@@ -2108,10 +2113,10 @@ function habbitMouseClick( o )
     if( o.down[ 1 ] && o.up[ 0 ] )
     {
 
-      let tooFar = _.avector.distanceSqr( o.down[ 0 ].clickPosition,o.down[ 1 ].clickPosition ) > o.clickPositionTolerance;
+      let tooFar = _.avector.distanceSqr( o.down[ 0 ].clickPosition, o.down[ 1 ].clickPosition ) > o.clickPositionTolerance;
       if( tooFar )
       {
-        giveEvent( 'single',o.down[ 1 ],o.up[ 0 ] );
+        giveEvent( 'single', o.down[ 1 ], o.up[ 0 ] );
         o.down[ 1 ] = null;
         o.up[ 0 ] = null;
       }
@@ -2129,7 +2134,7 @@ function habbitMouseClick( o )
       return;
 
       debugger;
-      giveEvent( 'repeat',o.down[ 0 ],null );
+      giveEvent( 'repeat', o.down[ 0 ], null );
       setTimeout( handleRepeat, delay2 );
       delay2 -= 1;
 
@@ -2142,7 +2147,7 @@ function habbitMouseClick( o )
 
   // handle mouseup
 
-  function handleMouseUp( event,extendingEvent )
+  function handleMouseUp( event, extendingEvent )
   {
 
     o.up[ 1 ] = o.up[ 0 ];
@@ -2163,7 +2168,7 @@ function habbitMouseClick( o )
 
     /* too far */
 
-    let tooFar = _.avector.distanceSqr( o.up[ 0 ].clickPosition,o.down[ 0 ].clickPosition ) > o.clickPositionTolerance;
+    let tooFar = _.avector.distanceSqr( o.up[ 0 ].clickPosition, o.down[ 0 ].clickPosition ) > o.clickPositionTolerance;
 
     /* too late */
 
@@ -2191,7 +2196,7 @@ function habbitMouseClick( o )
       }
       else
       {
-        giveEvent( 'double',o.down[ 1 ],o.up[ 0 ] );
+        giveEvent( 'double', o.down[ 1 ], o.up[ 0 ] );
         o.down[ 0 ] = null;
         o.up[ 0 ] = null;
         return;
@@ -2212,7 +2217,7 @@ function habbitMouseClick( o )
 
     // console.log( 'before.timeout',o.down,o.up );
 
-    let delay = Math.max( 1,o.down[ 0 ].clickTime - _.time.now() + o.clickDelay-10 );
+    let delay = Math.max( 1, o.down[ 0 ].clickTime - _.time.now() + o.clickDelay-10 );
     setTimeout( function()
     {
 
@@ -2227,21 +2232,21 @@ function habbitMouseClick( o )
 
       _.assert( !!o.down[ 0 ] );
 
-/*
-      if( o.up[ 1 ] )
-      debugger;
-      happen sometimes !!!
-*/
+      /*
+            if( o.up[ 1 ] )
+            debugger;
+            happen sometimes !!!
+      */
 
       if( o.down[ 1 ] )
       {
-        giveEvent( 'single',o.down[ 1 ],o.up[ 0 ] );
+        giveEvent( 'single', o.down[ 1 ], o.up[ 0 ] );
         o.down[ 1 ] = null;
         o.up[ 0 ] = null;
       }
       else
       {
-        giveEvent( 'single',o.down[ 0 ],o.up[ 0 ] );
+        giveEvent( 'single', o.down[ 0 ], o.up[ 0 ] );
         o.down[ 0 ] = null;
         o.up[ 0 ] = null;
       }
@@ -2255,20 +2260,20 @@ function habbitMouseClick( o )
 
   // hamdler of mousem ove
 
-  function handleMouseMove( e,extendingEvent )
+  function handleMouseMove( e, extendingEvent )
   {
 
     if( !o.down[ 0 ] )
     return;
 
     let clickPosition = _.dom.eventClientPosition( e );
-    let tooFar = _.avector.distanceSqr( clickPosition,o.down[ 0 ].clickPosition ) > o.clickPositionTolerance;
+    let tooFar = _.avector.distanceSqr( clickPosition, o.down[ 0 ].clickPosition ) > o.clickPositionTolerance;
 
     if( tooFar )
     {
 
       if( o.down[ 0 ] && o.up[ 0 ] )
-      giveEvent( 'single',o.down[ 0 ],o.up[ 0 ] );
+      giveEvent( 'single', o.down[ 0 ], o.up[ 0 ] );
 
       o.down[ 0 ] = null;
       o.up[ 0 ] = null;
@@ -2278,7 +2283,7 @@ function habbitMouseClick( o )
 
   // handler of events
 
-  o.handleMouseEvent = function( event,extendingEvent )
+  o.handleMouseEvent = function( event, extendingEvent )
   {
 
     // if( event.type !== 'mousemove' )
@@ -2288,13 +2293,13 @@ function habbitMouseClick( o )
     _.assert( _.dom.eventIs( event ) );
 
     if( event.type === mousedown )
-    handleMouseDown( event,extendingEvent );
+    handleMouseDown( event, extendingEvent );
     else if( event.type === mouseup )
-    handleMouseUp( event,extendingEvent );
+    handleMouseUp( event, extendingEvent );
     else if( event.type === mousemove )
-    handleMouseMove( event,extendingEvent );
+    handleMouseMove( event, extendingEvent );
     else
-    throw _.assert( 0,'unexpected event type',event.type );
+    throw _.assert( 0, 'unexpected event type', event.type );
 
   }
 
@@ -2305,10 +2310,9 @@ function habbitMouseClick( o )
 
     // debugger;
     o.dom
-    .on( mouseup,o.handleMouseEvent )
-    .on( mousedown,o.handleMouseEvent )
-    .on( mousemove,o.handleMouseEvent )
-    ;
+    .on( mouseup, o.handleMouseEvent )
+    .on( mousedown, o.handleMouseEvent )
+    .on( mousemove, o.handleMouseEvent );
 
   }
 
@@ -2354,7 +2358,7 @@ function habbitKeyEnter( o )
   let lastEvent = null;
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( habbitKeyEnter,o );
+  _.routineOptions( habbitKeyEnter, o );
 
   // give event
 
@@ -2365,12 +2369,12 @@ function habbitKeyEnter( o )
     {
       kind : 'keybaordEnter',
       enterHandler : o,
-      value : value,
-      lastEvent : lastEvent,
+      value,
+      lastEvent,
     }
 
     if( _.routineIs( o.onEvent ) )
-    o.onEvent.call( o,e );
+    o.onEvent.call( o, e );
     else
     o.onEvent.eventGive( e );
 
@@ -2397,7 +2401,7 @@ function habbitKeyEnter( o )
 
       value = '';
 
-    },o.delay );
+    }, o.delay );
 
   }
 
@@ -2405,9 +2409,8 @@ function habbitKeyEnter( o )
   {
 
     o.dom
-    .on( keyUpName,o.handleKeyEvent )
-    //.on( keyDownName,o.handleKeyEvent )
-    ;
+    .on( keyUpName, o.handleKeyEvent )
+    //.on( keyDownName,o.handleKeyEvent );
 
   }
 
@@ -2435,9 +2438,9 @@ function habbitDrag( o )
   o = { targetDom : o }
 
   if( o.arbitrary )
-  _.mapComplement( o,habbitDrag.defaults );
+  _.mapComplement( o, habbitDrag.defaults );
   else
-  _.routineOptions( habbitDrag,o );
+  _.routineOptions( habbitDrag, o );
 
   o.targetDom = $( o.targetDom );
 
@@ -2447,12 +2450,12 @@ function habbitDrag( o )
 
   o.down = null;
   o.position = null;
-  o.delta = [ 0,0 ];
-  o.targetOldPosition = [ 0,0 ];
-  o.targetNewPosition = [ 0,0 ];
+  o.delta = [ 0, 0 ];
+  o.targetOldPosition = [ 0, 0 ];
+  o.targetNewPosition = [ 0, 0 ];
 
   if( o.draggableAttr )
-  _.dom.s.attr( o.targetDom,o.draggableAttr,1 );
+  _.dom.s.attr( o.targetDom, o.draggableAttr, 1 );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( o.targetDom.length === 1 );
@@ -2460,7 +2463,7 @@ function habbitDrag( o )
 
   /* */
 
-  function giveEvent( e,kind )
+  function giveEvent( e, kind )
   {
 
     let event = Object.create( null );
@@ -2483,14 +2486,14 @@ function habbitDrag( o )
 
     // debugger;
     if( o.nonDraggableAttr )
-    if( _.dom.attrHasAny( o.targetDom , o.nonDraggableAttr ) || _.dom.attrHasAny( e.target , o.nonDraggableAttr ) )
+    if( _.dom.attrHasAny( o.targetDom, o.nonDraggableAttr ) || _.dom.attrHasAny( e.target, o.nonDraggableAttr ) )
     return;
 
     // return;
     console.log( 'habbitDrag : handleMouseDown' );
 
     if( o.draggingAttr )
-    _.dom.s.attr( o.targetDom,o.draggingAttr,1 );
+    _.dom.s.attr( o.targetDom, o.draggingAttr, 1 );
 
     o.down = _.dom.eventClientPosition
     ({
@@ -2502,7 +2505,7 @@ function habbitDrag( o )
     for( let i = 0 ; i < 2 ; i++ )
     o.targetNewPosition[ i ] = o.targetOldPosition[ i ];
 
-    if( giveEvent( e,'dragBegin' ) === false )
+    if( giveEvent( e, 'dragBegin' ) === false )
     o.down = null;
     else
     return false;
@@ -2519,9 +2522,9 @@ function habbitDrag( o )
     console.log( 'habbitDrag : handleMouseUp' );
 
     if( o.draggingAttr )
-    _.dom.s.attr( o.targetDom,o.draggingAttr,0 );
+    _.dom.s.attr( o.targetDom, o.draggingAttr, 0 );
 
-    if( giveEvent( e,'dragEnd' ) !== false )
+    if( giveEvent( e, 'dragEnd' ) !== false )
     o.down = null;
 
   }
@@ -2551,7 +2554,7 @@ function habbitDrag( o )
       o.targetNewPosition[ i ] = o.targetOldPosition[ i ] + o.delta[ i ];
     }
 
-    giveEvent( e,'drag' );
+    giveEvent( e, 'drag' );
 
   }
 
@@ -2574,26 +2577,23 @@ function habbitDrag( o )
   o.bindTarget = function bindTarget()
   {
     o.targetDom
-    .on( mousedown,o.handleEvent )
-    ;
+    .on( mousedown, o.handleEvent );
   }
 
   o.bindRoot = function bindRoot()
   {
     o.rootDom
-    .on( mouseup,o.handleEvent )
-    .on( mousemove,o.handleEvent )
-    .on( mouseleave,o.handleEvent )
-    ;
+    .on( mouseup, o.handleEvent )
+    .on( mousemove, o.handleEvent )
+    .on( mouseleave, o.handleEvent );
   }
 
   o.unbindRoot = function unbindRoot()
   {
     o.rootDom
-    .off( mouseup,o.handleEvent )
-    .off( mousemove,o.handleEvent )
-    .off( mouseleave,o.handleEvent )
-    ;
+    .off( mouseup, o.handleEvent )
+    .off( mousemove, o.handleEvent )
+    .off( mouseleave, o.handleEvent );
   }
 
   /* */
@@ -2615,7 +2615,7 @@ habbitDrag.defaults =
   targetDom : null,
   rootDom : 'body',
   relativeDom : null,
-  allowedDirections : [ 1,1 ],
+  allowedDirections : [ 1, 1 ],
   usingManualEventsOnly : 0,
   arbitrary : 0,
 
@@ -2632,7 +2632,7 @@ function draggable2( o )
   if( _.dom.like( o ) )
   o = { targetDom : o }
   o.arbitrary = 1;
-  _.routineOptions( draggable2,o );
+  _.routineOptions( draggable2, o );
   o = _.dom.habbitDrag( o );
 
   /* drag */
@@ -2658,7 +2658,7 @@ function draggable2( o )
     drag( e );
 
     if( onEvent )
-    onEvent.call( this,e );
+    onEvent.call( this, e );
 
   }
 
@@ -2679,8 +2679,7 @@ function draggable2( o )
     o.rootDom = $( this ).parent();
     o.bindRoot();
 
-  })
-  ;
+  });
 
   return o;
 }
@@ -2692,8 +2691,8 @@ draggable2.defaults =
   manualDragApplication : 1,
 
 }
-
-draggable2.defaults.__proto__ = habbitDrag.defaults;
+// draggable2.defaults.__proto__ = habbitDrag.defaults;
+Object.setPrototypeOf( draggable2.defaults, habbitDrag.defaults )
 
 //
 
@@ -2718,7 +2717,7 @@ let draggable = (function()
     ([
       '[ wdragging ], [ wdragging ] *',
       '{',
-        'cursor : move',
+      'cursor : move',
       '}',
     ].join( '\n' ));
 
@@ -2728,10 +2727,10 @@ let draggable = (function()
   {
     o = o || Object.create( null );
 
-    _.routineOptions( draggable,o );
+    _.routineOptions( draggable, o );
 
     if( o.notDraggableTagNames === null )
-    o.notDraggableTagNames = [ 'TEXTAREA','INPUT' ]
+    o.notDraggableTagNames = [ 'TEXTAREA', 'INPUT' ]
 
     _.assert( _.dom.domableIs( o.target ) );
     _.assert( _.dom.domableIs( o.container ) );
@@ -2740,7 +2739,7 @@ let draggable = (function()
     o.state = Object.create( null );
     o.container = $( o.container );
     o.target = $( o.target );
-    o.target.attr( 'wdraggable',1 );
+    o.target.attr( 'wdraggable', 1 );
 
     /* */
 
@@ -2766,32 +2765,31 @@ let draggable = (function()
 
       o.state.target = dom;
       o.state.offset = dom.offset();
-      o.state.offset = [ o.state.offset.left,o.state.offset.top ];
+      o.state.offset = [ o.state.offset.left, o.state.offset.top ];
       o.state.start = _.dom.eventClientPosition( event );
 
-      o.container.attr( 'wdragging',1 );
-      dom.attr( 'wdragging',1 );
+      o.container.attr( 'wdragging', 1 );
+      dom.attr( 'wdragging', 1 );
     })
     .on( _.dom.eventName( 'drag' ), function( event )
     {
       event.preventDefault();
       return false;
-    })
-    ;
+    });
 
     /* */
 
     o.container
     .on( _.dom.eventName( 'mouseup' ), function( event )
     {
-      if( !o.state.start ) return;
+      if( !o.state.start )return;
       o.state.start = null;
       o.state.target.removeAttr( 'wdragging' );
       o.container.removeAttr( 'wdragging' );
     })
     .on( _.dom.eventName( 'mousemove' ), function( event )
     {
-      if( !o.state.start ) return;
+      if( !o.state.start )return;
       let dom = o.state.target;
       let pos = _.dom.eventClientPosition( event );
       dom.offset
@@ -2816,14 +2814,14 @@ draggable.defaults =
 //
 //
 
-function habitRightClick( targetSelector,onEvent )
+function habitRightClick( targetSelector, onEvent )
 {
 
   let touchSupported = ( 'ontouchstart' in window ) || ( 'onmsgesturechange' in window );
   let eventName = _.dom.eventName( touchSupported ? 'taphold' : 'mouseup' );
 
 
-  $( targetSelector ).on( eventName,function( event )
+  $( targetSelector ).on( eventName, function( event )
   {
 
     if( event.which !== 3 )
@@ -2831,7 +2829,7 @@ function habitRightClick( targetSelector,onEvent )
 
     event = { mouse : event };
 
-    onEvent.call( this,event );
+    onEvent.call( this, event );
 
   })
 
@@ -2839,7 +2837,7 @@ function habitRightClick( targetSelector,onEvent )
 
 //
 
-function habitDropFile( targetDom,onEvent )
+function habitDropFile( targetDom, onEvent )
 {
 
   _.assert( _.dom.domableIs( targetDom ) )
@@ -2866,7 +2864,7 @@ function habitDropFile( targetDom,onEvent )
     event.preventDefault();
 
     let files = event.dataTransfer.files;
-    onEvent.call( this,files,event );
+    onEvent.call( this, files, event );
 
   }, false );
 
@@ -2885,8 +2883,8 @@ function uiPopupDefaults( dom )
   /* console.log( 'popup :',_.dom.nickname( dom,'data-tab' ) ); */
 
   dom = $( dom );
-  let position = _.dom.attrInherited( dom,'data-position' ) || 'bottom center';
-  let variation = _.dom.attrInherited( dom,'data-variation' ) || '';
+  let position = _.dom.attrInherited( dom, 'data-position' ) || 'bottom center';
+  let variation = _.dom.attrInherited( dom, 'data-variation' ) || '';
 
   let hoverable = dom.hasClass( 'hoverable' );
   let inline = dom.hasClass( 'inline' );
@@ -2894,10 +2892,10 @@ function uiPopupDefaults( dom )
   var defaults =
   {
     'exclusive' : true,
-    'position' : position,
-    'hoverable' : hoverable,
-    'inline' : inline,
-    'variation' : variation,
+    position,
+    hoverable,
+    inline,
+    variation,
     'delay' :
     {
       show : 750,
@@ -2920,10 +2918,9 @@ function uiInitPopups( dom )
 
   let popups = dom
   .find( '[ title ],[ data-html ],[ data-content ]' )
-  .addBack( '[ title ],[ data-html ],[ data-content ]' )
-  ;
+  .addBack( '[ title ],[ data-html ],[ data-content ]' );
 
-  popups.each( function( k,e )
+  popups.each( function( k, e )
   {
 
     e = $( e );
@@ -2945,7 +2942,7 @@ function uiInitDropdown( o )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( uiInitDropdown,o );
+  _.routineOptions( uiInitDropdown, o );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
   if( o.dropdownOptions === null )
@@ -2957,7 +2954,7 @@ function uiInitDropdown( o )
   .dropdown( o.dropdownOptions );
 
   o.targetDom.find( '.ui.dropdown.hoverable' )
-  .dropdown( _.mapExtend( { on : 'hover' },o.dropdownOptions || Object.create( null ) ) );
+  .dropdown( _.mapExtend( { on : 'hover' }, o.dropdownOptions || Object.create( null ) ) );
 
 }
 
@@ -2987,9 +2984,9 @@ let uiTabsInit = ( function uiTabsInit()
     // o = o || Object.create( null );
 
     _.assert( arguments.length === 1, 'Expects single argument' );
-    _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ),'uiTabsInit :','Expects { targetDom } as first argument' );
+    _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ), 'uiTabsInit :', 'Expects { targetDom } as first argument' );
     _.assertMapHasNoUndefine( o );
-    _.routineOptions( uiTabsInit,o );
+    _.routineOptions( uiTabsInit, o );
 
     let body = $( document.body );
     if( !o.targetDom ) o.targetDom = body;
@@ -2998,10 +2995,13 @@ let uiTabsInit = ( function uiTabsInit()
     /* not dynamic */
 
     o.targetDom.find( 'a[ data-tab ]:not( .dynamic ):not( .disabled )' )
-    .each( function( k,e )
+    .each( function( k, e )
     {
       e = $( e );
-      let dataTabContext = e.parents( '[ data-tab-context ]' ).add( e ).attr( 'data-tab-context' );
+      let dataTabContext = e
+      .parents( '[ data-tab-context ]' )
+      .add( e )
+      .attr( 'data-tab-context' );
       let dataTabName = e.attr( 'data-tab' );
       e.tab
       ({
@@ -3037,7 +3037,7 @@ let uiTabsInit = ( function uiTabsInit()
         /*if( _currentTab !== tabPath || ( t._tabOptions && !t._tabOptions.cache ) )*/
         if( !t._tabOptions || !t._tabOptions.cache )
         {
-          tabOptions.onFirstLoad.call( t,tabPath, parameterArray, historyEvent, t._tabOptions.url );
+          tabOptions.onFirstLoad.call( t, tabPath, parameterArray, historyEvent, t._tabOptions.url );
           return;
         }
         o.onTabLoad.call( t, tabPath, parameterArray, historyEvent, t._tabOptions.url );
@@ -3070,11 +3070,11 @@ let uiTabsInit = ( function uiTabsInit()
         t._tabOptions.url = url;
         t._tabOptions.loading = true;
 
-        console.log( 'onFirstLoad :',dataTab );
+        console.log( 'onFirstLoad :', dataTab );
         $( this )
-        .load( url,function( responseData, status, xhr )
+        .load( url, function( responseData, status, xhr )
         {
-          if ( status == 'error' )
+          if( status === 'error' )
           {
             var html;
 
@@ -3089,7 +3089,7 @@ let uiTabsInit = ( function uiTabsInit()
             let err = _.errLog( reason );
 
             if( o.viewOnError )
-            html = o.viewOnError({ reason : reason });
+            html = o.viewOnError({ reason });
             else
             html = 'Error ' + reason;
 
@@ -3111,22 +3111,38 @@ let uiTabsInit = ( function uiTabsInit()
     //
 
     dynamic.tab( tabOptions );
-    dynamic.each( function( k,e )
+    dynamic.each( function( k, e )
     {
 
       e = $( e );
       //let dataTabContext = e.parents().andSelf().filter( '[ data-tab-context ]' ).attr( 'data-tab-context' );
       //let dataHistoryType = e.parents().andSelf().filter( '[ data-tab-history-type ]' ).attr( 'data-tab-history-type' ) || 'hash';
-      let dataTabContext = e.parents().add( e ).filter( '[ data-tab-context ]' ).attr( 'data-tab-context' );
-      let dataHistoryType = e.parents().add( e ).filter( '[ data-tab-history-type ]' ).attr( 'data-tab-history-type' ) || 'hash';
+      let dataTabContext = e
+      .parents()
+      .add( e )
+      .filter( '[ data-tab-context ]' )
+      .attr( 'data-tab-context' );
+      let dataHistoryType = e
+      .parents()
+      .add( e )
+      .filter( '[ data-tab-history-type ]' )
+      .attr( 'data-tab-history-type' ) || 'hash';
 
       //let dataHistory = e.parents().andSelf().filter( '[ data-tab-history ]' ).attr( 'data-tab-history' );
-      let dataHistory = e.parents().add( e ).filter( '[ data-tab-history ]' ).attr( 'data-tab-history' );
+      let dataHistory = e
+      .parents()
+      .add( e )
+      .filter( '[ data-tab-history ]' )
+      .attr( 'data-tab-history' );
       if( dataHistory === undefined ) dataHistory = true;
       else dataHistory = _.boolFrom( dataHistory );
 
       //let dataCache = e.parents().andSelf().filter( '[ data-tab-cache ]' ).attr( 'data-tab-cache' );
-      let dataCache = e.parents().add( e ).filter( '[ data-tab-cache ]' ).attr( 'data-tab-cache' );
+      let dataCache = e
+      .parents()
+      .add( e )
+      .filter( '[ data-tab-cache ]' )
+      .attr( 'data-tab-cache' );
       if( dataCache === undefined ) dataCache = true;
       else dataCache = _.boolFrom( dataCache );
 
@@ -3144,7 +3160,7 @@ let uiTabsInit = ( function uiTabsInit()
         context : ( dataTabContext ? dataTabContext : body ),
       }
 
-      e.tab( 'setting',tabOptions );
+      e.tab( 'setting', tabOptions );
 
     });
 
@@ -3182,9 +3198,9 @@ function uiInitGeneric( o )
   o.dropdownOptions = Object.create( null );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ),'uiInitGeneric :','Expects DOM {o.targetDom}' );
+  _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ), 'uiInitGeneric :', 'Expects DOM {o.targetDom}' );
   _.assertMapHasNoUndefine( o );
-  _.routineOptions( uiInitGeneric,o );
+  _.routineOptions( uiInitGeneric, o );
 
   let body = $( document.body );
   if( !o.targetDom )
@@ -3213,8 +3229,8 @@ uiInitGeneric.defaults =
   dropdownOptions : null,
   usingTabs : 1,
 }
-
-uiInitGeneric.defaults.__proto__ = uiTabsInit.defaults;
+// uiInitGeneric.defaults.__proto__ = uiTabsInit.defaults;
+Object.setPrototypeOf( uiInitGeneric.defaults, uiTabsInit.defaults )
 
 //
 
@@ -3251,7 +3267,7 @@ function uiShow( o )
 
   _.assert( _.dom.domableIs( o.targetDom ) );
   _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.routineOptions( uiShow,o );
+  _.routineOptions( uiShow, o );
   _.assert( o.value !== undefined );
 
   o.targetDom = $( o.targetDom );
@@ -3271,7 +3287,7 @@ function uiShow( o )
   // for( let i = 0 ; i < o.targetDom.length ; i++ )
   // o.targetDom[ i ];
 
-  o.targetDom = o.targetDom.filter( function( k,e )
+  o.targetDom = o.targetDom.filter( function( k, e )
   {
     if( e._uiShowVisible === undefined )
     return true;
@@ -3287,7 +3303,7 @@ function uiShow( o )
   if( o.consequence.competitorsEarlyGet().length > 1 )
   return o.consequence.take( null );
 
-  o.targetDom = o.targetDom.filter( function( k,e )
+  o.targetDom = o.targetDom.filter( function( k, e )
   {
     if( e._uiShowVisible === undefined )
     if( o.value )
@@ -3407,7 +3423,7 @@ let Routines =
 
 };
 
-_.mapExtend( Self,Fields );
-_.mapExtend( Self,Routines );
+_.mapExtend( Self, Fields );
+_.mapExtend( Self, Routines );
 
 })();

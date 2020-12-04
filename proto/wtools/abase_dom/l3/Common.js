@@ -1,8 +1,7 @@
-(function _Common_js_() {
+(function _Common_js_()
+{
 
 'use strict';
-
-
 
 let _ = wTools;
 let $ = typeof jQuery !== 'undefined' ? jQuery : null;
@@ -92,7 +91,7 @@ function caretSelect( dom, selection )
     dom.focus();
     if( dom.setSelectionRange )
     {
-      dom.setSelectionRange( selection[ 0 ],selection[ 1 ],selection[ 2 ] );
+      dom.setSelectionRange( selection[ 0 ], selection[ 1 ], selection[ 2 ] );
     }
     else if( dom.selectionStart !== undefined )
     {
@@ -104,8 +103,8 @@ function caretSelect( dom, selection )
     {
       let range = dom.createTextRange();
       range.collapse( true );
-      range.moveEnd( 'character',selection[ 1 ] );
-      range.moveStart( 'character',selection[ 0 ] );
+      range.moveEnd( 'character', selection[ 1 ] );
+      range.moveStart( 'character', selection[ 0 ] );
       range.select();
       // dom.focus();
     }
@@ -114,17 +113,18 @@ function caretSelect( dom, selection )
   else
   {
 
-    if( dom.selectionStart !== undefined ){
-      return [ dom.selectionStart,dom.selectionEnd,dom.selectionDirection ];
+    if( dom.selectionStart !== undefined )
+    {
+      return [ dom.selectionStart, dom.selectionEnd, dom.selectionDirection ];
     }
     else if( dom.getSelectionRange )
     {
-      return [ dom.getSelectionRange().x,dom.getSelectionRange().y ];
+      return [ dom.getSelectionRange().x, dom.getSelectionRange().y ];
     }
     else if( dom.createTextRange )
     {
       let range = dom.createTextRange();
-      return [ range.startOffset,range.endOffset ];
+      return [ range.startOffset, range.endOffset ];
     }
   }
 
@@ -147,7 +147,7 @@ function caretSelect( dom, selection )
  * @module Tools/base/DomBasic
  */
 
-function val( dom,val )
+function val( dom, val )
 {
 
   var result;
@@ -159,13 +159,13 @@ function val( dom,val )
   {
 
     var caretSelected;
-    if( document.activeElement == dom[ 0 ] )
+    if( document.activeElement === dom[ 0 ] )
     caretSelected = caretSelect( dom[ 0 ] );
 
     if( dom.is( 'input[ type=checkbox ]' ) )
     {
-      result = dom[ 0 ].checked ? true : false;
-      dom[ 0 ].checked = val ? true : false;
+      result = !!dom[ 0 ].checked;
+      dom[ 0 ].checked = !!val;
     }
     else if( dom.is( 'input' ) )
     {
@@ -179,7 +179,7 @@ function val( dom,val )
     }
 
     if( caretSelected )
-    caretSelect( dom,caretSelected );
+    caretSelect( dom, caretSelected );
 
   }
   else
@@ -187,7 +187,7 @@ function val( dom,val )
 
     if( dom.is( 'input[ type=checkbox ]' ) )
     {
-      result = dom[ 0 ].checked ? true : false;
+      result = !!dom[ 0 ].checked;
     }
     else if( dom.is( 'input' ) )
     {
@@ -201,12 +201,12 @@ function val( dom,val )
       result = dom[ 0 ].placeholder;
 
     }
-/*
-    else
-    {
-      result = dom.text();
-    }
-*/
+    /*
+        else
+        {
+          result = dom.text();
+        }
+    */
   }
 
   return result;
@@ -244,7 +244,7 @@ function attr( dom, attr, value )
  * @module Tools/base/DomBasic
  */
 
-function _class( dom,cssClass,adding )
+function _class( dom, cssClass, adding )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
@@ -319,10 +319,10 @@ function hasClass( targetDom, cssClass )
  * @module Tools/base/DomBasic
  */
 
-function attrHasAny( dom,attrs )
+function attrHasAny( dom, attrs )
 {
   let has = _.mapKeys( _.dom.s.attr( dom ) );
-  return _.longHasAny( has,attrs );
+  return _.longHasAny( has, attrs );
 }
 
 //
@@ -336,11 +336,11 @@ function attrHasAny( dom,attrs )
  * @module Tools/base/DomBasic
  */
 
-function attrHasAll( dom,attrs )
+function attrHasAll( dom, attrs )
 {
   let has = _.mapKeys( _.dom.s.attr( dom ) );
   debugger;
-  return _.longHasAll( has,attrs );
+  return _.longHasAll( has, attrs );
 }
 
 //
@@ -354,11 +354,11 @@ function attrHasAll( dom,attrs )
  * @module Tools/base/DomBasic
  */
 
-function attrHasNone( dom,attrs )
+function attrHasNone( dom, attrs )
 {
   let has = _.mapKeys( _.dom.s.attr( dom ) );
   debugger;
-  return _.longHasNone( has,attrs );
+  return _.longHasNone( has, attrs );
 }
 
 //
@@ -379,14 +379,14 @@ function textGet( o )
 
   if( _.dom.domableIs( o ) )
   o = { targetDom : o }
-  _.routineOptions( textGet,o );
+  _.routineOptions( textGet, o );
 
   let result = _.dom.each
   ({
     recursive : true,
     result : '',
     dom : o.targetDom,
-    onUp : function( dom,iterator )
+    onUp : function( dom, iterator )
     {
       let text = '';
 
@@ -445,7 +445,7 @@ function setText( dst, text )
  * @module Tools/base/DomBasic
  */
 
-function attrInherited( dom,attrName )
+function attrInherited( dom, attrName )
 {
   var result;
 
@@ -478,7 +478,7 @@ function attrInherited( dom,attrName )
  * @module Tools/base/DomBasic
  */
 
-function nickname( dom,attrName )
+function nickname( dom, attrName )
 {
 
   if( _.dom.jqueryIs( dom ) )
@@ -503,7 +503,7 @@ function nickname( dom,attrName )
 
 //
 
-function of( parent,children )
+function of( parent, children )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -537,7 +537,7 @@ function leftTopGet( dom )
 
   for( let i = 0 ; i < 2 ; i++ )
   if( _.strIs( result[ i ] ) )
-  result[ i ] = _.strRemoveEnd( result[ i ],'px' );
+  result[ i ] = _.strRemoveEnd( result[ i ], 'px' );
 
   result = _.numbersFrom( result );
 
@@ -546,7 +546,7 @@ function leftTopGet( dom )
 
 //
 
-function leftTopSet( dom,pos )
+function leftTopSet( dom, pos )
 {
 
   _.assert( _.dom.domableIs( dom ) );
@@ -565,7 +565,7 @@ function leftTopSet( dom,pos )
 
 //
 
-function centerSet( dom,pos )
+function centerSet( dom, pos )
 {
 
   _.assert( _.dom.domableIs( dom ) );
@@ -597,7 +597,7 @@ function positionGet( dom )
 
   let result = dom.position();
 
-  result = [ result.left,result.top ];
+  result = [ result.left, result.top ];
 
   dom[ 0 ]._positionGet = result;
 
@@ -615,7 +615,7 @@ function boundingBoxGet( dom )
   let child = dom[ 0 ].getBoundingClientRect();
   let parent = dom[ 0 ].parentNode.getBoundingClientRect();
 
-  let result = [ child.left-parent.left,child.top-parent.top,child.right-parent.left,child.bottom-parent.top ];
+  let result = [ child.left-parent.left, child.top-parent.top, child.right-parent.left, child.bottom-parent.top ];
 
   return result;
 }
@@ -629,7 +629,7 @@ function boundingBoxGlobalGet( dom )
   _.assert( dom.length === 1 );
 
   let child = dom[ 0 ].getBoundingClientRect();
-  let result = [ child.left,child.top,child.right,child.bottom ];
+  let result = [ child.left, child.top, child.right, child.bottom ];
 
   dom[ 0 ]._domBondingBoxGet = result;
 
@@ -645,7 +645,7 @@ function sizeGet( dom )
 
   _.assert( dom.length === 1 );
 
-  result = [ dom.outerWidth(),dom.outerHeight() ];
+  result = [ dom.outerWidth(), dom.outerHeight() ];
   dom[ 0 ]._sizeGet = result;
 
   return result;
@@ -703,7 +703,7 @@ function radiusGet( dom )
   var result;
   dom = $( dom );
 
-  result = Math.min( dom.outerWidth(),dom.outerHeight() );
+  result = Math.min( dom.outerWidth(), dom.outerHeight() );
   dom[ 0 ]._radiusGet = result;
 
   return result;
@@ -728,14 +728,14 @@ function offset( dom )
 {
   dom = _.dom.from( dom );
 
-  if( !dom.getClientRects().length ) return { top: 0, left: 0 };
+  if( !dom.getClientRects().length )return { top : 0, left : 0 };
 
   let rect = dom.getBoundingClientRect();
   let win = dom.ownerDocument.defaultView;
   let result =
   {
-    top: rect.top + win.pageYOffset,
-    left: rect.left + win.pageXOffset
+    top : rect.top + win.pageYOffset,
+    left : rect.left + win.pageXOffset
   };
   return result;
 }
@@ -764,7 +764,7 @@ function first()
 
 //
 
-function firstOf( src,selector )
+function firstOf( src, selector )
 {
 
   _.assert( _.dom.domableIs( src ) );
@@ -786,7 +786,7 @@ function firstOf( src,selector )
 
 //
 
-function ownIdentity( dom,identity )
+function ownIdentity( dom, identity )
 {
 
   dom = $( dom );
@@ -818,14 +818,14 @@ function ownIdentity( dom,identity )
     return result;
   }
 
-  identity = _.strIsolateEndOrAll( identity,' ' )[ 2 ];
+  identity = _.strIsolateEndOrAll( identity, ' ' )[ 2 ];
 
   _.assert( identity.indexOf( ' ' ) === -1 );
 
   identity = _.strSplitFast
   ({
     src : identity,
-    delimeter : [ '.','#', '[', ']' ],
+    delimeter : [ '.', '#', '[', ']' ],
     preservingDelimeters : 1,
     preservingEmpty : 0,
   });
@@ -850,7 +850,7 @@ function ownIdentity( dom,identity )
     else
     {
       debugger;
-      throw _.err( 'unknown prefix',identity[ i-1 ] );
+      throw _.err( 'unknown prefix', identity[ i-1 ] );
     }
   }
 
@@ -858,7 +858,7 @@ function ownIdentity( dom,identity )
 
 //
 
-function cssGet( dom,fields )
+function cssGet( dom, fields )
 {
   let result = Object.create( null );
 
@@ -890,7 +890,7 @@ function cssGet( dom,fields )
 
 //
 
-function cssSet( dom,fields )
+function cssSet( dom, fields )
 {
 
   dom = $( dom )
@@ -906,10 +906,10 @@ function cssSet( dom,fields )
 
 //
 
-function emToPx( dom,em )
+function emToPx( dom, em )
 {
   let emSize = parseFloat( dom.css( 'font-size' ) );
-  return( emSize * em );
+  return ( emSize * em );
 }
 
 //
@@ -917,7 +917,7 @@ function emToPx( dom,em )
 function each( o )
 {
 
-  _.routineOptions( each,o );
+  _.routineOptions( each, o );
   _.assert( _.dom.domableIs( o.dom ) );
 
   o.dom = _.dom.from( o.dom );
@@ -925,7 +925,7 @@ function each( o )
   for( let d = 0 ; d < o.dom.length ; d++ )
   {
     // debugger
-    _each( o.dom[ d ],o );
+    _each( o.dom[ d ], o );
   }
 
   return o.result;
@@ -939,13 +939,13 @@ each.defaults =
   usingNodeTypeElement : true,
   usingNodeTypeText : true,
   usingNodeTypesAll : false,
-  onUp : function( dom,o ){},
-  onDown : function( dom,o ){},
+  onUp : function( dom, o ){},
+  onDown : function( dom, o ){},
 }
 
 //
 
-function _each( dom,o )
+function _each( dom, o )
 {
 
   _.assert( _.dom.is( dom ) );
@@ -968,17 +968,17 @@ function _each( dom,o )
 
   /* */
 
-  let r = o.onUp( dom,o );
+  let r = o.onUp( dom, o );
   _.assert( r === undefined );
 
   let children = dom.childNodes;
   for( let d = 0 ; d < children.length ; d++ )
   {
     let dom = children[ d ];
-    _each( dom,o );
+    _each( dom, o );
   }
 
-  r = o.onDown( dom,o );
+  r = o.onDown( dom, o );
   _.assert( r === undefined );
 
   return o.context;
@@ -993,7 +993,7 @@ function cssGlobal( o )
   if( _.strIs( o ) )
   o = { css : o }
 
-  _.routineOptions( cssGlobal,o );
+  _.routineOptions( cssGlobal, o );
 
   if( o.document === null )
   o.document = document;
@@ -1007,9 +1007,9 @@ function cssGlobal( o )
 
     if( o.key === null )
     o.key = o.css;
-    if( _.longHas( _domGlobalCssKeysArray , [ o.key,o.document ] , _.longIdentical ) )
+    if( _.longHas( _domGlobalCssKeysArray, [ o.key, o.document ], _.longIdentical ) )
     return;
-    _domGlobalCssKeysArray.push([ o.key,o.document ]);
+    _domGlobalCssKeysArray.push([ o.key, o.document ]);
 
   }
 
@@ -1033,7 +1033,7 @@ function cssExport( o )
   if( o instanceof Document )
   o = { dstDocument : o }
 
-  _.routineOptions( cssExport,o );
+  _.routineOptions( cssExport, o );
 
   if( o.srcDocument === null )
   o.srcDocument = document;
@@ -1056,7 +1056,7 @@ function cssExport( o )
     _.dom.cssGlobal
     ({
       document : o.dstDocument,
-      css : css,
+      css,
       once : 0,
     });
 
@@ -1072,9 +1072,14 @@ cssExport.defaults =
 
 //
 
-function css( targetDom, property, value, priority )
+function css( /* targetDom, property, value, priority */ )
 {
   _.assert( arguments.length >= 2, 'Expects at least two arguments' );
+
+  let targetDom = arguments[ 0 ];
+  let property = arguments[ 1 ];
+  let value = arguments[ 2 ];
+  let priority = arguments[ 3 ];
 
   targetDom = _.dom.from( targetDom );
 
@@ -1139,7 +1144,7 @@ function clipboardCopy( text )
   }
   catch(err )
   {
-    _.errLog( 'Failed to copy into clipboard',err );
+    _.errLog( 'Failed to copy into clipboard', err );
   }
 
   document.body.removeChild( textArea );
@@ -1204,7 +1209,8 @@ let fullScreen = ( function fullScreen()
       else
       {
         inFullscreen = false;
-        alert( 'Fullscreen is not supported.' );
+        // alert( 'Fullscreen is not supported.' );
+        console.warn( 'Fullscreen is not supported.' );
       }
     }
     else
@@ -1216,7 +1222,8 @@ let fullScreen = ( function fullScreen()
       }
       else
       {
-        alert( 'Fullscreen is not supported.' );
+        // alert( 'Fullscreen is not supported.' );
+        console.warn( 'Fullscreen is not supported.' );
       }
 
     }
@@ -1230,7 +1237,7 @@ let fullScreen = ( function fullScreen()
 function load( o )
 {
 
-  _.routineOptions( load,o );
+  _.routineOptions( load, o );
 
   o.once = new _.Consequence();
   o.ready = new _.Consequence();
@@ -1270,7 +1277,7 @@ function load( o )
   }
 
   if( o.targetClass )
-  _.dom.s.class( targetDom,o.targetClass,1 );
+  _.dom.s.class( targetDom, o.targetClass, 1 );
 
   /* */
 
@@ -1278,8 +1285,8 @@ function load( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   // _.assert( _.strIs( o.targetClass ) || o.replacing );
   _.assert( _.strDefined( o.url ), 'Expects {-o.url-}' );
-  _.assert( o.parentDom.length,'Expects { o.parentDom }' );
-  _.assert( targetDom.length,'Expects { targetDom }' );
+  _.assert( o.parentDom.length, 'Expects { o.parentDom }' );
+  _.assert( targetDom.length, 'Expects { targetDom }' );
 
   /* */
 
@@ -1288,7 +1295,7 @@ function load( o )
 
     _.assert( arguments.length === 3, 'Expects exactly three argument' );
 
-    if( status != 'error' && o.replacing ) try
+    if( status !== 'error' && o.replacing )try
     {
       _.assert( _.strIs( responseData ) );
       responseData = $( responseData );
@@ -1296,12 +1303,12 @@ function load( o )
     catch( err )
     {
       status = 'error';
-      reason = _.err( err );
+      let reason = _.err( err );
     }
 
     if( status === 'error' )
     {
-      var reason ;
+      var reason;
       if( _.objectIs( xhr ) )
       reason = xhr.status + ' : ' + xhr.statusText;
       else
@@ -1324,7 +1331,7 @@ function load( o )
       {
         // debugger;
         targetDom = targetDom.find( o.after || o.before );
-        _.assert( targetDom.length,o.after ? 'after' : 'before','DOM was not found',o.after || o.before );
+        _.assert( targetDom.length, o.after ? 'after' : 'before', 'DOM was not found', o.after || o.before );
         if( o.after )
         targetDom = targetDom.after( responseData );
         else
@@ -1338,14 +1345,14 @@ function load( o )
       targetDom = responseData;
 
       if( o.targetClass )
-      _.dom.s.class( targetDom,o.targetClass,1 );
+      _.dom.s.class( targetDom, o.targetClass, 1 );
       if( o.preservingAttributes )
-      _.dom.s.attr( targetDom,attrs,1 );
+      _.dom.s.attr( targetDom, attrs, 1 );
       if( o.preservingClasses )
-      _.dom.s.class( targetDom,classes,1 );
+      _.dom.s.class( targetDom, classes, 1 );
     }
 
-    o.parentDom.attr( 'dom-loaded',1 );
+    o.parentDom.attr( 'dom-loaded', 1 );
 
     showMaybe();
 
@@ -1359,7 +1366,7 @@ function load( o )
   if( o.replacing )
   $.get( o.url ).always( loadEnd );
   else
-  targetDom.load( o.url,loadEnd );
+  targetDom.load( o.url, loadEnd );
 
   return o;
 }
@@ -1398,7 +1405,7 @@ let eventName = ( function eventName()
       return result;
     }
     else if( !_.strIs( name ) )
-    throw _.err( 'eventName :','expect string or array as argument' );
+    throw _.err( 'eventName :', 'expect string or array as argument' );
 
     let touchSupported = ( 'ontouchstart' in window ) || ( 'onmsgesturechange' in window );
     if( !_eventMap )
@@ -1437,7 +1444,7 @@ let eventName = ( function eventName()
       }
     }
 
-    if( _eventMap[ name ] ) return _eventMap[ name ];
+    if( _eventMap[ name ] )return _eventMap[ name ];
     else return name;
 
   }
@@ -1462,21 +1469,21 @@ function eventClientPosition( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.dom.eventIs( event ) );
   _.assert( !o.flip || _.arrayIs( o.flip ) );
-  _.assertMapHasOnly( o,eventClientPosition.defaults );
+  _.assertMapHasOnly( o, eventClientPosition.defaults );
 
   if( _.numberIs( event.clientX ) )
-  result = [ event.clientX,event.clientY ];
+  result = [ event.clientX, event.clientY ];
 
   if( event.originalEvent )
   event = event.originalEvent;
 
   if( event.targetTouches && event.targetTouches.length )
-  result = [ event.targetTouches[ 0 ].clientX,event.targetTouches[ 0 ].clientY ];
+  result = [ event.targetTouches[ 0 ].clientX, event.targetTouches[ 0 ].clientY ];
 
   if( event.changedTouches && event.changedTouches.length )
-  result = [ event.changedTouches[ 0 ].clientX,event.changedTouches[ 0 ].clientY ];
+  result = [ event.changedTouches[ 0 ].clientX, event.changedTouches[ 0 ].clientY ];
 
-  _.assert( !relative || _.dom.is( relative ),'eventClientPosition :','relative must be jQuery object if defined' );
+  _.assert( !relative || _.dom.is( relative ), 'eventClientPosition :', 'relative must be jQuery object if defined' );
 
 
   if( relative && result )
@@ -1514,29 +1521,32 @@ eventClientPosition.defaults =
 
 //
 
-function eventRedirect( dst,src )
+function eventRedirect( dst, src )
 {
 
   src = $( src );
   dst = $( dst );
 
-  function handleRedirect( event ){
+  function handleRedirect( event )
+  {
     if( event.originalEvent && !event.originalEvent.doNotRedirect ) dst.trigger( event );
     return true;
   }
 
-  function handleMark( event ){
+  function handleMark( event )
+  {
     if( event.originalEvent ) event.originalEvent.doNotRedirect = 1;
   }
 
-  function handleStop( event ){
+  function handleStop( event )
+  {
     return false;
   }
 
   src.children()
-  .on( "blur focus focusin focusout load resize scroll unload click dblclick " +
-    "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
-    "change select submit keydown keypress keyup error contextmenu mousewheel", handleMark );
+  .on( 'blur focus focusin focusout load resize scroll unload click dblclick '
+  + 'mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave '
+  + 'change select submit keydown keypress keyup error contextmenu mousewheel', handleMark );
 
   //src.on( "mousemove", handleRedirect );
 
@@ -1544,9 +1554,9 @@ function eventRedirect( dst,src )
 
   //src.on( "blur focus focusin focusout click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave mousewheel", handleRedirect );
 
-  src.on( "blur focus focusin focusout load resize scroll unload click dblclick " +
-    "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
-    "change select submit keydown keypress keyup error contextmenu mousewheel", handleRedirect );
+  src.on( 'blur focus focusin focusout load resize scroll unload click dblclick '
+  + 'mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave '
+  + 'change select submit keydown keypress keyup error contextmenu mousewheel', handleRedirect );
 
 }
 
@@ -1564,7 +1574,7 @@ function eventMouse( type, cx, cy )
   var event;
   let e = {
     bubbles : true,
-    cancelable : ( type != "mousemove" ),
+    cancelable : ( type !== 'mousemove' ),
     view : window,
     detail : 0,
     screenX : sx,
@@ -1579,20 +1589,24 @@ function eventMouse( type, cx, cy )
     relatedTarget : undefined
   };
 
-  if ( typeof( document.createEvent ) == "function" ) {
-    event = document.createEvent( "MouseEvents" );
+  if( typeof( document.createEvent ) === 'function' )
+  {
+    event = document.createEvent( 'MouseEvents' );
     event.initMouseEvent( type,
       e.bubbles, e.cancelable, e.view, e.detail,
       e.screenX, e.screenY, e.clientX, e.clientY,
       e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
       e.button, null );
-      //e.button, document.body.parentNode );
-  } else if ( document.createEventObject ) {
+    //e.button, document.body.parentNode );
+  }
+  else if( document.createEventObject )
+  {
     event = document.createEventObject();
-    for ( prop in e ) {
+    for( prop in e )
+    {
       event[ prop ] = e[ prop ];
     }
-    event.button = { 0 :1, 1 :4, 2 :2 }[ event.button ] || event.button;
+    event.button = { 0 : 1, 1 : 4, 2 : 2 }[ event.button ] || event.button;
   }
 
   //event.fromElement = null;
@@ -1844,13 +1858,13 @@ function mousewheel( o )
 
     e.preventDefault();
 
-    if ( _.numberIs( e.detail ) )
+    if( _.numberIs( e.detail ) )
     deltaY = e.detail * -1;
-    if ( _.numberIs( e.wheelDelta ) )
+    if( _.numberIs( e.wheelDelta ) )
     deltaY = e.wheelDelta;
-    if ( _.numberIs( e.wheelDeltaY ) )
+    if( _.numberIs( e.wheelDeltaY ) )
     deltaY = e.wheelDeltaY;
-    if ( _.numberIs( e.wheelDeltaX ) )
+    if( _.numberIs( e.wheelDeltaX ) )
     deltaX = e.wheelDeltaX * -1;
 
     delta = deltaY === 0 ? deltaX : deltaY;
@@ -1863,11 +1877,11 @@ function mousewheel( o )
     if( _.numberIs( e.deltaX ) )
     {
       deltaX = e.deltaX;
-      if ( deltaY === 0 )
+      if( deltaY === 0 )
       delta  = deltaX * -1;
     }
 
-    if ( deltaY === 0 && deltaX === 0 )
+    if( deltaY === 0 && deltaX === 0 )
     return;
 
     let absDelta = Math.max( Math.abs( deltaY ), Math.abs( deltaX ) );
@@ -1875,9 +1889,9 @@ function mousewheel( o )
     if( !lowestDelta || absDelta < lowestDelta )
     lowestDelta = absDelta;
 
-    delta  = Math[ delta  >= 1 ? "floor" : "ceil" ]( delta  / lowestDelta );
-    deltaX = Math[ deltaX >= 1 ? "floor" : "ceil" ]( deltaX / lowestDelta );
-    deltaY = Math[ deltaY >= 1 ? "floor" : "ceil" ]( deltaY / lowestDelta );
+    delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ]( delta / lowestDelta );
+    deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ]( deltaX / lowestDelta );
+    deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ]( deltaY / lowestDelta );
 
     let originalEvent = e;
     e = new Event( originalEvent );
@@ -1939,8 +1953,7 @@ wheelOn.defaults =
 
 function eventWheelDelta( e, usingOne )
 {
-  var deltaX;
-  var deltaY;
+  var deltaX, deltaY;
 
   if( e.originalEvent )
   e = e.originalEvent;
@@ -1976,7 +1989,7 @@ function eventWheelDelta( e, usingOne )
 
   }
 
-  return [ +deltaX,+deltaY ];
+  return [ +deltaX, +deltaY ];
 }
 
 //
@@ -1989,7 +2002,7 @@ let eventWheelDeltaScreen = ( function eventWheelDeltaScreen()
   return function( e )
   {
     if( !screenSize )
-    screenSize = [ screen.width / 250 , screen.height / 250 ];
+    screenSize = [ screen.width / 250, screen.height / 250 ];
     let result = eventWheelDelta( e );
     result[ 0 ] *= screenSize[ 0 ];
     result[ 1 ] *= screenSize[ 1 ];
@@ -2008,7 +2021,7 @@ function eventSpecialMake( o )
   if( _.strIs( o ) )
   o = { name : o };
 
-  _.assertMapHasOnly( o,eventSpecialMake.defaults );
+  _.assertMapHasOnly( o, eventSpecialMake.defaults );
 
   let event = new CustomEvent
   (
@@ -2043,7 +2056,7 @@ function eventsObserver( o )
 
   _.assert( _.dom.is( o.targetDom ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( eventsObserver,o );
+  _.routineOptions( eventsObserver, o );
 
   let observer = new MutationObserver( function( mutations )
   {
@@ -2052,7 +2065,7 @@ function eventsObserver( o )
       if( o.verbosity )
       console.log( mutation.type );
       if( o.onMutation )
-      o.onMutation.call( o,mutation );
+      o.onMutation.call( o, mutation );
     });
   });
 
@@ -2067,7 +2080,7 @@ function eventsObserver( o )
     // attributeFilter : true,
   };
 
-  observer.observe( o.targetDom,config );
+  observer.observe( o.targetDom, config );
 
   // observer.disconnect();
 
@@ -2099,7 +2112,7 @@ function eventsBindAll( o )
 
   _.assert( _.dom.domableIs( o.targetDom ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( eventsBindAll,o );
+  _.routineOptions( eventsBindAll, o );
 
   o.targetDom = $( o.targetDom );
   _.assert( o.targetDom.length === 1 );
@@ -2107,13 +2120,13 @@ function eventsBindAll( o )
 
   for( var e in o.targetDom )
   {
-    if( !_.strBegins( e,'on' ) || e.length < 3 )
+    if( !_.strBegins( e, 'on' ) || e.length < 3 )
     continue;
 
     debugger;
-    let name = _.strRemoveBegin( e,'on' );
+    let name = _.strRemoveBegin( e, 'on' );
 
-    o.targetDom.addEventListener( name,o.onEvent );
+    o.targetDom.addEventListener( name, o.onEvent );
 
   }
 
@@ -2130,9 +2143,9 @@ eventsBindAll.defaults =
 let _jqueryOriginalOn = $ ? $.fn.on : null;
 function eventsBindWatcher( o )
 {
-  o = _.routineOptions( eventsBindWatcher,o )
+  o = _.routineOptions( eventsBindWatcher, o )
 
-  _.assert( _jqueryOriginalOn === $.fn.on,'on of jQuery is already overwritten' );
+  _.assert( _jqueryOriginalOn === $.fn.on, 'on of jQuery is already overwritten' );
 
   o.result = o.result || [];
   o.close = function close()
@@ -2141,11 +2154,10 @@ function eventsBindWatcher( o )
     return o.result;
   }
 
-  $.fn.on.fn.on = function on( eventName,handler )
+  $.fn.on.fn.on = function on( eventName, handler )
   {
     let dom = $( this );
-    var selector;
-    var data;
+    var selector, data;
 
     let argumentsLength = arguments.length;
     if( arguments[ argumentsLength-1 ] === undefined )
@@ -2182,7 +2194,7 @@ function eventsBindWatcher( o )
 
     o.result.push( e );
 
-    let result = _jqueryOriginalOn.call( this,eventName,handler );
+    let result = _jqueryOriginalOn.call( this, eventName, handler );
     return result;
   }
 
@@ -2198,22 +2210,22 @@ eventsBindWatcher.defaults =
 
 function eventFire( o )
 {
-  _.routineOptions( eventFire,o );
+  _.routineOptions( eventFire, o );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
   o.targetDom = _.dom.from( o.targetDom );
 
   let event = new Event( o.kind,
-  {
-    // 'bubbles' : true,
-    'cancelable' : true,
-  });
+    {
+      // 'bubbles' : true,
+      'cancelable' : true,
+    });
 
   if( o.extendingByOptions )
-  _.mapExtend( event,o );
+  _.mapExtend( event, o );
 
   if( o.extendMap )
-  _.mapExtend( event,o.extendMap );
+  _.mapExtend( event, o.extendMap );
 
   // if( !o.informingDescandants )
   // o.targetDom.each( function( k,dom )
@@ -2255,7 +2267,7 @@ function eventFire2( targetDom, event )
 
   _.assert( _.dom.is( targetDom ) );
 
-  if ( targetDom.dispatchEvent )
+  if( targetDom.dispatchEvent )
   {
     targetDom.dispatchEvent( event );
   }
@@ -2375,7 +2387,7 @@ let Routines =
 
 };
 
-_.mapExtend( Self,Fields );
-_.mapExtend( Self,Routines );
+_.mapExtend( Self, Fields );
+_.mapExtend( Self, Routines );
 
 })();

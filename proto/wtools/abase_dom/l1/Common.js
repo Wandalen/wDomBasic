@@ -1,4 +1,5 @@
-(function _Common_js_() {
+(function _Common_js_()
+{
 
 'use strict';
 
@@ -206,7 +207,7 @@ function empty( targetDom )
   _.assert( arguments.length === 1 );
   targetDom = _.dom.from( targetDom );
 
-  while ( targetDom.firstChild )
+  while( targetDom.firstChild )
   targetDom.removeChild( targetDom.firstChild );
 }
 
@@ -395,8 +396,8 @@ let Routines =
 
 }
 
-_.mapExtend( Self,Fields );
-_.mapExtend( Self,Routines );
+_.mapExtend( Self, Fields );
+_.mapExtend( Self, Routines );
 
 Self.Init();
 
