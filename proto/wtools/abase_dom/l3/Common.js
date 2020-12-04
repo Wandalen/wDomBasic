@@ -1072,9 +1072,14 @@ cssExport.defaults =
 
 //
 
-function css( targetDom, property, value, priority )
+function css( /* targetDom, property, value, priority */ )
 {
   _.assert( arguments.length >= 2, 'Expects at least two arguments' );
+
+  let targetDom = arguments[ 0 ];
+  let property = arguments[ 1 ];
+  let value = arguments[ 2 ];
+  let priority = arguments[ 3 ];
 
   targetDom = _.dom.from( targetDom );
 
