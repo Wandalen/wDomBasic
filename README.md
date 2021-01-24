@@ -8,7 +8,7 @@ Collection of cross-platform routines for a browser to operate DOM elements and 
 git clone https://github.com/Wandalen/wDomBasic
 cd wDomBasic
 npm install
-node sample/Sample.s
+node sample/trivial/Sample.s
 ```
 
 ## To add to your project
