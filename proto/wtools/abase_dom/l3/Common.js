@@ -1,10 +1,11 @@
-(function _Common_js_()
+( function _Common_js_()
 {
 
 'use strict';
 
 let _ = wTools;
-let $ = typeof jQuery !== 'undefined' ? jQuery : null;
+let $ = typeof jQuery === 'undefined' ? null : jQuery;
+// let $ = typeof jQuery !== 'undefined' ? jQuery : null;
 let Self = _.dom = _.dom || Object.create( null );
 let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
@@ -85,7 +86,23 @@ function caretSelect( dom, selection )
   if( _.dom.jqueryIs( dom ) )
   dom = dom[ 0 ];
 
-  if( selection !== undefined )
+  if( selection === undefined )
+  {
+    if( dom.selectionStart !== undefined )
+    {
+      return [ dom.selectionStart, dom.selectionEnd, dom.selectionDirection ];
+    }
+    else if( dom.getSelectionRange )
+    {
+      return [ dom.getSelectionRange().x, dom.getSelectionRange().y ];
+    }
+    else if( dom.createTextRange )
+    {
+      let range = dom.createTextRange();
+      return [ range.startOffset, range.endOffset ];
+    }
+  }
+  else
   {
     if( !_.arrayIs( selection ) ) selection = [ selection ];
     dom.focus();
@@ -110,23 +127,49 @@ function caretSelect( dom, selection )
     }
     dom.focus();
   }
-  else
-  {
 
-    if( dom.selectionStart !== undefined )
-    {
-      return [ dom.selectionStart, dom.selectionEnd, dom.selectionDirection ];
-    }
-    else if( dom.getSelectionRange )
-    {
-      return [ dom.getSelectionRange().x, dom.getSelectionRange().y ];
-    }
-    else if( dom.createTextRange )
-    {
-      let range = dom.createTextRange();
-      return [ range.startOffset, range.endOffset ];
-    }
-  }
+  // if( selection !== undefined )
+  // {
+  //   if( !_.arrayIs( selection ) ) selection = [ selection ];
+  //   dom.focus();
+  //   if( dom.setSelectionRange )
+  //   {
+  //     dom.setSelectionRange( selection[ 0 ], selection[ 1 ], selection[ 2 ] );
+  //   }
+  //   else if( dom.selectionStart !== undefined )
+  //   {
+  //     dom.selectionEnd = selection[ 0 ];
+  //     dom.selectionStart = selection[ 1 ];
+  //     // dom.focus();
+  //   }
+  //   else if( dom.createTextRange )
+  //   {
+  //     let range = dom.createTextRange();
+  //     range.collapse( true );
+  //     range.moveEnd( 'character', selection[ 1 ] );
+  //     range.moveStart( 'character', selection[ 0 ] );
+  //     range.select();
+  //     // dom.focus();
+  //   }
+  //   dom.focus();
+  // }
+  // else
+  // {
+  //
+  //   if( dom.selectionStart !== undefined )
+  //   {
+  //     return [ dom.selectionStart, dom.selectionEnd, dom.selectionDirection ];
+  //   }
+  //   else if( dom.getSelectionRange )
+  //   {
+  //     return [ dom.getSelectionRange().x, dom.getSelectionRange().y ];
+  //   }
+  //   else if( dom.createTextRange )
+  //   {
+  //     let range = dom.createTextRange();
+  //     return [ range.startOffset, range.endOffset ];
+  //   }
+  // }
 
 }
 
@@ -155,7 +198,32 @@ function val( dom, val )
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
-  if( val !== undefined )
+  if( val === undefined )
+  {
+
+    if( dom.is( 'input[ type=checkbox ]' ) )
+    {
+      result = !!dom[ 0 ].checked;
+    }
+    else if( dom.is( 'input' ) )
+    {
+
+      result = dom[ 0 ].value;
+
+      if( result === '' || result === undefined )
+      result = dom[ 0 ].defaultFieldsMap;
+
+      if( result === '' || result === undefined )
+      result = dom[ 0 ].placeholder;
+    }
+    /*
+        else
+        {
+          result = dom.text();
+        }
+    */
+  }
+  else
   {
 
     var caretSelected;
@@ -182,32 +250,60 @@ function val( dom, val )
     caretSelect( dom, caretSelected );
 
   }
-  else
-  {
 
-    if( dom.is( 'input[ type=checkbox ]' ) )
-    {
-      result = !!dom[ 0 ].checked;
-    }
-    else if( dom.is( 'input' ) )
-    {
-
-      result = dom[ 0 ].value;
-
-      if( result === '' || result === undefined )
-      result = dom[ 0 ].defaultFieldsMap;
-
-      if( result === '' || result === undefined )
-      result = dom[ 0 ].placeholder;
-
-    }
-    /*
-        else
-        {
-          result = dom.text();
-        }
-    */
-  }
+  // if( val !== undefined )
+  // {
+  //
+  //   var caretSelected;
+  //   if( document.activeElement === dom[ 0 ] )
+  //   caretSelected = caretSelect( dom[ 0 ] );
+  //
+  //   if( dom.is( 'input[ type=checkbox ]' ) )
+  //   {
+  //     result = !!dom[ 0 ].checked;
+  //     dom[ 0 ].checked = !!val;
+  //   }
+  //   else if( dom.is( 'input' ) )
+  //   {
+  //     result = dom[ 0 ].value;
+  //     dom[ 0 ].value = val;
+  //   }
+  //   else
+  //   {
+  //     result = dom.text();
+  //     dom.text( val );
+  //   }
+  //
+  //   if( caretSelected )
+  //   caretSelect( dom, caretSelected );
+  //
+  // }
+  // else
+  // {
+  //
+  //   if( dom.is( 'input[ type=checkbox ]' ) )
+  //   {
+  //     result = !!dom[ 0 ].checked;
+  //   }
+  //   else if( dom.is( 'input' ) )
+  //   {
+  //
+  //     result = dom[ 0 ].value;
+  //
+  //     if( result === '' || result === undefined )
+  //     result = dom[ 0 ].defaultFieldsMap;
+  //
+  //     if( result === '' || result === undefined )
+  //     result = dom[ 0 ].placeholder;
+  //
+  //   }
+  //   /*
+  //       else
+  //       {
+  //         result = dom.text();
+  //       }
+  //   */
+  // }
 
   return result;
 }
@@ -1422,10 +1518,17 @@ let eventName = ( function eventName()
 
         if( 'ontouch' in window )
         _eventMap[ 'click' ] = 'touch';
-        else if( !( 'onclick' in window ) )
-        _eventMap[ 'click' ] = 'click';
-        else
+        else if( 'onclick' in window )
         _eventMap[ 'click' ] = 'touchend';
+        else
+        _eventMap[ 'click' ] = 'click';
+
+        // if( 'ontouch' in window )
+        // _eventMap[ 'click' ] = 'touch';
+        // else if( !( 'onclick' in window ) )
+        // _eventMap[ 'click' ] = 'click';
+        // else
+        // _eventMap[ 'click' ] = 'touchend';
 
         //if( !( 'onclick' in window ) )
         //_eventMap[ 'click' ] = 'touchend'; // xxx
@@ -2238,16 +2341,27 @@ function eventFire( o )
   //   dom.dispatchEvent( event );
   // });
 
-  if( !o.informingDescandants )
-  {
-    o.targetDom.dispatchEvent( event );
-  }
-  else
+  if( o.informingDescandants )
   {
     let descandants = _.dom.find( o.targetDom, '*' );
     descandants = _.arrayAs( descandants );
     descandants.forEach( ( dom ) => dom.dispatchEvent( event ) )
   }
+  else
+  {
+    o.targetDom.dispatchEvent( event );
+  }
+
+  // if( !o.informingDescandants )
+  // {
+  //   o.targetDom.dispatchEvent( event );
+  // }
+  // else
+  // {
+  //   let descandants = _.dom.find( o.targetDom, '*' );
+  //   descandants = _.arrayAs( descandants );
+  //   descandants.forEach( ( dom ) => dom.dispatchEvent( event ) )
+  // }
 
 }
 
