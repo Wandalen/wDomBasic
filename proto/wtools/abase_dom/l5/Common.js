@@ -1,11 +1,12 @@
-(function _Common_js_()
+( function _Common_js_()
 {
 
 'use strict';
 
 let _global = _global_;
 let _ = _global.wTools;
-let $ = typeof jQuery !== 'undefined' ? jQuery : null;
+let $ = typeof jQuery === 'undefined' ? null : jQuery;
+// let $ = typeof jQuery !== 'undefined' ? jQuery : null;
 let Self = _.dom = _.dom || Object.create( null );
 let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
@@ -356,8 +357,10 @@ function scrollFix( o )
   _.assert( _.dom.is( o.target ) || _.dom.jqueryIs( o.target ), 'scrollFix', 'Expects o.target' );
 
   o.target = $( o.target );
-  let xFix = o.xFix !== undefined ? !!o.xFix : true;
-  let yFix = o.yFix !== undefined ? !!o.yFix : true;
+  let xFix = o.xFix === undefined ? true : !!o.xFix;
+  let yFix = o.yFix === undefined ? true : !!o.yFix;
+  // let xFix = o.xFix !== undefined ? !!o.xFix : true;
+  // let yFix = o.yFix !== undefined ? !!o.yFix : true;
 
   o.target.each( function( k, element )
   {
@@ -391,10 +394,15 @@ function scrollFocus( o )
 
   o.elementDom = $( o.elementDom );
 
-  if( !o.contentDom )
-  o.contentDom = o.elementDom.parent().parent();
-  else
+  if( o.contentDom )
   o.contentDom = $( o.contentDom );
+  else
+  o.contentDom = o.elementDom.parent().parent();
+
+  // if( !o.contentDom )
+  // o.contentDom = o.elementDom.parent().parent();
+  // else
+  // o.contentDom = $( o.contentDom );
 
   _.routineOptions( scrollFocus, o );
   _.assert( [ 'center', 'begin', 'end' ].indexOf( o.mode ) !== -1 );
@@ -584,7 +592,11 @@ function menuable( o )
 
   o.items = o.items || [];
 
-  if( !o.menuDom )
+  if( o.menuDom )
+  {
+    o.menuDom = $( o.menuDom );
+  }
+  else
   {
     o.menuDom = $( '<div class="wmenu-menu transition hidden">' ).appendTo( o.targetDom );
 
@@ -600,12 +612,29 @@ function menuable( o )
       item.addClass( 'wmenu-item' );
       item.attr( 'item', o.items[ i ] );
     }
-
   }
-  else
-  {
-    o.menuDom = $( o.menuDom );
-  }
+  // if( !o.menuDom )
+  // {
+  //   o.menuDom = $( '<div class="wmenu-menu transition hidden">' ).appendTo( o.targetDom );
+  //
+  //   if( o.addingStockItems )
+  //   {
+  //     _.arrayAppendArrayOnceStrictly( o.items, [ 'Maximize', 'Window', 'Close', 'Resume' ] );
+  //   }
+  //
+  //   for( let i = 0 ; i < o.items.length ; i++ )
+  //   {
+  //     let item = $( '<div>' ).appendTo( o.menuDom );
+  //     item.text( o.items[ i ] );
+  //     item.addClass( 'wmenu-item' );
+  //     item.attr( 'item', o.items[ i ] );
+  //   }
+  //
+  // }
+  // else
+  // {
+  //   o.menuDom = $( o.menuDom );
+  // }
 
   o.itemsDom = o.menuDom.find( '.wmenu-item' );
 
