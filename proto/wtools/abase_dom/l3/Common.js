@@ -1975,13 +1975,13 @@ function mousewheel( o )
     if( _.numberIs( e.deltaY ) )
     {
       deltaY = e.deltaY * -1;
-      delta  = deltaY;
+      delta = deltaY;
     }
     if( _.numberIs( e.deltaX ) )
     {
       deltaX = e.deltaX;
       if( deltaY === 0 )
-      delta  = deltaX * -1;
+      delta = deltaX * -1;
     }
 
     if( deltaY === 0 && deltaX === 0 )
@@ -1992,7 +1992,7 @@ function mousewheel( o )
     if( !lowestDelta || absDelta < lowestDelta )
     lowestDelta = absDelta;
 
-    delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ]( delta / lowestDelta );
+    delta = Math[ delta >= 1 ? 'floor' : 'ceil' ]( delta / lowestDelta );
     deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ]( deltaX / lowestDelta );
     deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ]( deltaY / lowestDelta );
 
