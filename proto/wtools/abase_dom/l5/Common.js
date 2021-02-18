@@ -1168,7 +1168,7 @@ function windowOpen( o )
     _.assert( !o.asTab, 'Expects no {o.size} when {o.asTab} is enabled.' );
     _.assert( _.arrayIs( o.size ) );
     _.assert( o.size.length === 2 );
-    o.features.push( 'width=' +  o.size[ 0 ] )
+    o.features.push( 'width=' + o.size[ 0 ] )
     o.features.push( 'height=' + o.size[ 1 ] )
   }
 
