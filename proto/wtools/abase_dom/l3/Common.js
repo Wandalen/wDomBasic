@@ -558,7 +558,7 @@ function attrInherited( dom, attrName )
     result = p.getAttribute( attrName );
     p = p.parentNode;
   }
-  while( p && p !== document && _.strType( p ) !== 'DocumentFragment' && ( result === null || result === undefined ) );
+  while( p && p !== document && _.entity.strType( p ) !== 'DocumentFragment' && ( result === null || result === undefined ) );
 
   return result;
 }

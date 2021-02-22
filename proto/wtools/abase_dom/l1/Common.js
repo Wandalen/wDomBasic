@@ -122,14 +122,14 @@ function domableIs( src )
 
 function headIs( src )
 {
-  return _.strType( src ) === 'HTMLHeadElement';
+  return _.entity.strType( src ) === 'HTMLHeadElement';
 }
 
 //
 
 function headIs( src )
 {
-  return _.strType( src ) === 'HTMLHeadElement';
+  return _.entity.strType( src ) === 'HTMLHeadElement';
 }
 
 //

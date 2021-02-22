@@ -166,7 +166,7 @@ function colorOnClick( o )
       for( let i = 0 ; i < color.length ; i++ )
       colorFloat[ i ] = color[ i ] / 255;
 
-      console.log( 'color', ' :', _.toStr( color ), ' :', _.toStr( colorFloat, { precision : 3 } ) );
+      console.log( 'color', ' :', _.entity.exportString( color ), ' :', _.entity.exportString( colorFloat, { precision : 3 } ) );
 
     }
   });
@@ -237,7 +237,7 @@ let msg = ( function msg()
     o.msg = '';
 
     if( !_.strIs( o.msg ) )
-    o.msg = _.toStr( o.msg, { levels : 2 } );
+    o.msg = _.entity.exportString( o.msg, { levels : 2 } );
 
     if( o.title === undefined )
     o.title = titles[ o.kind ];
