@@ -1,6 +1,6 @@
 {
   "name" : "wdombasic",
-  "version" : "0.3.234",
+  "version" : "0.3.235",
   "description" : "Collection of cross-platform routines for a browser to operate DOM elements and its events. No matter whatever problem in a browser you are trying to solve several routines of DomBase would help you to solve it faster. It has something in common with Jquery, but no significant overlap. Use the module to get access to shortcuts for a browser.",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
