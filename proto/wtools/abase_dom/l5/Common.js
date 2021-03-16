@@ -3086,9 +3086,8 @@ let uiTabsInit = ( function uiTabsInit()
         {
           if( status === 'error' )
           {
-            var html;
+            var html, reason;
 
-            var reason;
             if( _.objectIs( xhr ) )
             reason = xhr.status + ' : ' + xhr.statusText;
             else
