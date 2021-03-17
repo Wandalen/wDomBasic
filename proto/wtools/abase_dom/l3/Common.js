@@ -435,7 +435,6 @@ function attrHasAny( dom, attrs )
 function attrHasAll( dom, attrs )
 {
   let has = _.mapKeys( _.dom.s.attr( dom ) );
-  debugger;
   return _.longHasAll( has, attrs );
 }
 
@@ -453,7 +452,6 @@ function attrHasAll( dom, attrs )
 function attrHasNone( dom, attrs )
 {
   let has = _.mapKeys( _.dom.s.attr( dom ) );
-  debugger;
   return _.longHasNone( has, attrs );
 }
 
@@ -501,7 +499,6 @@ function textGet( o )
     },
   });
 
-  // debugger;
   if( o.strippingEmptyLines )
   result = _.strStripEmptyLines( result );
 
@@ -903,8 +900,8 @@ function ownIdentity( dom, identity )
       result += '.' + cssClasses.join( '.' );
     }
 
-    if( dom[ 0 ].id )
-    debugger;
+    // if( dom[ 0 ].id )
+    // debugger;
 
     if( dom[ 0 ].id )
     result = '#' + dom[ 0 ].id + result;
@@ -945,7 +942,6 @@ function ownIdentity( dom, identity )
     }
     else
     {
-      debugger;
       throw _.err( 'unknown prefix', identity[ i-1 ] );
     }
   }
@@ -966,7 +962,6 @@ function cssGet( dom, fields )
 
   if( _.strIs( fields ) )
   {
-    debugger;
     result[ fields ] = dom.css( fields );
   }
   else if( _.arrayIs( fields ) )
@@ -976,7 +971,6 @@ function cssGet( dom, fields )
   }
   else if( _.mapIs( fields ) )
   {
-    debugger;
     for( var f in fields.length )
     result[ fields[ f ] ] = dom.css( fields[ f ] );
   }
@@ -1020,7 +1014,6 @@ function each( o )
 
   for( let d = 0 ; d < o.dom.length ; d++ )
   {
-    // debugger
     _each( o.dom[ d ], o );
   }
 
@@ -1425,14 +1418,12 @@ function load( o )
 
       if( o.after || o.before )
       {
-        // debugger;
         targetDom = targetDom.find( o.after || o.before );
         _.assert( targetDom.length, o.after ? 'after' : 'before', 'DOM was not found', o.after || o.before );
         if( o.after )
         targetDom = targetDom.after( responseData );
         else
         targetDom = targetDom.before( responseData );
-        // debugger;
       }
       else
       {
@@ -2061,8 +2052,6 @@ function eventWheelDelta( e, usingOne )
   if( e.originalEvent )
   e = e.originalEvent;
 
-  // debugger;
-
   if( _.numberIs( e.wheelDeltaX ) )
   deltaX = e.wheelDeltaX;
   else if( _.numberIs( e.deltaX ) )
@@ -2226,7 +2215,6 @@ function eventsBindAll( o )
     if( !_.strBegins( e, 'on' ) || e.length < 3 )
     continue;
 
-    debugger;
     let name = _.strRemoveBegin( e, 'on' );
 
     o.targetDom.addEventListener( name, o.onEvent );

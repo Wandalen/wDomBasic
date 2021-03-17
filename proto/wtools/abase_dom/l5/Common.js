@@ -140,7 +140,6 @@ function colorOnClick( o )
 
       let renderer = canvas.renderer;
       // SRT.gfx.RenderTarget.prototype._webglRendertargetActivate_static.call( null,null,renderer );
-      debugger;
       // gRenderTarget.screen.webglRenderTargetActivate( renderer );
       // renderer.renderTarget = gRenderTarget.screen;
       renderer.renderTarget = renderer.screen;
@@ -329,7 +328,6 @@ function loadingMode( value )
 
     console.warn( _.err( 'loadingMode : have used more times then loadingBegin' ).toString() );
     _domLoadingModeLoading = 0;
-    debugger;
 
   }
 
@@ -709,7 +707,6 @@ function menuable( o )
     {
 
       console.log( 'kindOfMouseEvent', e.kindOfMouseEvent );
-      // debugger;
       // if( e.kindOfMouseEvent !== 'repeat' )
       // return;
       handleItemSelect.call( this, e );
@@ -1284,8 +1281,6 @@ function abilityUnregister( o )
   _.assert( _.dom.jqueryIs( o.targetDom ) );
   _.assert( _.strDefined( o.name ) );
 
-  debugger
-
   o.targetDom.each( function( k, e )
   {
 
@@ -1295,8 +1290,6 @@ function abilityUnregister( o )
     delete e._abilities[ o.name ];
 
   });
-
-  debugger;
 
   return o;
 }
@@ -1607,7 +1600,6 @@ function widgable( o )
     // targetDom : '.pin.icon',
     onPin : function( value )
     {
-      debugger;
     }
   });
 
@@ -1970,8 +1962,6 @@ function textEditMake( o )
 {
   let con = new _.Consequence();
 
-  debugger;
-
   if( o === undefined )
   o = Object.create( null );
 
@@ -2110,13 +2100,10 @@ function habbitMouseClick( o )
     if( !o.up[ 1 ] || !o.down[ 1 ] )
     return;
 
-    debugger;
-
     /* double or single click? */
 
     if( tooFar )
     {
-      debugger;
       giveEvent( 'single', o.down[ 1 ], o.up[ 1 ] );
       o.down[ 1 ] = null;
       o.up[ 1 ] = null;
@@ -2162,7 +2149,6 @@ function habbitMouseClick( o )
       if( o.up[ 0 ] )
       return;
 
-      debugger;
       giveEvent( 'repeat', o.down[ 0 ], null );
       setTimeout( handleRepeat, delay2 );
       delay2 -= 1;
@@ -2337,7 +2323,6 @@ function habbitMouseClick( o )
   if( !o.usingManualEventsOnly )
   {
 
-    // debugger;
     o.dom
     .on( mouseup, o.handleMouseEvent )
     .on( mousedown, o.handleMouseEvent )
@@ -2513,7 +2498,6 @@ function habbitDrag( o )
   o.handleMouseDown = function handleMouseDown( e )
   {
 
-    // debugger;
     if( o.nonDraggableAttr )
     if( _.dom.attrHasAny( o.targetDom, o.nonDraggableAttr ) || _.dom.attrHasAny( e.target, o.nonDraggableAttr ) )
     return;
@@ -2779,8 +2763,6 @@ let draggable = (function()
     o.target
     .on( _.dom.eventName( 'mousedown' ), function( event )
     {
-
-      // debugger;
 
       let notDraggable = $( this ).closest( '[ wdraggable-not ]' );
       if( notDraggable.length )
@@ -3076,7 +3058,6 @@ let uiTabsInit = ( function uiTabsInit()
 
         if( _currentTab === tabPath )
         {
-          debugger;
           throw _.err( 'not expected' );
           return;
         }
@@ -3105,11 +3086,8 @@ let uiTabsInit = ( function uiTabsInit()
         {
           if( status === 'error' )
           {
-            var html;
+            var html, reason;
 
-            debugger;
-
-            var reason;
             if( _.objectIs( xhr ) )
             reason = xhr.status + ' : ' + xhr.statusText;
             else
