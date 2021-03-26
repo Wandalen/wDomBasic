@@ -6,7 +6,7 @@
 const _global = _global_;
 const _ = _global.wTools;
 _.assert( !!_.dom );
-let Parent = _.dom;
+const Parent = _.dom;
 const Self = _.dom.s = _.dom.s || Object.create( Parent );
 
 // --

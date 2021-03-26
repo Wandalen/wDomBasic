@@ -7,7 +7,7 @@ const _global = _global_;
 const _ = _global.wTools;
 _.assert( !!_.dom );
 _.assert( !!_.dom.s );
-let Parent = _.dom;
+const Parent = _.dom;
 const Self = _.dom.s
 let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
