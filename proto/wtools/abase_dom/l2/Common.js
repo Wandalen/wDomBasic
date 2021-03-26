@@ -3,11 +3,11 @@
 
 'use strict';
 
-let _global = _global_;
-let _ = _global.wTools;
+const _global = _global_;
+const _ = _global.wTools;
 _.assert( !!_.dom );
 let Parent = _.dom;
-let Self = _.dom.s = _.dom.s || Object.create( Parent );
+const Self = _.dom.s = _.dom.s || Object.create( Parent );
 
 // --
 //

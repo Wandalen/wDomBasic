@@ -3,11 +3,11 @@
 
 'use strict';
 
-let _global = _global_;
-let _ = _global.wTools;
+const _global = _global_;
+const _ = _global.wTools;
 let $ = typeof jQuery === 'undefined' ? null : jQuery;
 // let $ = typeof jQuery !== 'undefined' ? jQuery : null;
-let Self = _.dom = _.dom || Object.create( null );
+const Self = _.dom = _.dom || Object.create( null );
 let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 /*
@@ -229,7 +229,7 @@ let msg = ( function msg()
     if( o.kind === undefined )
     o.kind = 'neutral';
 
-    _.assertMapHasOnly( o, optionsDefault );
+    _.map.assertHasOnly( o, optionsDefault );
     _.assert( kinds.indexOf( o.kind ) !== -1, 'dom.msg :', 'unknown type' );
 
     if( o.msg === undefined )
@@ -1543,7 +1543,7 @@ let subjective = (function()
       onFocus : function( value ){ return value },
     }
 
-    _.assertMapHasOnly( o, optionsDefault );
+    _.map.assertHasOnly( o, optionsDefault );
     _.mapSupplement( o, optionsDefault );
     _.assert( _.dom.domableIs( o.target ) );
 
@@ -1640,7 +1640,7 @@ function tristatable( o )
 {
   o = o || Object.create( null );
 
-  _.assertMapHasOnly( o, tristatable.defaults );
+  _.map.assertHasOnly( o, tristatable.defaults );
   _.mapSupplement( o, tristatable.defaults );
   _.assert( _.dom.domableIs( o.items ) );
 
@@ -2996,7 +2996,7 @@ let uiTabsInit = ( function uiTabsInit()
 
     _.assert( arguments.length === 1, 'Expects single argument' );
     _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ), 'uiTabsInit :', 'Expects { targetDom } as first argument' );
-    _.assertMapHasNoUndefine( o );
+    _.map.assertHasNoUndefine( o );
     _.routineOptions( uiTabsInit, o );
 
     let body = $( document.body );
@@ -3206,7 +3206,7 @@ function uiInitGeneric( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ), 'uiInitGeneric :', 'Expects DOM {o.targetDom}' );
-  _.assertMapHasNoUndefine( o );
+  _.map.assertHasNoUndefine( o );
   _.routineOptions( uiInitGeneric, o );
 
   let body = $( document.body );
@@ -3220,11 +3220,11 @@ function uiInitGeneric( o )
   // debugger;
 
   if( o.usingTabs )
-  _.dom.uiTabsInit( _.mapOnly( o, _.dom.uiTabsInit.defaults ) );
+  _.dom.uiTabsInit( _.mapOnly_( null, o, _.dom.uiTabsInit.defaults ) );
 
   _.dom.uiInitPopups( o.targetDom );
 
-  _.dom.uiInitDropdown( _.mapOnly( o, _.dom.uiInitDropdown.defaults ) );
+  _.dom.uiInitDropdown( _.mapOnly_( null, o, _.dom.uiInitDropdown.defaults ) );
 
   _.dom.uiInitSimple( o.targetDom );
 

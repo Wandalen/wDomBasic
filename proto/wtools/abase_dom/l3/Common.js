@@ -6,7 +6,7 @@
 let _ = wTools;
 let $ = typeof jQuery === 'undefined' ? null : jQuery;
 // let $ = typeof jQuery !== 'undefined' ? jQuery : null;
-let Self = _.dom = _.dom || Object.create( null );
+const Self = _.dom = _.dom || Object.create( null );
 let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 //
@@ -1563,7 +1563,7 @@ function eventClientPosition( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.dom.eventIs( event ) );
   _.assert( !o.flip || _.arrayIs( o.flip ) );
-  _.assertMapHasOnly( o, eventClientPosition.defaults );
+  _.map.assertHasOnly( o, eventClientPosition.defaults );
 
   if( _.numberIs( event.clientX ) )
   result = [ event.clientX, event.clientY ];
@@ -2113,7 +2113,7 @@ function eventSpecialMake( o )
   if( _.strIs( o ) )
   o = { name : o };
 
-  _.assertMapHasOnly( o, eventSpecialMake.defaults );
+  _.map.assertHasOnly( o, eventSpecialMake.defaults );
 
   let event = new CustomEvent
   (

@@ -3,12 +3,12 @@
 
 'use strict';
 
-let _global = _global_;
-let _ = _global.wTools;
+const _global = _global_;
+const _ = _global.wTools;
 _.assert( !!_.dom );
 _.assert( !!_.dom.s );
 let Parent = _.dom;
-let Self = _.dom.s
+const Self = _.dom.s
 let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 //

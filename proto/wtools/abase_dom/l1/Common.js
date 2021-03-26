@@ -14,9 +14,9 @@
  * @module Tools/base/DomBasic
  */
 
-let _global = _global_;
-let _ = _global.wTools;
-let Self = _.dom = _.dom || Object.create( null );
+const _global = _global_;
+const _ = _global.wTools;
+const Self = _.dom = _.dom || Object.create( null );
 
 function Init()
 {
