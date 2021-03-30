@@ -5,7 +5,7 @@
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
   "main" : "proto/wtools/abase_dom/include/DomBase.js",
-  "files" : [ "proto/wtools/abase_dom", "proto/wtools/Tools.s", "out" ],
+  "files" : [ "proto/wtools/abase_dom", "proto/wtools/Tools.s", "out", "proto/node_modules" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
   "repository" :
   {
@@ -17,6 +17,6 @@
     "url" : "https://github.com/Wandalen/wDomBasic/issues"
   },
   "dependencies" : { "wTools" : "" },
-  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0", "wdombasic" : "file:." },
+  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0" },
   "keywords" : [ "wTools" ]
 }
