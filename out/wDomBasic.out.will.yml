@@ -2,15 +2,12 @@ format: outwillfile-2.0
 root:
   - wDomBasic.out
 consistency:
-  wDomBasic.out.will.yml: &ref_0
-    hash: 9c475a5821dcf44c12b28aee30be6412
-    size: 38910
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: 3e2894a071b5f34feb2422527da32d1f
     size: 2003
-  ../.im.will.yml: &ref_2
-    hash: 7503edf7e637f550789c624cea234bc6
-    size: 4978
+  ../.im.will.yml: &ref_1
+    hash: c30dc9aa1aae63933783ce348104190a
+    size: 4966
 module:
   wDomBasic.out:
     about:
@@ -24,19 +21,19 @@ module:
         overlap. Use the module to get access to shortcuts for a browser.
       enabled: 1
       version: 0.4.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
         - DOM
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wdombasic
-      npm.scripts:
+      npm.scripts: &ref_5
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -67,7 +64,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ../
+        path: ..
       repository:
         path: 'git+https:///github.com/Wandalen/wDomBasic.git'
       bugtracker:
@@ -144,6 +141,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - ../proto/wtools/abase_dom/include/DomBase.js
+          - ../proto/node_modules/wdombasic
       exported.dir.proto.export:
         criterion:
           generated: 1
@@ -707,24 +708,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -813,9 +796,8 @@ module:
           content: proto
           export: 1
     consistency:
-      wDomBasic.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: wDomBasic
@@ -828,21 +810,13 @@ module:
         overlap. Use the module to get access to shortcuts for a browser.
       enabled: 1
       version: 0.4.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
-        - DOM
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+      contributors: *ref_4
       npm.name: wdombasic
-      npm.scripts:
-        test: wtest .run proto/**
-        docgen: wdocgen .build proto
+      npm.scripts: *ref_5
     path:
       module.willfiles:
         criterion:
@@ -871,7 +845,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ./
+        path: .
       repository:
         path: 'git+https:///github.com/Wandalen/wDomBasic.git'
       bugtracker:
@@ -948,6 +922,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - proto/wtools/abase_dom/include/DomBase.js
+          - proto/node_modules/wdombasic
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -1506,6 +1484,5 @@ module:
         hash: 3e2894a071b5f34feb2422527da32d1f
         size: 2003
       ../.im.will.yml:
-        hash: 7503edf7e637f550789c624cea234bc6
-        size: 4978
-      wDomBasic.out.will.yml: *ref_0
+        hash: c30dc9aa1aae63933783ce348104190a
+        size: 4966
