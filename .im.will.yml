@@ -73,8 +73,8 @@ path:
       raw: compiled
       content: prime
   npm.proto.entry:
-    - /pro/module/wDomBasic/proto/wtools/abase_dom/include/DomBase.js
-    - /pro/module/wDomBasic/proto/node_modules/wdombasic
+    - proto/wtools/abase_dom/include/DomBase.js
+    - proto/node_modules/wdombasic
 reflector:
   reflect.proto:
     inherit: predefined.*
