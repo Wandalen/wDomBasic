@@ -179,8 +179,12 @@ module:
           - ../proto/wtools/abase_dom/l4/Common.js
           - ../proto/wtools/abase_dom/l5
           - ../proto/wtools/abase_dom/l5/Common.js
-          - ../proto/wtools/amid
-          - ../proto/wtools/atop
+          - ../proto/wtools/abase_dom/l7
+          - ../proto/wtools/abase_dom/l7/Blob.js
+          - ../proto/wtools/abase_dom/l7/Dataurl.js
+          - ../proto/wtools/abase_dom/l7/File.js
+          - ../proto/wtools/abase_dom/l7/Image.js
+          - ../proto/wtools/abase_dom/l7/Sound.js
     submodule:
       wTools:
         path: 'npm:///wTools'
