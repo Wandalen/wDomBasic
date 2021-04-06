@@ -1516,6 +1516,4 @@ module:
       ../.im.will.yml:
         hash: 9d22b6572dd4c4213441524aecb3b608
         size: 4922
-      wDomBasic.out.will.yml:
-        hash: a1e01ae2231a94a4447013d233680885
-        size: 39291
+      wDomBasic.out.will.yml: *ref_0
