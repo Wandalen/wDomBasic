@@ -3,7 +3,7 @@
 
 'use strict';
 
-let _ = wTools;
+const _ = _global_.wTools;
 let $ = typeof jQuery === 'undefined' ? null : jQuery;
 // let $ = typeof jQuery !== 'undefined' ? jQuery : null;
 const Self = _.dom = _.dom || Object.create( null );
