@@ -3,6 +3,7 @@
 'use strict';
 
 const _ = _global_.wTools;
+const Self = _.dom.sound = _.dom.sound || Object.create( null );
 var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 
 // --
@@ -60,7 +61,7 @@ playTry.defaults.__proto__ = play.defaults;
 // prototype
 // --
 
-const Proto =
+const Routines =
 {
 
   play : play,
@@ -70,16 +71,19 @@ const Proto =
 
 }
 
-if( _.sound )
-{
-  _.mapExtend( _.sound,Proto );
-}
-else
-{
-  _.sound = Proto;
-  _.sound.__proto__ = _;
-}
+// if( _.sound )
+// {
+//   _.mapExtend( Self,Routines );
+// }
+// else
+// {
+//   _.sound = Proto;
+//   _.sound.__proto__ = _;
+// }
 
-const _ = _global_.wTools.sound;
+_.mapExtend( Self,Routines );
+
+
+// const _ = _global_.wTools.sound;
 
 })();

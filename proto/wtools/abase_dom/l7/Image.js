@@ -4,7 +4,9 @@
 
 //
 
-const _ = _global_.wTools;
+const _global = _global_;
+const _ = _global.wTools;
+const Self = _.dom = _.dom || Object.create( null );
 
 // --
 // svg
@@ -343,37 +345,39 @@ function canvasFromDataurl( o )
   o = _.routineOptions( canvasFromDataurl,o );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.dataurlIs( o.src ) );
+  _.assert( _.dom.dataurlIs( o.src ) );
 
-  if( !o.canvas )
-  o.canvas = document.createElement( 'canvas' );
+  // if( !o.canvas )
+  // o.canvas = document.createElement( 'canvas' );
 
-  if( !o.onReady )
-  o.onReady = new _.Consequence();
+  // if( !o.onReady )
+  // o.onReady = new _.Consequence();
+
+  let ready = _.Consequence();
 
   var readOptions = Object.create( null );
-  readOptions.filePath = o.dataUrl;
+  // readOptions.filePath = o.dataUrl;
+  readOptions.filePath = o.src;
   readOptions.onReady = function( image )
   {
-
-    var canvas = _.canvasFromImage({ src : image });
-    if( o.onReady )
-    o.onReady( o );
-
+    o.canvas = _.dom.canvasFromImage({ src : image });
+    // if( o.onReady )
+    ready.take( o );
   }
 
-  _.imageReadFromFile( readOptions );
+  _.dom.imageReadFromFile( readOptions );
   o.image = readOptions.image;
 
-  return o.canvas;
+  // return o.canvas;
+  return ready;
 }
 
 canvasFromDataurl.defaults =
 {
   src : null,
-  canvas : null,
-  dataUrl : null,
-  onReady : null,
+  // canvas : null,
+  // dataUrl : null,
+  // onReady : null,
 }
 
 //
@@ -381,9 +385,7 @@ canvasFromDataurl.defaults =
 function canvasFromImage( o )
 {
 
-  debugger;
-
-  if( src instanceof HTMLImageElement )
+  if( o instanceof HTMLImageElement )
   o = { src : o };
 
   o = _.routineOptions( canvasFromImage,o );
@@ -406,13 +408,13 @@ function canvasFromImage( o )
   context.save();
   context.fillStyle = 'transparent';
   context.fillRect( 0,0,o.canvas.width,o.canvas.height );
-  context.scale( scale[0],scale[1] );
+  context.scale( o.scale[0],o.scale[1] );
   if( o.src.width > 0 && o.src.height > 0 )
   {
     var pos =
     [
-      scale[ 0 ] < 0 ? o.src.width * scale[0] : 0,
-      scale[ 1 ] < 0 ? o.src.height * scale[1] : 0,
+      o.scale[ 0 ] < 0 ? o.src.width * o.scale[0] : 0,
+      o.scale[ 1 ] < 0 ? o.src.height * o.scale[1] : 0,
     ];
     context.drawImage( o.src,pos[ 0 ],pos[ 1 ] );
   }
@@ -965,6 +967,24 @@ imageReadFromFile.defaults =
 
 //
 
+function imageDataFromFile( filePath )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.strDefined( filePath ) );
+
+  let op = { filePath };
+  _.dom.imageReadFromFile( op );
+  return op.onReady.then( () =>
+  {
+    let canvas = _.dom.canvasFromImage({ src : op.image });
+    let gl = canvas.getContext( '2d' );
+    let imageData = gl.getImageData( 0, 0, op.image.width, op.image.height );
+    return imageData;
+  })
+}
+
+//
+
 function imageSize( image )
 {
   var result = [];
@@ -996,6 +1016,58 @@ function imageSize( image )
   }
 
   return result;
+}
+
+//
+
+function imageCompare( o )
+{
+  _.assert( arguments.length === 1 );
+  _.routineOptions( imageCompare, o );
+
+  if( o.format === null )
+  o.format = [ 8, 8, 8, 8 ];
+
+  _.assert( _.arrayIs( o.format ), '{o.format} should be an array' );
+  _.assert( o.format.length > 0, '{o.format} should not be empty' );
+  _.assert( _.bufferTypedIs( o.src1 ) );
+  _.assert( _.bufferTypedIs( o.src2 ) );
+  _.assert( o.src1.constructor === o.src2.constructor,'{o.src1} and {o.src2} should have same type' );
+  _.assert( o.src1.length === o.src2.length, '{o.src1} and {o.src2} should have same length' );
+
+  let channels = o.format.length;
+  let pixels = o.src1.length / channels;
+
+  _.assert( Number.isInteger( pixels ), `The number of pixels should be an integer, got:${pixels}, format:${o.format}` )
+
+  let sameForAllPixels = 0;
+
+  for( let i = 0; i < pixels; i++ )
+  {
+    let sameForPixel = 0;
+
+    for( let c = 0; c < channels; c++ )
+    {
+      let ci = i * channels + c;
+      let sameForChannel = Math.abs( o.src1[ ci ] - o.src2[ ci ] ) / ( 1 << o.format[ c ] );
+      sameForPixel += sameForChannel;
+    }
+
+    sameForPixel = sameForPixel / channels;
+
+    sameForAllPixels += sameForPixel;
+  }
+
+  sameForAllPixels = sameForAllPixels / pixels;
+
+  return sameForAllPixels;
+}
+
+imageCompare.defaults =
+{
+  src1 : null,
+  src2 : null,
+  format : null
 }
 
 //
@@ -1051,7 +1123,7 @@ function pictureSave( picture )
 // prototype
 // --
 
-const Proto =
+const Routines =
 {
 
   // svg
@@ -1096,8 +1168,11 @@ const Proto =
   imageClampToSize : imageClampToSize,
   imageGetWithDom : imageGetWithDom,
   imageReadFromFile : imageReadFromFile,
+  imageDataFromFile,
 
   imageSize : imageSize,
+
+  imageCompare,
 
 
   // picture
@@ -1107,6 +1182,6 @@ const Proto =
 
 }
 
-_.mapExtend( _,Proto );
+_.mapExtend( Self, Routines );
 
 })();

@@ -1,6 +1,7 @@
 (function(){
 
 const _ = _global_.wTools;
+const Self = _.dom = _.dom || Object.create( null );
 var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 
 //
@@ -226,7 +227,7 @@ function textSave( text,name )
 // proto
 // --
 
-const Proto =
+const Routines =
 {
 
   // load
@@ -241,6 +242,6 @@ const Proto =
 
 }
 
-_.mapExtend( _,Proto );
+_.mapExtend( Self,Routines );
 
 })();
