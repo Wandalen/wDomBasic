@@ -417,7 +417,7 @@ function hasClass( targetDom, cssClass )
 
 function attrHasAny( dom, attrs )
 {
-  let has = _.mapKeys( _.dom.s.attr( dom ) );
+  let has = _.props.keys( _.dom.s.attr( dom ) );
   return _.longHasAny( has, attrs );
 }
 
@@ -434,7 +434,7 @@ function attrHasAny( dom, attrs )
 
 function attrHasAll( dom, attrs )
 {
-  let has = _.mapKeys( _.dom.s.attr( dom ) );
+  let has = _.props.keys( _.dom.s.attr( dom ) );
   return _.longHasAll( has, attrs );
 }
 
@@ -451,7 +451,7 @@ function attrHasAll( dom, attrs )
 
 function attrHasNone( dom, attrs )
 {
-  let has = _.mapKeys( _.dom.s.attr( dom ) );
+  let has = _.props.keys( _.dom.s.attr( dom ) );
   return _.longHasNone( has, attrs );
 }
 
@@ -473,7 +473,7 @@ function textGet( o )
 
   if( _.dom.domableIs( o ) )
   o = { targetDom : o }
-  _.routineOptions( textGet, o );
+  _.routine.options_( textGet, o );
 
   let result = _.dom.each
   ({
@@ -1007,7 +1007,7 @@ function emToPx( dom, em )
 function each( o )
 {
 
-  _.routineOptions( each, o );
+  _.routine.options_( each, o );
   _.assert( _.dom.domableIs( o.dom ) );
 
   o.dom = _.dom.from( o.dom );
@@ -1082,7 +1082,7 @@ function cssGlobal( o )
   if( _.strIs( o ) )
   o = { css : o }
 
-  _.routineOptions( cssGlobal, o );
+  _.routine.options_( cssGlobal, o );
 
   if( o.document === null )
   o.document = document;
@@ -1096,7 +1096,7 @@ function cssGlobal( o )
 
     if( o.key === null )
     o.key = o.css;
-    if( _.longHas( _domGlobalCssKeysArray, [ o.key, o.document ], _.longIdentical ) )
+    if( _.longHas( _domGlobalCssKeysArray, [ o.key, o.document ], _.long.identical ) )
     return;
     _domGlobalCssKeysArray.push([ o.key, o.document ]);
 
@@ -1122,7 +1122,7 @@ function cssExport( o )
   if( o instanceof Document )
   o = { dstDocument : o }
 
-  _.routineOptions( cssExport, o );
+  _.routine.options_( cssExport, o );
 
   if( o.srcDocument === null )
   o.srcDocument = document;
@@ -1326,7 +1326,7 @@ let fullScreen = ( function fullScreen()
 function load( o )
 {
 
-  _.routineOptions( load, o );
+  _.routine.options_( load, o );
 
   o.once = new _.Consequence();
   o.ready = new _.Consequence();
@@ -1923,7 +1923,7 @@ let lowestDelta = null;
 function mousewheel( o )
 {
   _.assert( arguments.length === 1 );
-  _.routineOptions( mousewheel, o );
+  _.routine.options_( mousewheel, o );
   _.assert( _.routineIs( o.onWheel ) );
 
   let targetDom = _.dom.from( o.targetDom );
@@ -2015,7 +2015,7 @@ function wheelOn( o )
   if( arguments.length === 2 )
   o = { targetDom : arguments[ 0 ], onWheel : arguments[ 1 ] }
 
-  _.routineOptions( wheelOn, o );
+  _.routine.options_( wheelOn, o );
   _.assert( _.routineIs( o.onWheel ) );
 
   o.targetDom = _.dom.fromAtLeastOne( o.targetDom );
@@ -2111,7 +2111,7 @@ function eventSpecialMake( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.strIs( o ) )
-  o = { name : o };
+  o = { name : o || null };
 
   _.map.assertHasOnly( o, eventSpecialMake.defaults );
 
@@ -2148,7 +2148,7 @@ function eventsObserver( o )
 
   _.assert( _.dom.is( o.targetDom ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( eventsObserver, o );
+  _.routine.options_( eventsObserver, o );
 
   let observer = new MutationObserver( function( mutations )
   {
@@ -2204,7 +2204,7 @@ function eventsBindAll( o )
 
   _.assert( _.dom.domableIs( o.targetDom ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( eventsBindAll, o );
+  _.routine.options_( eventsBindAll, o );
 
   o.targetDom = $( o.targetDom );
   _.assert( o.targetDom.length === 1 );
@@ -2234,7 +2234,7 @@ eventsBindAll.defaults =
 let _jqueryOriginalOn = $ ? $.fn.on : null;
 function eventsBindWatcher( o )
 {
-  o = _.routineOptions( eventsBindWatcher, o )
+  o = _.routine.options_( eventsBindWatcher, o )
 
   _.assert( _jqueryOriginalOn === $.fn.on, 'on of jQuery is already overwritten' );
 
@@ -2301,7 +2301,7 @@ eventsBindWatcher.defaults =
 
 function eventFire( o )
 {
-  _.routineOptions( eventFire, o );
+  _.routine.options_( eventFire, o );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
   o.targetDom = _.dom.from( o.targetDom );
@@ -2313,10 +2313,10 @@ function eventFire( o )
     });
 
   if( o.extendingByOptions )
-  _.mapExtend( event, o );
+  _.props.extend( event, o );
 
   if( o.extendMap )
-  _.mapExtend( event, o.extendMap );
+  _.props.extend( event, o.extendMap );
 
   // if( !o.informingDescandants )
   // o.targetDom.each( function( k,dom )
@@ -2489,7 +2489,7 @@ let Routines =
 
 };
 
-_.mapExtend( Self, Fields );
-_.mapExtend( Self, Routines );
+_.props.extend( Self, Fields );
+_.props.extend( Self, Routines );
 
 })();

@@ -6,7 +6,7 @@ const _ = _global_.wTools;
 var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 
 // --
-// routines
+// implementation
 // --
 
 function play( o )
@@ -72,7 +72,7 @@ const Proto =
 
 if( _.sound )
 {
-  _.mapExtend( _.sound,Proto );
+  _.props.extend( _.sound,Proto );
 }
 else
 {

@@ -289,6 +289,6 @@ const Proto =
 
 };
 
-_.mapExtend( _,Proto );
+_.props.extend( _,Proto );
 
 })();

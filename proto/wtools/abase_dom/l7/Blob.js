@@ -112,6 +112,6 @@ let Extension =
 
 };
 
-_.mapExtend( wTools, Extension );
+_.props.extend( wTools, Extension );
 
 })();
