@@ -868,7 +868,7 @@ function imageReadFromFile( o )
     debugger;
     var result = _.entity.cloneShallow( o.filePath );
 
-    o.onReady.give( _.entityLengthOf( o.filePath ) );
+    o.onReady.give( _.entity.lengthOf( o.filePath ) );
 
     _.each( o.filePath,function( e,k )
     {
