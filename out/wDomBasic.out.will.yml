@@ -185,6 +185,8 @@ module:
           - ../proto/wtools/abase_dom/l7/File.js
           - ../proto/wtools/abase_dom/l7/Image.js
           - ../proto/wtools/abase_dom/l7/Sound.js
+          - ../proto/wtools/abase_dom.test
+          - ../proto/wtools/abase_dom.test/Image.test.s
     submodule:
       wTools:
         path: 'npm:///wTools'
