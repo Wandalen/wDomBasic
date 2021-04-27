@@ -13,6 +13,11 @@
     require( '../l3/Common.js' );
     require( '../l4/Common.js' );
     require( '../l5/Common.js' );
+    require( '../l7/Blob.js' );
+    require( '../l7/Dataurl.js' );
+    require( '../l7/File.js' );
+    require( '../l7/Image.js' );
+    require( '../l7/Sound.js' );
 
     module.exports = _;
   }
