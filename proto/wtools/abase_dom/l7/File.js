@@ -1,6 +1,7 @@
 (function(){
 
 const _ = _global_.wTools;
+const Self = _.dom = _.dom || Object.create( null );
 var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 
 //
@@ -165,27 +166,21 @@ uploadFiles.defaults =
 
 //
 
-function urlSave( url,name )
+function urlSave( url, name )
 {
+  let a = _.dom.make({ targetDom : 'body', html : '<a></a>' });
+  _.dom.css( a, 'display', 'none' );
+  _.dom.append( 'body', a );
 
-  //$( '<iframe ></iframe>' )
-  var a = $( '<a></a>' )
-    .css( 'display','none' ).appendTo( $('body') )
-    .attr( 'download',name )
-    .attr( 'title',name )
-    .attr( 'value',name )
-    .attr( 'src',url )
-    .attr( 'href',url )
-//    .click()
-//    .remove();
-  ;
-  //window.location = url
+  _.dom.attr( a, 'download', name )
+  _.dom.attr( a, 'title', name )
+  _.dom.attr( a, 'value', name )
+  _.dom.attr( a, 'src', url )
+  _.dom.attr( a, 'href', url )
 
   var event = document.createEvent( 'MouseEvents' );
   event.initMouseEvent( 'click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null );
-  a[ 0 ].dispatchEvent( event );
-  //window.open( url, '_blank', '' );
-
+  a.dispatchEvent( event );
 }
 
 //
@@ -226,7 +221,7 @@ function textSave( text,name )
 // proto
 // --
 
-const Proto =
+const Routines =
 {
 
   // load
@@ -241,6 +236,6 @@ const Proto =
 
 }
 
-_.props.extend( _,Proto );
+_.props.extend( Self,Routines );
 
 })();
