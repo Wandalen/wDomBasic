@@ -46,7 +46,7 @@ function formationRadialSet( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.arrayIs( o.containerCenter ) );
   _.assert( _.numberIs( o.containerRadius ) );
-  _.routineOptions( formationRadialSet, o );
+  _.routine.options_( formationRadialSet, o );
 
   if( !o.elementsDom.length )
   return;
@@ -402,7 +402,7 @@ function scrollFocus( o )
   // else
   // o.contentDom = $( o.contentDom );
 
-  _.routineOptions( scrollFocus, o );
+  _.routine.options_( scrollFocus, o );
   _.assert( [ 'center', 'begin', 'end' ].indexOf( o.mode ) !== -1 );
   _.assert( o.contentDom.length === 1 );
   _.assert( o.elementDom.length === 1 );
@@ -444,7 +444,7 @@ function scrolable( o )
 function menuable( o )
 {
 
-  _.routineOptions( menuable, o );
+  _.routine.options_( menuable, o );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
   o.targetDom = $( o.targetDom );
@@ -800,7 +800,7 @@ menuable.defaults =
 function resizable( o )
 {
 
-  _.routineOptions( resizable, o );
+  _.routine.options_( resizable, o );
 
   o.containerDom = $( o.containerDom );
   o.targetDom = $( o.targetDom );
@@ -1022,7 +1022,7 @@ resizable.defaults =
 function cornersMake( o )
 {
 
-  _.routineOptions( cornersMake, o );
+  _.routine.options_( cornersMake, o );
 
   o.targetDom = $( o.targetDom );
 
@@ -1149,7 +1149,7 @@ cornersMake.defaults =
 function windowOpen( o )
 {
 
-  o = _.routineOptions( windowOpen, o );
+  o = _.routine.options_( windowOpen, o );
   _.assert( _.arrayIs( o.features ) || o.features === null );
   _.assert( _.strIs( o.uri ) );
   _.assert( _.strIs( o.iframeName ) );
@@ -1305,7 +1305,7 @@ abilityUnregister.defaults =
 
 function abilityCssExport( o )
 {
-  _.routineOptions( abilityCssExport, o );
+  _.routine.options_( abilityCssExport, o );
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.dom.jqueryIs( o.targetDom )
 
@@ -1344,7 +1344,7 @@ function copyable( o )
 {
   o = o || Object.create( null );
 
-  _.routineOptions( copyable, o );
+  _.routine.options_( copyable, o );
   _.assert( _.dom.domableIs( o.containerDom ) );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
@@ -1395,7 +1395,7 @@ function copyableHtmlText( o )
 {
   o = o || Object.create( null );
 
-  _.routineOptions( copyableHtmlText, o );
+  _.routine.options_( copyableHtmlText, o );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
   /* */
@@ -1436,7 +1436,7 @@ function pinnable( o )
 {
   o = o || Object.create( null );
 
-  _.routineOptions( pinnable, o );
+  _.routine.options_( pinnable, o );
 
   if( o.makingTargetDom && !o.targetDom )
   o.targetDom = o.containerDom;
@@ -1544,7 +1544,7 @@ let subjective = (function()
     }
 
     _.map.assertHasOnly( o, optionsDefault );
-    _.mapSupplement( o, optionsDefault );
+    _.props.supplement( o, optionsDefault );
     _.assert( _.dom.domableIs( o.target ) );
 
     //
@@ -1579,7 +1579,7 @@ function widgable( o )
 {
   o = o || Object.create( null );
 
-  _.routineOptions( widgable, o );
+  _.routine.options_( widgable, o );
 
   o.targetDom = $( o.targetDom );
   if( !o.containerDom )
@@ -1641,7 +1641,7 @@ function tristatable( o )
   o = o || Object.create( null );
 
   _.map.assertHasOnly( o, tristatable.defaults );
-  _.mapSupplement( o, tristatable.defaults );
+  _.props.supplement( o, tristatable.defaults );
   _.assert( _.dom.domableIs( o.items ) );
 
   //
@@ -1653,7 +1653,7 @@ function tristatable( o )
 
   o.itemSet = function( state )
   {
-    let stateWas = _.mapExtend( null, o.state );
+    let stateWas = _.props.extend( null, o.state );
 
     _.assert( _.strIs( state.name ) );
 
@@ -1727,7 +1727,7 @@ function buttonMake( o )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( buttonMake, o );
+  _.routine.options_( buttonMake, o );
 
   o.parentDom = $( o.parentDom );
   let html = o.onHtmlGet( o );
@@ -1769,7 +1769,7 @@ function panelMake( o )
   if( !_.objectIs( o ) )
   o = { targetDom : o }
 
-  _.routineOptions( panelMake, o );
+  _.routine.options_( panelMake, o );
   o.targetDom = $( o.targetDom );
 
   if( !o.targetDom.length )
@@ -1968,7 +1968,7 @@ function textEditMake( o )
   if( _.strIs( o ) )
   o = { text : o };
 
-  _.routineOptions( textEditMake, o );
+  _.routine.options_( textEditMake, o );
 
   o.container = $( o.container );
 
@@ -2053,7 +2053,7 @@ function habbitMouseClick( o )
   let mousedown = _.dom.eventName( 'mousedown' );
   let mousemove = _.dom.eventName( 'mousemove' );
 
-  _.routineOptions( habbitMouseClick, o );
+  _.routine.options_( habbitMouseClick, o );
 
   _.assert( _.objectIs( o.onEvent ) || _.routineIs( o.onEvent ) );
   _.assert( !!o.dom );
@@ -2372,7 +2372,7 @@ function habbitKeyEnter( o )
   let lastEvent = null;
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( habbitKeyEnter, o );
+  _.routine.options_( habbitKeyEnter, o );
 
   // give event
 
@@ -2454,7 +2454,7 @@ function habbitDrag( o )
   if( o.arbitrary )
   _.mapComplement( o, habbitDrag.defaults );
   else
-  _.routineOptions( habbitDrag, o );
+  _.routine.options_( habbitDrag, o );
 
   o.targetDom = $( o.targetDom );
 
@@ -2645,7 +2645,7 @@ function draggable2( o )
   if( _.dom.like( o ) )
   o = { targetDom : o }
   o.arbitrary = 1;
-  _.routineOptions( draggable2, o );
+  _.routine.options_( draggable2, o );
   o = _.dom.habbitDrag( o );
 
   /* drag */
@@ -2740,7 +2740,7 @@ let draggable = (function()
   {
     o = o || Object.create( null );
 
-    _.routineOptions( draggable, o );
+    _.routine.options_( draggable, o );
 
     if( o.notDraggableTagNames === null )
     o.notDraggableTagNames = [ 'TEXTAREA', 'INPUT' ]
@@ -2953,7 +2953,7 @@ function uiInitDropdown( o )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( uiInitDropdown, o );
+  _.routine.options_( uiInitDropdown, o );
   _.assert( _.dom.domableIs( o.targetDom ) );
 
   if( o.dropdownOptions === null )
@@ -2965,7 +2965,7 @@ function uiInitDropdown( o )
   .dropdown( o.dropdownOptions );
 
   o.targetDom.find( '.ui.dropdown.hoverable' )
-  .dropdown( _.mapExtend( { on : 'hover' }, o.dropdownOptions || Object.create( null ) ) );
+  .dropdown( _.props.extend( { on : 'hover' }, o.dropdownOptions || Object.create( null ) ) );
 
 }
 
@@ -2997,7 +2997,7 @@ let uiTabsInit = ( function uiTabsInit()
     _.assert( arguments.length === 1, 'Expects single argument' );
     _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ), 'uiTabsInit :', 'Expects { targetDom } as first argument' );
     _.map.assertHasNoUndefine( o );
-    _.routineOptions( uiTabsInit, o );
+    _.routine.options_( uiTabsInit, o );
 
     let body = $( document.body );
     if( !o.targetDom ) o.targetDom = body;
@@ -3207,7 +3207,7 @@ function uiInitGeneric( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( !o.targetDom || _.dom.domableIs( o.targetDom ), 'uiInitGeneric :', 'Expects DOM {o.targetDom}' );
   _.map.assertHasNoUndefine( o );
-  _.routineOptions( uiInitGeneric, o );
+  _.routine.options_( uiInitGeneric, o );
 
   let body = $( document.body );
   if( !o.targetDom )
@@ -3274,7 +3274,7 @@ function uiShow( o )
 
   _.assert( _.dom.domableIs( o.targetDom ) );
   _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.routineOptions( uiShow, o );
+  _.routine.options_( uiShow, o );
   _.assert( o.value !== undefined );
 
   o.targetDom = $( o.targetDom );
@@ -3430,7 +3430,7 @@ let Routines =
 
 };
 
-_.mapExtend( Self, Fields );
-_.mapExtend( Self, Routines );
+_.props.extend( Self, Fields );
+_.props.extend( Self, Routines );
 
 })();

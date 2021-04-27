@@ -24,7 +24,7 @@ function loadDialog( options )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.objectIs( options ) );
   _.map.assertHasOnly( options,optionsDefault );
-  _.mapSupplement( options,optionsDefault );
+  _.props.supplement( options,optionsDefault );
 
   var con = new _.Consequence();
 
@@ -236,6 +236,6 @@ const Routines =
 
 }
 
-_.mapExtend( Self,Routines );
+_.props.extend( Self,Routines );
 
 })();

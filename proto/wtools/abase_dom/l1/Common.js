@@ -24,7 +24,7 @@ function Init()
 }
 
 // --
-// checkers
+// dichotomys
 // --
 
 function is( src )
@@ -160,7 +160,7 @@ function from( src )
 function make( o )
 {
   _.assert( arguments.length === 1 );
-  _.routineOptions( make, o );
+  _.routine.options_( make, o );
   _.assert( _.strDefined( o.html ) );
   _.assert( o.class === null || _.strDefined( o.class ) || _.arrayIs( o.class ) );
   _.assert( o.class === null || _.strDefined( o.class ) );
@@ -365,7 +365,7 @@ let Routines =
 {
   Init,
 
-  // checkers
+  // dichotomys
 
   is,
   like,
@@ -396,8 +396,8 @@ let Routines =
 
 }
 
-_.mapExtend( Self, Fields );
-_.mapExtend( Self, Routines );
+_.props.extend( Self, Fields );
+_.props.extend( Self, Routines );
 
 Self.Init();
 

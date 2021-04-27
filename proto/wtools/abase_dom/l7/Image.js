@@ -35,7 +35,7 @@ function svgAdd( dst,src )
   {
     if( viewBox )
     {
-      viewBox = _.arrayFrom( viewBox );
+      viewBox = _.array.from( viewBox );
       var transform
         = ' translate( ' + [-viewBox[0],-viewBox[1]].join(' ') + ' )'
         + ' scale( ' + [parseFloat( width )/viewBox[2],parseFloat( height )/viewBox[3]].join(' ') + ' )';
@@ -220,7 +220,7 @@ function canvasMake( o )
 {
   var o = o || Object.create( null );
 
-  _.routineOptions( canvasMake,o );
+  _.routine.options_( canvasMake,o );
 
   if( _.numberIs( o.size ) )
   o.size = [ o.size,o.size ];
@@ -312,7 +312,7 @@ function canvasFromDom( dom,o )
   if( !_.domableIs( o ) )
   o = { src : o }
 
-  o = _.routineOptions( canvasFromDataurl,o );
+  o = _.routine.options_( canvasFromDataurl,o );
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.domIs( o.src ),'canvasFromDom :','Expects dom element' );
 
@@ -342,7 +342,7 @@ function canvasFromDataurl( o )
   // var o = o || Object.create( null );
   // o.dataUrl = dataUrl || o.dataUrl;
 
-  o = _.routineOptions( canvasFromDataurl,o );
+  o = _.routine.options_( canvasFromDataurl,o );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.dom.dataurlIs( o.src ) );
@@ -388,7 +388,7 @@ function canvasFromImage( o )
   if( o instanceof HTMLImageElement )
   o = { src : o };
 
-  o = _.routineOptions( canvasFromImage,o );
+  o = _.routine.options_( canvasFromImage,o );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
@@ -439,7 +439,7 @@ function canvasFromImageData( o )
   if( o instanceof ImageData )
   o = { src : o };
 
-  o = _.routineOptions( canvasFromImageData,o );
+  o = _.routine.options_( canvasFromImageData,o );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( o.src instanceof ImageData );
@@ -470,7 +470,7 @@ function canvasFrom( o )
   if( !_.mapIs( o ) )
   o = { src : o }
 
-  _.routineOptions( canvasFrom,o );
+  _.routine.options_( canvasFrom,o );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.strIs( o.src ) )
@@ -636,7 +636,7 @@ function canvasToDurl( o )
   if( !_.mapIs( o ) )
   o = { canvas : o }
 
-  _.routineOptions( canvasToDurl,o );
+  _.routine.options_( canvasToDurl,o );
 
   function onBlobReady( blob )
   {
@@ -701,9 +701,9 @@ function canvasDrawText( o )
   if( _.strIs( o ) )
   o = { text : o }
   if( arguments[ 1 ] )
-  _.mapExtend( o,arguments[ 1 ] );
+  _.props.extend( o,arguments[ 1 ] );
 
-  _.routineOptions( canvasDrawText,o );
+  _.routine.options_( canvasDrawText,o );
 
   o.fontSize = Number( o.fontSize );
   o.borderThickness = Number( o.borderThickness );
@@ -856,7 +856,7 @@ function imageReadFromFile( o )
   o = { filePath : o };
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( imageReadFromFile,o );
+  _.routine.options_( imageReadFromFile,o );
   _.assert( _.strDefined( o.filePath ) );
 
   if( !o.onReady )
@@ -872,7 +872,7 @@ function imageReadFromFile( o )
 
     _.each( o.filePath,function( e,k )
     {
-      var optionsForRead = _.mapExtend( null,o );
+      var optionsForRead = _.props.extend( null,o );
       optionsForRead.filePath = e;
       optionsForRead.onReady = o.onReady;
       result[ k ] = imageReadFromFile( optionsForRead ).image;
@@ -1182,6 +1182,6 @@ const Routines =
 
 }
 
-_.mapExtend( Self, Routines );
+_.props.extend( Self,Routines );
 
 })();

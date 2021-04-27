@@ -290,6 +290,6 @@ const Routines =
 
 };
 
-_.mapExtend( Self,Routines );
+_.props.extend( Self,Routines );
 
 })();

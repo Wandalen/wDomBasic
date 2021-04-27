@@ -7,7 +7,7 @@ const Self = _.dom.sound = _.dom.sound || Object.create( null );
 var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 
 // --
-// routines
+// implementation
 // --
 
 function play( o )
@@ -73,7 +73,7 @@ const Routines =
 
 // if( _.sound )
 // {
-//   _.mapExtend( Self,Routines );
+//   _.props.extend( _.sound,Proto );
 // }
 // else
 // {
@@ -81,8 +81,7 @@ const Routines =
 //   _.sound.__proto__ = _;
 // }
 
-_.mapExtend( Self,Routines );
-
+_.props.extend( Self,Routines );
 
 // const _ = _global_.wTools.sound;
 
