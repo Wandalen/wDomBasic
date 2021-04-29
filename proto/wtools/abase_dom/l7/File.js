@@ -22,7 +22,7 @@ function loadDialog( options )
   options = { title : options };
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.objectIs( options ) );
+  _.assert( _.object.isBasic( options ) );
   _.map.assertHasOnly( options,optionsDefault );
   _.props.supplement( options,optionsDefault );
 
@@ -69,7 +69,7 @@ function loadDialog( options )
 function uploadFiles( files,options )
 {
 
-  if( _.objectIs( arguments[ 0 ] ) )
+  if( _.object.isBasic( arguments[ 0 ] ) )
   {
     options = arguments[ 0 ];
     files = options.files;

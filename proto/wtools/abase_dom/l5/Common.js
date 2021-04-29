@@ -1243,7 +1243,7 @@ function abilityRegister( o )
   _.assert( _.dom.jqueryIs( o.targetDom ) );
   _.assert( _.routineIs( o.maker ) );
   _.assert( _.strDefined( o.maker.name ) );
-  _.assert( _.objectIs( o.settings ) );
+  _.assert( _.object.isBasic( o.settings ) );
   _.assert( !o.combining || o.combining === 'rewriting' );
 
   o.name = o.maker.name;
@@ -1766,7 +1766,7 @@ buttonMake.defaults =
 function panelMake( o )
 {
   o = o || Object.create( null );
-  if( !_.objectIs( o ) )
+  if( !_.object.isBasic( o ) )
   o = { targetDom : o }
 
   _.routine.options_( panelMake, o );
@@ -1828,7 +1828,7 @@ panelMake.defaults =
 function totalPanelMake( o )
 {
   o = o || Object.create( null );
-  if( !_.objectIs( o ) )
+  if( !_.object.isBasic( o ) )
   o = { targetDom : o }
 
   o.total = 1;
@@ -2055,7 +2055,7 @@ function habbitMouseClick( o )
 
   _.routine.options_( habbitMouseClick, o );
 
-  _.assert( _.objectIs( o.onEvent ) || _.routineIs( o.onEvent ) );
+  _.assert( _.object.isBasic( o.onEvent ) || _.routineIs( o.onEvent ) );
   _.assert( !!o.dom );
 
   o.down = [ null, null ];
@@ -3088,7 +3088,7 @@ let uiTabsInit = ( function uiTabsInit()
           {
             var html, reason;
 
-            if( _.objectIs( xhr ) )
+            if( _.object.isBasic( xhr ) )
             reason = xhr.status + ' : ' + xhr.statusText;
             else
             reason = responseData.status + ' : ' + responseData.statusText;

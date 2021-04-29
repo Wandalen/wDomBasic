@@ -1176,7 +1176,7 @@ function css( /* targetDom, property, value, priority */ )
 
   if( arguments.length === 2 )
   {
-    if( _.objectIs( property ) )
+    if( _.object.isBasic( property ) )
     {
       for( let key in property )
       targetDom.style.setProperty( key, property[ key ] )
@@ -1398,7 +1398,7 @@ function load( o )
     if( status === 'error' )
     {
       var reason;
-      if( _.objectIs( xhr ) )
+      if( _.object.isBasic( xhr ) )
       reason = xhr.status + ' : ' + xhr.statusText;
       else
       reason = responseData.status + ' : ' + responseData.statusText;
@@ -2143,7 +2143,7 @@ eventSpecialMake.defaults =
 function eventsObserver( o )
 {
 
-  if( !_.objectIs( o ) )
+  if( !_.object.isBasic( o ) )
   o = { targetDom : o };
 
   _.assert( _.dom.is( o.targetDom ) );

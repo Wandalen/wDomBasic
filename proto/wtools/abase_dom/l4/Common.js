@@ -205,7 +205,7 @@ function attr( dom, attrs, adding )
   {
 
     _.assert( dom.length >= 1 );
-    _.assert( _.objectIs( attrs ) || _.strIs( attrs ) );
+    _.assert( _.object.isBasic( attrs ) || _.strIs( attrs ) );
 
     // if( !adding )
     // debugger;

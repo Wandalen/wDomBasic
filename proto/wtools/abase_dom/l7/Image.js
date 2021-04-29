@@ -334,7 +334,7 @@ function canvasFromDataurl( o )
   if( _.strIs( o ) )
   o = { src : o }
 
-  // if( _.objectIs( dataUrl ) )
+  // if( _.object.isBasic( dataUrl ) )
   // {
   //   o = dataUrl;
   //   dataUrl = null;

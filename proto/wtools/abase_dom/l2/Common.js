@@ -35,7 +35,7 @@ Parent.Init = function Init()
 {
   let result = OriginalInit.apply( this, arguments );
 
-  _.assert( _.objectIs( this.s ) );
+  _.assert( _.object.isBasic( this.s ) );
   _.assert( this.s.single !== undefined );
   this.s = Object.create( this.s );
   this.s.single = this;
