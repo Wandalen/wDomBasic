@@ -936,7 +936,7 @@ function ownIdentity( dom, identity )
     else if( identity[ i-1 ] === '[' && identity[ i+1 ] === ']' )
     {
       let attrStrSplitted = _.strSplitNonPreserving({ src : identity[ i ], delimeter : '=' });
-      _.assert( attrStrSplitted.length === 2, 'ownIdentity expects attribute indentity of format: attr=val, got:', identity[ i ] );
+      _.assert( attrStrSplitted.length === 2, 'ownIdentity expects attribute identity of format: attr=val, got:', identity[ i ] );
       dom.attr( attrStrSplitted[ 0 ], attrStrSplitted[ 1 ] );
       i += 1;
     }
