@@ -81,7 +81,7 @@ function uploadFiles( files,options )
   var options = options || {};
   var files = options.files = files || options.files;
   if( !( files instanceof FileList ) )
-  files = _.arrayAs( files );
+  files = _.array.as( files );
 
   _.assert( _.strIs( options.url ) );
 

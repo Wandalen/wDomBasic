@@ -1738,7 +1738,7 @@ function on( targetDom, eventName, eventHandler )
 
   _.assert( _.strDefined( eventName ) );
 
-  namespaces = _.arrayAs( namespaces );
+  namespaces = _.array.as( namespaces );
   if( !namespaces.length )
   namespaces.push( null );
 
@@ -1817,7 +1817,7 @@ function off( targetDom, eventName, eventHandler )
   if( !targetDom._events[ eventName ])
   return;
 
-  namespaces = _.arrayAs( namespaces );
+  namespaces = _.array.as( namespaces );
 
   if( !namespaces.length )
   namespaces.push( null );
@@ -2332,7 +2332,7 @@ function eventFire( o )
   if( o.informingDescandants )
   {
     let descandants = _.dom.find( o.targetDom, '*' );
-    descandants = _.arrayAs( descandants );
+    descandants = _.array.as( descandants );
     descandants.forEach( ( dom ) => dom.dispatchEvent( event ) )
   }
   else
@@ -2347,7 +2347,7 @@ function eventFire( o )
   // else
   // {
   //   let descandants = _.dom.find( o.targetDom, '*' );
-  //   descandants = _.arrayAs( descandants );
+  //   descandants = _.array.as( descandants );
   //   descandants.forEach( ( dom ) => dom.dispatchEvent( event ) )
   // }
 
