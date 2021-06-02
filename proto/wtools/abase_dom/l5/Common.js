@@ -3421,7 +3421,7 @@ let Extension =
   uiInitSimple,
 
   uiShow,
-  uiIsShowed
+  uiIsShowed,
 
   _domBasel5Loaded : true
 
