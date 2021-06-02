@@ -12,10 +12,10 @@ _.dom = _.dom || Object.create( null );
 // svg
 // --
 
-function svgAdd( dst,src )
+function svgAdd( dst, src )
 {
 
-  var result = _.svgDom( 'g',{
+  var result = _.svgDom( 'g', {
   });
 
   if( dst ) $( dst ).append( result );
@@ -37,39 +37,39 @@ function svgAdd( dst,src )
     {
       viewBox = _.array.from( viewBox );
       var transform
-        = ' translate( ' + [-viewBox[0],-viewBox[1]].join(' ') + ' )'
-        + ' scale( ' + [parseFloat( width )/viewBox[2],parseFloat( height )/viewBox[3]].join(' ') + ' )';
-      result.attr( 'transform',transform );
+        = ' translate( ' + [-viewBox[0], -viewBox[1]].join(' ') + ' )'
+        + ' scale( ' + [parseFloat( width )/viewBox[2], parseFloat( height )/viewBox[3]].join(' ') + ' )';
+      result.attr( 'transform', transform );
 
       var clipId = _.dateGetId( 'clip' );
-      var clip = _.svgDom( 'clipPath',{
+      var clip = _.svgDom( 'clipPath', {
         'id' : clipId
       })
-      _.svgDom( 'rect',{
+      _.svgDom( 'rect', {
         'x' : viewBox[0],
         'y' : viewBox[1],
         'width' : viewBox[2],
         'height' : viewBox[3]
       }).appendTo( clip );
-      result.attr( 'clip-path','url( #' + clipId + ' )' );
+      result.attr( 'clip-path', 'url( #' + clipId + ' )' );
       if( dst ) dst.prepend( clip );
-      else result = [result,clip];
+      else result = [result, clip];
     }
     else
     {
       var clipId = _.dateGetId( 'clip' );
-      var clip = _.svgDom( 'clipPath',{
+      var clip = _.svgDom( 'clipPath', {
         'id' : clipId
       });
-      _.svgDom( 'rect',{
+      _.svgDom( 'rect', {
         'x' : 0,
         'y' : 0,
         'width' : width,
         'height' : height
       }).appendTo( clip );
-      result.attr( 'clip-path','url( #' + clipId + ' )' );
+      result.attr( 'clip-path', 'url( #' + clipId + ' )' );
       if( dst ) dst.prepend( clip );
-      else result = [result,clip];
+      else result = [result, clip];
     }
   }
   return result;
@@ -78,7 +78,7 @@ function svgAdd( dst,src )
 
 //
 
-function svgDom( tag,attrs )
+function svgDom( tag, attrs )
 {
 
   //var xml = '<' + tag + '>'
@@ -101,17 +101,17 @@ function svgDom( tag,attrs )
 function svgRoot( attrs )
 {
 
-  var dom = svgDom( 'svg',attrs )
+  var dom = svgDom( 'svg', attrs )
 
-  dom.attr( 'version','1.1' );
-  //dom.attr( 'xmlns','http ://www.w3.org/2000/svg' );
-  //dom.attr( 'xmlns :xlink','http ://www.w3.org/1999/xlink' );
+  dom.attr( 'version', '1.1' );
+  //dom.attr( 'xmlns', 'http ://www.w3.org/2000/svg' );
+  //dom.attr( 'xmlns :xlink', 'http ://www.w3.org/1999/xlink' );
 
   dom[0].setAttributeNS( 'http ://www.w3.org/2000/xmlns/', 'xmlns', 'http ://www.w3.org/2000/svg' );
   dom[0].setAttributeNS( 'http ://www.w3.org/2000/xmlns/', 'xmlns :xlink', 'http ://www.w3.org/1999/xlink' );
-  //dom[0].setAttribute( 'xmlns :xlink','http ://www.w3.org/1999/xlink' );
+  //dom[0].setAttribute( 'xmlns :xlink', 'http ://www.w3.org/1999/xlink' );
 
-  //dom.setAttributeNS( 'http ://www.w3.org/1999/xlink','xmlns :xlink' );
+  //dom.setAttributeNS( 'http ://www.w3.org/1999/xlink', 'xmlns :xlink' );
   //dom = document.createElementNS('http ://www.w3.org/2000/svg', tag );
 
   return dom;
@@ -146,13 +146,13 @@ function svgFromPolygon( polygon, o )
   if( o.precision === undefined ) o.precision = 5;
   if( o.rootless === undefined ) o.rootless = 0;
   if( o.scale === undefined ) o.scale = 1;
-  if( _.numberIs( o.scale ) ) o.scale = [ o.scale,o.scale ];
+  if( _.numberIs( o.scale ) ) o.scale = [ o.scale, o.scale ];
 
   var path = result = _.svgDom( 'path' );
 
   var d = '';
 
-  for( var p = 0,pl = polygon.length / 2; p < pl ; p++ )
+  for( var p = 0, pl = polygon.length / 2; p < pl ; p++ )
   {
     d += polygon[ 2*p+0 ].toFixed( o.precision ) * o.scale[ 0 ];
     d += ',';
@@ -1128,57 +1128,57 @@ const Extension =
 
   // svg
 
-  svgAdd : svgAdd,
-  svgDom : svgDom,
-  svgRoot : svgRoot,
-  svgStringWithDom : svgStringWithDom,
-  svgFromPolygon : svgFromPolygon,
+  svgAdd,
+  svgDom,
+  svgRoot,
+  svgStringWithDom,
+  svgFromPolygon,
 
 
   // canvas
 
-  canvasIs : canvasIs,
-  canvasMake : canvasMake,
-  canvasResize : canvasResize,
-  canvasDelete : canvasDelete,
-  canvasAlign : canvasAlign,
+  canvasIs,
+  canvasMake,
+  canvasResize,
+  canvasDelete,
+  canvasAlign,
 
-  canvasFromDom : canvasFromDom,
-  canvasFromDataurl : canvasFromDataurl,
-  canvasFromImage : canvasFromImage,
-  canvasFromImageData : canvasFromImageData,
-  canvasFrom : canvasFrom,
+  canvasFromDom,
+  canvasFromDataurl,
+  canvasFromImage,
+  canvasFromImageData,
+  canvasFrom,
 
-  canvasNormalMapMake : canvasNormalMapMake,
-  canvasDataMake : canvasDataMake,
+  canvasNormalMapMake,
+  canvasDataMake,
 
-  canvasToDurl : canvasToDurl,
+  canvasToDurl,
 
 
   // drawing
 
-  canvasDrawRoundRect : canvasDrawRoundRect,
-  canvasDrawText : canvasDrawText,
+  canvasDrawRoundRect,
+  canvasDrawText,
 
 
   // image
 
-  imageIs : imageIs,
-  imageFromCanvas : imageFromCanvas,
-  imageClampToSize : imageClampToSize,
-  imageGetWithDom : imageGetWithDom,
-  imageReadFromFile : imageReadFromFile,
+  imageIs,
+  imageFromCanvas,
+  imageClampToSize,
+  imageGetWithDom,
+  imageReadFromFile,
   imageDataFromFile,
 
-  imageSize : imageSize,
+  imageSize,
 
   imageCompare,
 
 
   // picture
 
-  pictureShow : pictureShow,
-  pictureSave : pictureSave,
+  pictureShow,
+  pictureSave,
 
 }
 
