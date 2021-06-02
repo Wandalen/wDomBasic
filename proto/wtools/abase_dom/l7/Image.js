@@ -1023,7 +1023,7 @@ function imageSize( image )
 function imageCompare( o )
 {
   _.assert( arguments.length === 1 );
-  _.routineOptions( imageCompare, o );
+  _.routine.options_( imageCompare, o );
 
   if( o.format === null )
   o.format = [ 8, 8, 8, 8 ];
