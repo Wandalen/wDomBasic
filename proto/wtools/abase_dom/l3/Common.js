@@ -1565,17 +1565,17 @@ function eventClientPosition( o )
   _.assert( !o.flip || _.arrayIs( o.flip ) );
   _.map.assertHasOnly( o, eventClientPosition.defaults );
 
-  if( _.numberIs( event.clientX ) )
-  result = [ event.clientX, event.clientY ];
+  if( _.numberIs( event.pageX ) )
+  result = [ event.pageX, event.pageY ];
 
   if( event.originalEvent )
   event = event.originalEvent;
 
   if( event.targetTouches && event.targetTouches.length )
-  result = [ event.targetTouches[ 0 ].clientX, event.targetTouches[ 0 ].clientY ];
+  result = [ event.targetTouches[ 0 ].pageX, event.targetTouches[ 0 ].pageY ];
 
   if( event.changedTouches && event.changedTouches.length )
-  result = [ event.changedTouches[ 0 ].clientX, event.changedTouches[ 0 ].clientY ];
+  result = [ event.changedTouches[ 0 ].pageX, event.changedTouches[ 0 ].pageY ];
 
   _.assert( !relative || _.dom.is( relative ), 'eventClientPosition :', 'relative must be jQuery object if defined' );
 
