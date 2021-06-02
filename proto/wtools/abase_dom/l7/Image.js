@@ -1,4 +1,5 @@
-(function _Image_js_(){
+( function _Image_js_()
+{
 
 'use strict';
 
@@ -20,7 +21,7 @@ function svgAdd( dst, src )
 
   if( dst ) $( dst ).append( result );
   var src = $( src );
-  var src = $( src[0].childNodes[src[0].childNodes.length-1] );
+  var src = $( src[ 0 ].childNodes[ src[ 0 ].childNodes.length-1 ] );
 
 //<clipPath id='clipUnion'>
 //    <use x='0' y='0' width='200' height='200' xlink :href='#clip1Shape' />
@@ -36,9 +37,9 @@ function svgAdd( dst, src )
     if( viewBox )
     {
       viewBox = _.array.from( viewBox );
-      var transform
-        = ' translate( ' + [-viewBox[0], -viewBox[1]].join(' ') + ' )'
-        + ' scale( ' + [parseFloat( width )/viewBox[2], parseFloat( height )/viewBox[3]].join(' ') + ' )';
+      var transform =
+      ' translate( ' + [ -viewBox[ 0 ], -viewBox[ 1 ] ].join(' ') + ' )'
+      + ' scale( ' + [ parseFloat( width )/viewBox[ 2 ], parseFloat( height )/viewBox[ 3 ] ].join(' ') + ' )';
       result.attr( 'transform', transform );
 
       var clipId = _.dateGetId( 'clip' );
@@ -46,30 +47,18 @@ function svgAdd( dst, src )
         'id' : clipId
       })
       _.svgDom( 'rect', {
-        'x' : viewBox[0],
-        'y' : viewBox[1],
-        'width' : viewBox[2],
-        'height' : viewBox[3]
+        'x' : viewBox[ 0 ],
+        'y' : viewBox[ 1 ],
+        'width' : viewBox[ 2 ],
+        'height' : viewBox[ 3 ]
       }).appendTo( clip );
       result.attr( 'clip-path', 'url( #' + clipId + ' )' );
       if( dst ) dst.prepend( clip );
-      else result = [result, clip];
+      else result = [ result, clip ];
     }
     else
     {
       var clipId = _.dateGetId( 'clip' );
-      var clip = _.svgDom( 'clipPath', {
-        'id' : clipId
-      });
-      _.svgDom( 'rect', {
-        'x' : 0,
-        'y' : 0,
-        'width' : width,
-        'height' : height
-      }).appendTo( clip );
-      result.attr( 'clip-path', 'url( #' + clipId + ' )' );
-      if( dst ) dst.prepend( clip );
-      else result = [result, clip];
     }
   }
   return result;
@@ -89,8 +78,8 @@ function svgDom( tag, attrs )
   var dom = document.createElementNS( 'http ://www.w3.org/2000/svg', tag );
 
   for( var a in attrs )
-  if( attrs[a] !== '' && attrs[a] !== undefined )
-  dom.setAttribute( a, attrs[a] );
+  if( attrs[ a ] !== '' && attrs[ a ] !== undefined )
+  dom.setAttribute( a, attrs[ a ] );
   dom = $( dom );
   return dom;
 
@@ -107,9 +96,9 @@ function svgRoot( attrs )
   //dom.attr( 'xmlns', 'http ://www.w3.org/2000/svg' );
   //dom.attr( 'xmlns :xlink', 'http ://www.w3.org/1999/xlink' );
 
-  dom[0].setAttributeNS( 'http ://www.w3.org/2000/xmlns/', 'xmlns', 'http ://www.w3.org/2000/svg' );
-  dom[0].setAttributeNS( 'http ://www.w3.org/2000/xmlns/', 'xmlns :xlink', 'http ://www.w3.org/1999/xlink' );
-  //dom[0].setAttribute( 'xmlns :xlink', 'http ://www.w3.org/1999/xlink' );
+  dom[ 0 ].setAttributeNS( 'http ://www.w3.org/2000/xmlns/', 'xmlns', 'http ://www.w3.org/2000/svg' );
+  dom[ 0 ].setAttributeNS( 'http ://www.w3.org/2000/xmlns/', 'xmlns :xlink', 'http ://www.w3.org/1999/xlink' );
+  //dom[ 0 ].setAttribute( 'xmlns :xlink', 'http ://www.w3.org/1999/xlink' );
 
   //dom.setAttributeNS( 'http ://www.w3.org/1999/xlink', 'xmlns :xlink' );
   //dom = document.createElementNS('http ://www.w3.org/2000/svg', tag );
@@ -126,12 +115,12 @@ function svgStringWithDom( svg )
 
   if( !_xmlSerialiser ) _xmlSerialiser = new XMLSerializer();
 
-  if( _.jqueryIs( svg ) || _.arrayIs( svg ) ) svg = svg[0];
+  if( _.jqueryIs( svg ) || _.arrayIs( svg ) ) svg = svg[ 0 ];
   var data = _xmlSerialiser.serializeToString( svg );
-  var data
-    = '<?xml version="1.0" encoding="utf-8"?>\n'
-    + '<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http ://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>\n'
-    + data;
+  var data =
+  '<?xml version="1.0" encoding="utf-8"?>\n'
+  + '<!DOCTYPE svg PUBLIC \'-//W3C//DTD SVG 1.1//EN\' \'http ://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\'>\n'
+  + data;
 
   return data;
 }
@@ -161,7 +150,7 @@ function svgFromPolygon( polygon, o )
     d += 'L';
   }
 
-  path.attr( 'd','M'+d+'Z' );
+  path.attr( 'd', 'M'+d+'Z' );
 
   var svgOptions =
   {
@@ -172,16 +161,19 @@ function svgFromPolygon( polygon, o )
     //'fill' : _.color.colorToRgbHtml( color ) ),
   };
 
-  if( o.fill !== undefined ) svgOptions[ 'fill' ] = _.color.colorToRgbHtml( o.fill );
-  if( o.stroke !== undefined  ) svgOptions[ 'stroke' ] = _.color.colorToRgbHtml( o.stroke );
-  if( o[ 'stroke-width' ] !== undefined ) svgOptions[ 'stroke-width' ] = o[ 'stroke-width' ];
+  if( o.fill !== undefined )
+  svgOptions[ 'fill' ] = _.color.colorToRgbHtml( o.fill );
+  if( o.stroke !== undefined )
+  svgOptions[ 'stroke' ] = _.color.colorToRgbHtml( o.stroke );
+  if( o[ 'stroke-width' ] !== undefined )
+  svgOptions[ 'stroke-width' ] = o[ 'stroke-width' ];
 
-  if( !o.rootless )
+  if( o.rootless )
   {
-
-    //var minMax = _.avector.minmaxVector( polygon,2 );
-    //var minMax = _.avector.distributionRangeSummary( polygon ); // xxx
-
+    path.attr( svgOptions );
+  }
+  else
+  {
     var wspace = _.Matrix({ buffer : polygon, dimensions : 2 });
     var min = wspace.reduceToMin();
     var max = wspace.reduceToMax();
@@ -194,10 +186,28 @@ function svgFromPolygon( polygon, o )
     path.appendTo( group );
     result = svg;
   }
-  else
-  {
-    path.attr( svgOptions );
-  }
+  // if( !o.rootless )
+  // {
+  //
+  //   //var minMax = _.avector.minmaxVector( polygon, 2 );
+  //   //var minMax = _.avector.distributionRangeSummary( polygon ); // xxx
+  //
+  //   var wspace = _.Matrix({ buffer : polygon, dimensions : 2 });
+  //   var min = wspace.reduceToMin();
+  //   var max = wspace.reduceToMax();
+  //
+  //   svgOptions[ 'width' ] = max.eGet( 0 ) * o.scale[ 0 ];
+  //   svgOptions[ 'height' ] = max.eGet( 1 ) * o.scale[ 1 ];
+  //
+  //   var svg = _.svgRoot( svgOptions );
+  //   var group = _.svgDom( 'g' ).appendTo( svg );
+  //   path.appendTo( group );
+  //   result = svg;
+  // }
+  // else
+  // {
+  //   path.attr( svgOptions );
+  // }
 
   return result;
 }
@@ -220,10 +230,10 @@ function canvasMake( o )
 {
   var o = o || Object.create( null );
 
-  _.routine.options_( canvasMake,o );
+  _.routine.options_( canvasMake, o );
 
   if( _.numberIs( o.size ) )
-  o.size = [ o.size,o.size ];
+  o.size = [ o.size, o.size ];
 
   _.assert( _.arrayIs( o.size ) );
 
@@ -234,9 +244,8 @@ function canvasMake( o )
   var context = canvas.context = canvas.getContext( '2d' );
   if( o.color )
   {
-    //debugger;
     context.fillStyle = _.color.colorToRgbaHtml( o.color );
-    context.fillRect( 0,0,canvas.width,canvas.height );
+    context.fillRect( 0, 0, canvas.width, canvas.height );
   }
 
   return canvas;
@@ -244,13 +253,13 @@ function canvasMake( o )
 
 canvasMake.defaults =
 {
-  size : [ 1,1 ],
-  color : { r : 1 , g : 1 , b : 1, a : 0 },
+  size : [ 1, 1 ],
+  color : { r : 1, g : 1, b : 1, a : 0 },
 }
 
 //
 
-function canvasResize( canvas,size )
+function canvasResize( canvas, size )
 {
   var context = canvas.context = canvas.context || canvas.getContext( '2d' );
   var data = context.getImageData( 0, 0, canvas.width - 1, canvas.height - 1 );
@@ -268,14 +277,17 @@ function canvasDelete( canvas )
 
   throw _.err( 'not tested' );
 
-  if( !canvas ) return;
-  if( canvas.context ) delete canvas.context;
+  if( !canvas )
+  return;
+  if( canvas.context )
+  delete canvas.context;
+
   if( canvas.image )
   {
     canvas.image.onload = null;
     delete canvas.image;
   }
-  window.URL.revokeObjectURL( canvas['url'] );
+  window.URL.revokeObjectURL( canvas[ 'url' ] );
 }
 
 //
@@ -285,36 +297,35 @@ function canvasAlign( src )
 
   throw _.err( 'not tested' );
 
-  var srcSize = [ src.width,src.height ];
+  var srcSize = [ src.width, src.height ];
 
   _.avector.ceilToPowerOfTwo( srcSize );
 
-  if( dstSize[ 0 ] == srcSize[ 0 ] && dstSize[ 1 ] == srcSize[ 1 ] )
+  // if( dstSize[ 0 ] == srcSize[ 0 ] && dstSize[ 1 ] == srcSize[ 1 ] )
+  if( dstSize[ 0 ] === srcSize[ 0 ] && dstSize[ 1 ] === srcSize[ 1 ] )
   return src;
 
   var dst = document.createElement( 'canvas' );
   //dst = src;
-  dst.width = dstSize[0];
-  dst.height = dstSize[1];
+  dst.width = dstSize[ 0 ];
+  dst.height = dstSize[ 1 ];
 
   var context = dst.getContext( '2d' );
-  context.drawImage( src, 0, 0, dstSize[0], dstSize[1] );
+  context.drawImage( src, 0, 0, dstSize[ 0 ], dstSize[ 1 ] );
 
   return dst;
 };
 
 //
 
-function canvasFromDom( dom,o )
+function canvasFromDom( dom, o )
 {
-  debugger;
-
   if( !_.domableIs( o ) )
   o = { src : o }
 
-  o = _.routine.options_( canvasFromDataurl,o );
+  o = _.routine.options_( canvasFromDataurl, o );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.domIs( o.src ),'canvasFromDom :','Expects dom element' );
+  _.assert( _.domIs( o.src ), 'canvasFromDom :', 'Expects dom element' );
 
   var durl = dataurlFromSvgDom( o.src );
 
@@ -342,7 +353,7 @@ function canvasFromDataurl( o )
   // var o = o || Object.create( null );
   // o.dataUrl = dataUrl || o.dataUrl;
 
-  o = _.routine.options_( canvasFromDataurl,o );
+  o = _.routine.options_( canvasFromDataurl, o );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.dom.dataurlIs( o.src ) );
@@ -388,7 +399,7 @@ function canvasFromImage( o )
   if( o instanceof HTMLImageElement )
   o = { src : o };
 
-  o = _.routine.options_( canvasFromImage,o );
+  o = _.routine.options_( canvasFromImage, o );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
@@ -399,24 +410,24 @@ function canvasFromImage( o )
   var context = o.canvas.context = o.canvas.context || o.canvas.getContext( '2d' );
 
   if( o.size === null )
-  o.size = [ o.src.width,o.src.height ]
-  o.scale = _.numbersFromNumber( o.scale,2 );
+  o.size = [ o.src.width, o.src.height ]
+  o.scale = _.numbersFromNumber( o.scale, 2 );
 
   o.canvas.width = Math.abs( o.size[ 0 ] * o.scale[ 0 ] );
   o.canvas.height = Math.abs( o.size[ 1 ] * o.scale[ 1 ] );
 
   context.save();
   context.fillStyle = 'transparent';
-  context.fillRect( 0,0,o.canvas.width,o.canvas.height );
-  context.scale( o.scale[0],o.scale[1] );
+  context.fillRect( 0, 0, o.canvas.width, o.canvas.height );
+  context.scale( o.scale[ 0 ], o.scale[ 1 ] );
   if( o.src.width > 0 && o.src.height > 0 )
   {
     var pos =
     [
-      o.scale[ 0 ] < 0 ? o.src.width * o.scale[0] : 0,
-      o.scale[ 1 ] < 0 ? o.src.height * o.scale[1] : 0,
+      o.scale[ 0 ] < 0 ? o.src.width * o.scale[ 0 ] : 0,
+      o.scale[ 1 ] < 0 ? o.src.height * o.scale[ 1 ] : 0,
     ];
-    context.drawImage( o.src,pos[ 0 ],pos[ 1 ] );
+    context.drawImage( o.src, pos[ 0 ], pos[ 1 ] );
   }
   context.restore();
 
@@ -439,7 +450,7 @@ function canvasFromImageData( o )
   if( o instanceof ImageData )
   o = { src : o };
 
-  o = _.routine.options_( canvasFromImageData,o );
+  o = _.routine.options_( canvasFromImageData, o );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( o.src instanceof ImageData );
@@ -470,17 +481,15 @@ function canvasFrom( o )
   if( !_.mapIs( o ) )
   o = { src : o }
 
-  _.routine.options_( canvasFrom,o );
+  _.routine.options_( canvasFrom, o );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.strIs( o.src ) )
   {
-    debugger;
     _.assert( _.dataurlIs( o.src ) );
   }
   else if( o.src instanceof HTMLImageElement )
   {
-    debugger;
     o.src = _.canvasFromImage( o.src );
   }
   else if( o.src instanceof ImageData )
@@ -489,10 +498,9 @@ function canvasFrom( o )
   }
   else if( _.domIs( o.src ) )
   {
-    debugger;
     o.src = _.dataurlFromSvgDom( o.src );
   }
-  else throw _.err( 'canvasFrom :','unknown source',o.src );
+  else throw _.err( 'canvasFrom :', 'unknown source', o.src );
 
   /* */
 
@@ -553,14 +561,14 @@ function canvasNormalMapMake( image, depth )
 
       var points = [];
       var origin = [ 0, 0, data[ ( y * width + x ) * 4 ] / 255 * depth ];
-      points.push( [ - 1, 0, data[ ( y * width + lx ) * 4 ] / 255 * depth ] );
-      points.push( [ - 1, - 1, data[ ( ly * width + lx ) * 4 ] / 255 * depth ] );
-      points.push( [ 0, - 1, data[ ( ly * width + x ) * 4 ] / 255 * depth ] );
-      points.push( [  1, - 1, data[ ( ly * width + ux ) * 4 ] / 255 * depth ] );
+      points.push( [ -1, 0, data[ ( y * width + lx ) * 4 ] / 255 * depth ] );
+      points.push( [ -1, -1, data[ ( ly * width + lx ) * 4 ] / 255 * depth ] );
+      points.push( [ 0, -1, data[ ( ly * width + x ) * 4 ] / 255 * depth ] );
+      points.push( [ 1, -1, data[ ( ly * width + ux ) * 4 ] / 255 * depth ] );
       points.push( [ 1, 0, data[ ( y * width + ux ) * 4 ] / 255 * depth ] );
       points.push( [ 1, 1, data[ ( uy * width + ux ) * 4 ] / 255 * depth ] );
       points.push( [ 0, 1, data[ ( uy * width + x ) * 4 ] / 255 * depth ] );
-      points.push( [ - 1, 1, data[ ( uy * width + lx ) * 4 ] / 255 * depth ] );
+      points.push( [ -1, 1, data[ ( uy * width + lx ) * 4 ] / 255 * depth ] );
 
       var normals = [];
 
@@ -612,17 +620,15 @@ function canvasDataMake( size )
 {
 
   if( _.numberIs( size ) )
-  size = [ size,size ];
+  size = [ size, size ];
 
   var canvas = _.canvasMake
   ({
-    size : size,
+    size,
     color : 'rgba( 0,0,0,0 )',
   });
 
-  debugger;
-
-  canvas.data = canvas.context.getImageData( 0,0,size[ 0 ],size[ 1 ] );
+  canvas.data = canvas.context.getImageData( 0, 0, size[ 0 ], size[ 1 ] );
 
   return canvas;
 }
@@ -636,20 +642,20 @@ function canvasToDurl( o )
   if( !_.mapIs( o ) )
   o = { canvas : o }
 
-  _.routine.options_( canvasToDurl,o );
+  _.routine.options_( canvasToDurl, o );
 
   function onBlobReady( blob )
   {
     o.durl = URL.createObjectURL( blob );
 
     // if( o.saving )
-    // _.uri.save( o.durl,'snapshot.' + o.type );
+    // _.uri.save( o.durl, 'snapshot.' + o.type );
 
     con.take( o );
   }
 
 
-  o.canvas.toBlob( onBlobReady,'image/' + o.type, 1 );
+  o.canvas.toBlob( onBlobReady, 'image/' + o.type, 1 );
 
   return con;
 }
@@ -658,14 +664,21 @@ canvasToDurl.defaults =
 {
   type : 'jpg',
   canvas : null,
-}
+};
 
 // --
 // drawing
 // --
 
-function canvasDrawRoundRect( ctx, x, y, w, h, r )
+function canvasDrawRoundRect( /* ctx, x, y, w, h, r */ )
 {
+  let ctx = arguments[ 0 ];
+  let x = arguments[ 1 ];
+  let y = arguments[ 2 ];
+  let w= arguments[ 3 ];
+  let h = arguments[ 4 ];
+  let r = arguments[ 5 ];
+
   ctx.beginPath();
   ctx.moveTo( x + r, y );
   ctx.lineTo( x + w - r, y );
@@ -701,9 +714,9 @@ function canvasDrawText( o )
   if( _.strIs( o ) )
   o = { text : o }
   if( arguments[ 1 ] )
-  _.props.extend( o,arguments[ 1 ] );
+  _.props.extend( o, arguments[ 1 ] );
 
-  _.routine.options_( canvasDrawText,o );
+  _.routine.options_( canvasDrawText, o );
 
   o.fontSize = Number( o.fontSize );
   o.borderThickness = Number( o.borderThickness );
@@ -799,8 +812,6 @@ function imageFromCanvas( canvas )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( canvas instanceof HTMLCanvasElement );
 
-  debugger
-
   throw _.err( 'not implemented' );
 
 }
@@ -835,15 +846,15 @@ function imageClampToSize( image, maxSize )
 
 //
 
-function imageGetWithDom( dom,o )
+function imageGetWithDom( dom, o )
 {
 
   if( !_.domIs( dom ) ) dom = dom[ 0 ];
-  _.assert( _.domIs( dom ),'canvasFromDom :','Expects dom element' );
+  _.assert( _.domIs( dom ), 'canvasFromDom :', 'Expects dom element' );
 
   var durl = _.dataurlFromSvgDom( dom );
 
-  return _.imageReadFromFile( durl,o );
+  return _.imageReadFromFile( durl, o );
 }
 
 //
@@ -856,7 +867,7 @@ function imageReadFromFile( o )
   o = { filePath : o };
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routine.options_( imageReadFromFile,o );
+  _.routine.options_( imageReadFromFile, o );
   _.assert( _.strDefined( o.filePath ) );
 
   if( !o.onReady )
@@ -864,15 +875,13 @@ function imageReadFromFile( o )
 
   if( _.arrayIs( o.filePath ) || _.mapIs( o.filePath ) )
   {
-
-    debugger;
     var result = _.entity.cloneShallow( o.filePath );
 
     o.onReady.give( _.entity.lengthOf( o.filePath ) );
 
-    _.each( o.filePath,function( e,k )
+    _.each( o.filePath, function( e, k )
     {
-      var optionsForRead = _.props.extend( null,o );
+      var optionsForRead = _.props.extend( null, o );
       optionsForRead.filePath = e;
       optionsForRead.onReady = o.onReady;
       result[ k ] = imageReadFromFile( optionsForRead ).image;
@@ -897,7 +906,6 @@ function imageReadFromFile( o )
     _imageReadFromFileProcessing.push( o )
     if( _imageReadFromFileProcessing.length > 1 )
     {
-      debugger;
       console.info( 'Not tested' );
       return;
     }
@@ -914,16 +922,15 @@ function imageReadFromFile( o )
     o.onReady.take( undefined, image );
 
     if( o.serializing )
-    _imageReadFromFileProcessing.splice( 0,1 );
+    _imageReadFromFileProcessing.splice( 0, 1 );
     var l = _imageReadFromFileProcessing.length;
     if( l > 0 )
     {
-      debugger;
       throw _.err( 'not tested' );
       var execute = _imageReadFromFileProcessing[ l-1 ];
-      _imageReadFromFileProcessing.splice( 0,l-1 );
+      _imageReadFromFileProcessing.splice( 0, l-1 );
       o.serializing = false;
-      _.imageReadFromFile( o.filePath,o );
+      _.imageReadFromFile( o.filePath, o );
     }
 
   }
@@ -932,7 +939,7 @@ function imageReadFromFile( o )
 
   function onError( err )
   {
-    err = _.errLogOnce( 'imageReadFromFile : error loading :',o.filePath );
+    err = _.errLogOnce( 'imageReadFromFile : error loading :', o.filePath );
 
     if( o.onEnd )
     o.onEnd( err, undefined );
@@ -943,13 +950,12 @@ function imageReadFromFile( o )
 
   /* */
 
-  //image.setAttribute( 'src','' );
-  //image.setAttribute( 'src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY/j//z8ABf4C/qc1gYQAAAAASUVORK5CYII=' );
-  //debugger;
+  //image.setAttribute( 'src', '' );
+  //image.setAttribute( 'src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY/j//z8ABf4C/qc1gYQAAAAASUVORK5CYII=' );
 
   image.onload = onLoad;
   image.onerror = onError;
-  _.time.out( 0,function()
+  _.time.out( 0, function()
   {
     image.src = o.filePath;
   });
@@ -1032,7 +1038,7 @@ function imageCompare( o )
   _.assert( o.format.length > 0, '{o.format} should not be empty' );
   _.assert( _.bufferTypedIs( o.src1 ) );
   _.assert( _.bufferTypedIs( o.src2 ) );
-  _.assert( o.src1.constructor === o.src2.constructor,'{o.src1} and {o.src2} should have same type' );
+  _.assert( o.src1.constructor === o.src2.constructor, '{o.src1} and {o.src2} should have same type' );
   _.assert( o.src1.length === o.src2.length, '{o.src1} and {o.src2} should have same length' );
 
   let channels = o.format.length;
@@ -1108,10 +1114,10 @@ function pictureSave( picture )
 
   var con = _.canvasToDurl( picture );
 
-  con.ifNoErrorThen( function( e ) {
-
+  con.ifNoErrorThen( ( e ) =>
+  {
     _.assert( e.durl );
-    _.uri.save( e.durl,'picture.' + e.type );
+    _.uri.save( e.durl, 'picture.' + e.type );
 
     return e;
   });
