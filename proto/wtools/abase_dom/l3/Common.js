@@ -936,7 +936,7 @@ function ownIdentity( dom, identity )
     else if( identity[ i-1 ] === '[' && identity[ i+1 ] === ']' )
     {
       let attrStrSplitted = _.strSplitNonPreserving({ src : identity[ i ], delimeter : '=' });
-      _.assert( attrStrSplitted.length === 2, 'ownIdentity expects attribute indentity of format: attr=val, got:', identity[ i ] );
+      _.assert( attrStrSplitted.length === 2, 'ownIdentity expects attribute identity of format: attr=val, got:', identity[ i ] );
       dom.attr( attrStrSplitted[ 0 ], attrStrSplitted[ 1 ] );
       i += 1;
     }
@@ -1176,7 +1176,7 @@ function css( /* targetDom, property, value, priority */ )
 
   if( arguments.length === 2 )
   {
-    if( _.objectIs( property ) )
+    if( _.object.isBasic( property ) )
     {
       for( let key in property )
       targetDom.style.setProperty( key, property[ key ] )
@@ -1374,8 +1374,8 @@ function load( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   // _.assert( _.strIs( o.targetClass ) || o.replacing );
   _.assert( _.strDefined( o.url ), 'Expects {-o.url-}' );
-  _.assert( o.parentDom.length, 'Expects { o.parentDom }' );
-  _.assert( targetDom.length, 'Expects { targetDom }' );
+  _.assert( o.parentDom.length > 0, 'Expects { o.parentDom }' );
+  _.assert( targetDom.length > 0, 'Expects { targetDom }' );
 
   /* */
 
@@ -1398,7 +1398,7 @@ function load( o )
     if( status === 'error' )
     {
       var reason;
-      if( _.objectIs( xhr ) )
+      if( _.object.isBasic( xhr ) )
       reason = xhr.status + ' : ' + xhr.statusText;
       else
       reason = responseData.status + ' : ' + responseData.statusText;
@@ -1419,7 +1419,7 @@ function load( o )
       if( o.after || o.before )
       {
         targetDom = targetDom.find( o.after || o.before );
-        _.assert( targetDom.length, o.after ? 'after' : 'before', 'DOM was not found', o.after || o.before );
+        _.assert( targetDom.length > 0, o.after ? 'after' : 'before', 'DOM was not found', o.after || o.before );
         if( o.after )
         targetDom = targetDom.after( responseData );
         else
@@ -1738,7 +1738,7 @@ function on( targetDom, eventName, eventHandler )
 
   _.assert( _.strDefined( eventName ) );
 
-  namespaces = _.arrayAs( namespaces );
+  namespaces = _.array.as( namespaces );
   if( !namespaces.length )
   namespaces.push( null );
 
@@ -1817,7 +1817,7 @@ function off( targetDom, eventName, eventHandler )
   if( !targetDom._events[ eventName ])
   return;
 
-  namespaces = _.arrayAs( namespaces );
+  namespaces = _.array.as( namespaces );
 
   if( !namespaces.length )
   namespaces.push( null );
@@ -2143,7 +2143,7 @@ eventSpecialMake.defaults =
 function eventsObserver( o )
 {
 
-  if( !_.objectIs( o ) )
+  if( !_.object.isBasic( o ) )
   o = { targetDom : o };
 
   _.assert( _.dom.is( o.targetDom ) );
@@ -2332,7 +2332,7 @@ function eventFire( o )
   if( o.informingDescandants )
   {
     let descandants = _.dom.find( o.targetDom, '*' );
-    descandants = _.arrayAs( descandants );
+    descandants = _.array.as( descandants );
     descandants.forEach( ( dom ) => dom.dispatchEvent( event ) )
   }
   else
@@ -2347,7 +2347,7 @@ function eventFire( o )
   // else
   // {
   //   let descandants = _.dom.find( o.targetDom, '*' );
-  //   descandants = _.arrayAs( descandants );
+  //   descandants = _.array.as( descandants );
   //   descandants.forEach( ( dom ) => dom.dispatchEvent( event ) )
   // }
 
@@ -2385,12 +2385,7 @@ function eventFire2( targetDom, event )
 // prototype
 // --
 
-let Fields =
-{
-  _domBaselayer3Loaded : true
-}
-
-let Routines =
+let Extension =
 {
 
   // dom
@@ -2485,11 +2480,12 @@ let Routines =
   eventFire,
   eventFire2,
 
-  // on
+  // fields
+
+  _domBaselayer3Loaded : true
 
 };
 
-_.props.extend( Self, Fields );
-_.props.extend( Self, Routines );
+/* _.props.extend */Object.assign( _.dom, Extension );
 
 })();

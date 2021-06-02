@@ -1,7 +1,7 @@
 (function(){
 
 const _ = _global_.wTools;
-const Self = _.dom = _.dom || Object.create( null );
+_.dom = _.dom || Object.create( null );
 var $ = typeof jQuery !== 'undefined' ? jQuery : null;
 
 //
@@ -22,7 +22,7 @@ function loadDialog( options )
   options = { title : options };
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.objectIs( options ) );
+  _.assert( _.object.isBasic( options ) );
   _.map.assertHasOnly( options,optionsDefault );
   _.props.supplement( options,optionsDefault );
 
@@ -69,7 +69,7 @@ function loadDialog( options )
 function uploadFiles( files,options )
 {
 
-  if( _.objectIs( arguments[ 0 ] ) )
+  if( _.object.isBasic( arguments[ 0 ] ) )
   {
     options = arguments[ 0 ];
     files = options.files;
@@ -81,7 +81,7 @@ function uploadFiles( files,options )
   var options = options || {};
   var files = options.files = files || options.files;
   if( !( files instanceof FileList ) )
-  files = _.arrayAs( files );
+  files = _.array.as( files );
 
   _.assert( _.strIs( options.url ) );
 
@@ -221,7 +221,7 @@ function textSave( text,name )
 // proto
 // --
 
-const Routines =
+const Extension =
 {
 
   // load
@@ -236,6 +236,6 @@ const Routines =
 
 }
 
-_.props.extend( Self,Routines );
+/* _.props.extend */Object.assign( _.dom, Extension );
 
 })();

@@ -16,7 +16,7 @@
 
 const _global = _global_;
 const _ = _global.wTools;
-const Self = _.dom = _.dom || Object.create( null );
+_.dom = _.dom || Object.create( null );
 
 function Init()
 {
@@ -352,16 +352,7 @@ function closest( targetDom, src )
 // prototype
 // --
 
-let Fields =
-{
-  _domBaselayer1Loaded : true,
-
-  dom : Self,
-  single : Self,
-  s : null,
-}
-
-let Routines =
+let Extension =
 {
   Init,
 
@@ -392,13 +383,20 @@ let Routines =
   find,
   closest,
 
-  include
+  include,
+
+  // fields
+
+  _domBaselayer1Loaded : true,
+
+  dom : _.dom,
+  single : _.dom,
+  s : null,
 
 }
 
-_.props.extend( Self, Fields );
-_.props.extend( Self, Routines );
+/* _.props.extend */Object.assign( _.dom, Extension );
 
-Self.Init();
+_.dom.Init();
 
 })();
