@@ -1,10 +1,11 @@
-(function _Sound_js_() {
+( function _Sound_js_()
+{
 
 'use strict';
 
 const _ = _global_.wTools;
 _.dom.sound = _.dom.sound || Object.create( null );
-var $ = typeof jQuery !== 'undefined' ? jQuery : null;
+var $ = typeof jQuery === 'undefined' ? null : jQuery;
 
 // --
 // implementation
@@ -46,16 +47,16 @@ function playTry( o )
   }
   catch( err )
   {
-    console.warn( 'cant paly',o.url );
+    console.warn( 'cant paly', o.url );
   }
 
 }
 
 playTry.defaults =
 {
-}
+};
 
-playTry.defaults.__proto__ = play.defaults;
+// playTry.defaults.__proto__ = play.defaults; /* qqq : for Dmytro : investigate */
 
 // --
 // prototype
@@ -64,8 +65,8 @@ playTry.defaults.__proto__ = play.defaults;
 const Extension =
 {
 
-  play : play,
-  playTry : playTry,
+  play,
+  playTry,
 
   SoundsByUrl : {},
 

@@ -1,4 +1,5 @@
-(function _Dataurl_js_() {
+( function _Dataurl_js_()
+{
 
 'use strict';
 
@@ -11,8 +12,9 @@ _.dom = _.dom || Object.create( null );
 
 function dataurlIs( url )
 {
-  if( !_.strIs( url ) ) return false;
-  return url.substring( 0,5 ) == 'data:';
+  if( !_.strIs( url ) )
+  return false;
+  return url.substring( 0, 5 ) === 'data:';
 }
 
 //
@@ -20,7 +22,7 @@ function dataurlIs( url )
 function dataurlType( url )
 {
   throw _.err( 'not tested' );
-  result = url.substring( 5,url.indexOf( ';' ) );
+  result = url.substring( 5, url.indexOf( ';' ) );
   return result;
 }
 
@@ -29,8 +31,6 @@ function dataurlType( url )
 function dataurlFrom( picture )
 {
   var result;
-
-  debugger;
 
   if( _.strIs( picture ) )
   {
@@ -53,25 +53,25 @@ function dataurlFrom( picture )
   //   var canvas = _.canvasFromImage( picture );
   //   result = canvas.toDataURL( 'image/png' );
   // }
-  // else _.assert( 0,'unknown format of picture',picture );
+  // else _.assert( 0, 'unknown format of picture', picture );
 
   return result;
 }
 
 //
 
-function dataurlFrom2( src,o )
+function dataurlFrom2( src, o )
 {
 
   var o = o || Object.create( null );
   if( o.type === undefined ) o.type = 'image/png';
-  _.assert( o.onReady,'dataurlFrom2 :','Expects o.onReady' );
+  _.assert( o.onReady, 'dataurlFrom2 :', 'Expects o.onReady' );
 
   if( _.dataurlIs( src ) )
   {
     if( _.dataurlType( src ) === o.type )
     {
-      _.time.out( 1,o,o.onReady,[ src ] );
+      _.time.out( 1, o, o.onReady, [ src ] );
       return src;
     }
     src = src;
@@ -81,7 +81,7 @@ function dataurlFrom2( src,o )
     src = _.dataurlFromSvgString( src );
     if( o.type.indexOf( 'svg' ) !== -1 )
     {
-      _.time.out( 1,o,o.onReady,[ src ] );
+      _.time.out( 1, o, o.onReady, [ src ] );
       return src;
     }
   }
@@ -92,7 +92,7 @@ function dataurlFrom2( src,o )
     o.onReady( result );
   }
 
-  _.canvasFrom( src,{ type : o.type, onReady : onReady } );
+  _.canvasFrom( src, { type : o.type, onReady } );
 
 }
 
@@ -100,7 +100,6 @@ function dataurlFrom2( src,o )
 
 function dataurlFromSvgDom( svg )
 {
-  debugger;
   var data = _.dataurlFromSvgString( svgStringWithDom( svg ) );
   return data;
 }
@@ -109,21 +108,21 @@ function dataurlFromSvgDom( svg )
 
 function dataurlFromSvgString( svgString )
 {
-  debugger;
-  return _.dataurlFromString( svgString,'image/svg+xml' );
+  return _.dataurlFromString( svgString, 'image/svg+xml' );
 }
 
 // --
 // url data
 // --
 
-function dataurlParse( dataurl,type )
+function dataurlParse( dataurl, type )
 {
 
   var result = {};
   var parsed = /^data:image\/([^;]+);base64,(.*)$/.exec( dataurl );
 
-  if( !parsed ) return;
+  if( !parsed )
+  return;
 
   result.type = parsed[ 1 ];
   result.data = parsed[ 2 ];
@@ -132,30 +131,30 @@ function dataurlParse( dataurl,type )
 
 //
 
-function dataurlFromString( str,type )
+function dataurlFromString( str, type )
 {
 
   var base64 = _.base64FromUtf8( str );
-  return dataurlFromBase64( base64,type );
+  return dataurlFromBase64( base64, type );
 }
 
 //
 
-function dataurlFromBase64( base64,type )
+function dataurlFromBase64( base64, type )
 {
 
   if( !type ) type = 'image/png';
 
-  _.assert( type.indexOf( '/' ) !== -1,'dataurlFromBase64 :','wrong type, must has "/"' );
+  _.assert( type.indexOf( '/' ) !== -1, 'dataurlFromBase64 :', 'wrong type, must has "/"' );
 
   return 'data:' + type + ';base64,' + base64;
 }
 
 //
 
-function dataurlFromDom( dom,mimetype,show )
+function dataurlFromDom( dom, mimetype, show )
 {
-  var mimetype = mimetype || "image/png";
+  var mimetype = mimetype || 'image/png';
   var result = dom.toDataURL( mimetype );
   if( show ) dataurlShow( result );
   return result;
@@ -163,38 +162,42 @@ function dataurlFromDom( dom,mimetype,show )
 
 //
 
-function dataurlFromRenderer( renderer,mimetype,show )
+function dataurlFromRenderer( renderer, mimetype, show )
 {
-  return dataurlFromDom( renderer.domElement,mimetype,show );
+  return dataurlFromDom( renderer.domElement, mimetype, show );
 }
 
 //
 
 var dataurlShowed = 0;
-function dataurlShow( data,dimension )
+function dataurlShow( data, dimension )
 {
 
-  var dimension = dimension || [512,512];
-  window.open( data,'name-' + Math.random(),
+  var dimension = dimension || [ 512, 512 ];
+  window.open( data, 'name-' + Math.random(),
     'toolbar=no,location=no,message=no,menubar=no,scrollbars=yes,resizable=yes,'
-    + 'width=' + dimension[0] * 1.05  + ',height=' + dimension[1] * 1.05 );
+    + 'width=' + dimension[ 0 ] * 1.05 + ',height=' + dimension[ 1 ] * 1.05 );
   dataurlShowed++;
 
 }
 
 //
 
-function dataurlTransform( onReady,dataUrl,dimension,scale,format )
+function dataurlTransform( /* onReady, dataUrl, dimension, scale, format */ )
 {
-  var format = format || 'image/png';
+  let onReady = arguments[ 0 ];
+  let dataUrl = arguments[ 1 ];
+  let dimension = arguments[ 2 ];
+  let scale = arguments[ 3 ];
+  let format = arguments[ 4 ];
+
+  format = format || 'image/png';
   var isDataUrl = _.dataurlIs( dataUrl );
 
   if( isDataUrl && !dimension && !scale && !format )
   return dataUrl;
 
-  debugger;
-
-  _.canvasFrom( undefined,dataUrl,dimension,scale,function( canvas )
+  _.canvasFrom( undefined, dataUrl, dimension, scale, function( canvas )
   {
 
     var result = canvas.toDataURL( format );
@@ -212,7 +215,8 @@ function dataurlToBuffer( urlData )
 
   var urlData = _.dataurlParse( urlData );
 
-  if( !urlData ) return;
+  if( !urlData )
+  return;
 
   urlData.buffer = _.base64ToBuffer( urlData.data );
 
@@ -225,7 +229,7 @@ function dataurlToBlob( urlData )
 {
 
   var data = _.dataurlToBuffer( urlData );
-  var blob = _.blobFromBuffer( data.buffer,data.type );
+  var blob = _.blobFromBuffer( data.buffer, data.type );
 
   return blob;
 }
@@ -241,7 +245,7 @@ function blobUrl( blob )
 
 //
 
-function blobFromBuffer( buffer,mime )
+function blobFromBuffer( buffer, mime )
 {
 
   var mime = mime || 'application/octet-stream';
@@ -260,32 +264,32 @@ const Extension =
 
   // dataurl
 
-  dataurlIs : dataurlIs,
-  dataurlType : dataurlType,
+  dataurlIs,
+  dataurlType,
 
-  dataurlFrom2 : dataurlFrom2,
-  dataurlFromSvgDom : dataurlFromSvgDom,
-  dataurlFromSvgString : dataurlFromSvgString,
+  dataurlFrom2,
+  dataurlFromSvgDom,
+  dataurlFromSvgString,
 
-  dataurlParse : dataurlParse,
+  dataurlParse,
 
-  dataurlFromString : dataurlFromString,
-  dataurlFromBase64 : dataurlFromBase64,
-  dataurlFromDom : dataurlFromDom,
-  dataurlFromRenderer : dataurlFromRenderer,
+  dataurlFromString,
+  dataurlFromBase64,
+  dataurlFromDom,
+  dataurlFromRenderer,
 
-  dataurlShow : dataurlShow,
+  dataurlShow,
 
-  dataurlTransform : dataurlTransform,
+  dataurlTransform,
 
-  dataurlToBuffer : dataurlToBuffer,
-  dataurlToBlob : dataurlToBlob,
+  dataurlToBuffer,
+  dataurlToBlob,
 
 
   // blob
 
-  blobUrl : blobUrl,
-  blobFromBuffer : blobFromBuffer,
+  blobUrl,
+  blobFromBuffer,
 
 
 };
