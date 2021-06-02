@@ -1,12 +1,13 @@
-(function(){
+( function()
+{
 
 const _ = _global_.wTools;
 _.dom = _.dom || Object.create( null );
-var $ = typeof jQuery !== 'undefined' ? jQuery : null;
+var $ = typeof jQuery === 'undefined' ? null : jQuery;
 
 //
 
-//function loadDialog( name,onReady,context )
+//function loadDialog( name, onReady, context )
 function loadDialog( options )
 {
   var optionsDefault =
@@ -23,17 +24,18 @@ function loadDialog( options )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.object.isBasic( options ) );
-  _.map.assertHasOnly( options,optionsDefault );
-  _.props.supplement( options,optionsDefault );
+  _.map.assertHasOnly( options, optionsDefault );
+  _.props.supplement( options, optionsDefault );
 
   var con = new _.Consequence();
 
   var a = $( '<input>' )
-  .css( 'display','none' ).appendTo( $('body') )
-  .attr( 'type','file' )
-  .attr( 'name',options.title )
-  .attr( 'title',options.title )
-  .attr( 'value',options.title )
+  .css( 'display', 'none' )
+  .appendTo( $('body') )
+  .attr( 'type', 'file' )
+  .attr( 'name', options.title )
+  .attr( 'title', options.title )
+  .attr( 'value', options.title )
   .change( function( event )
   {
 
@@ -45,17 +47,13 @@ function loadDialog( options )
     {
       title : options.title,
       name : options.name,
-      files : files,
-    }
-
+      files,
+    };
     con.take( e );
-
-  })
-  ;
+  });
 
   if( options.multiple )
-  a.attr( 'multiple','' )
-  ;
+  a.attr( 'multiple', '' );
 
   var event = document.createEvent( 'MouseEvents' );
   event.initMouseEvent( 'click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null );
@@ -66,7 +64,7 @@ function loadDialog( options )
 
 //
 
-function uploadFiles( files,options )
+function uploadFiles( files, options )
 {
 
   if( _.object.isBasic( arguments[ 0 ] ) )
@@ -75,8 +73,8 @@ function uploadFiles( files,options )
     files = options.files;
   }
 
-  _.map.assertHasOnly( options,uploadFiles.defaults );
-  _.mapComplement( options,uploadFiles.defaults );
+  _.map.assertHasOnly( options, uploadFiles.defaults );
+  _.mapComplement( options, uploadFiles.defaults );
 
   var options = options || {};
   var files = options.files = files || options.files;
@@ -137,7 +135,7 @@ function uploadFiles( files,options )
     {
 
       /*debugger;*/
-      var err = _.err( 'upload : cant upload','( ',options.names.join( ' , ' ),' )',request.responseText );
+      var err = _.err( 'upload : cant upload', '( ', options.names.join( ' , ' ), ' )', request.responseText );
       _.errLog( err );
       if( options.onEnd )
       options.onEnd.call( this, err, null, options );
@@ -185,34 +183,38 @@ function urlSave( url, name )
 
 //
 
-function blobSave( blob,name )
+function blobSave( blob, name )
 {
 
   //saveAs = undefined; // xxx
 
-  if( typeof saveAs !== 'undefined' )
-  {
-
-    //if( typeof saveAs === 'undefined' ) throw 'blobSave : saveAs is not implemented';
-    //var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
-    return saveAs( blob, name );
-
-  }
+  if( typeof saveAs === 'undefined' )
+  throw _.err( 'blobSave : saveAs is not implemented' );
   else
-  {
-
-    throw 'blobSave : saveAs is not implemented';
-
-  }
+  return saveAs( blob, name );
+  // if( typeof saveAs !== 'undefined' )
+  // {
+  //
+  //   //if( typeof saveAs === 'undefined' ) throw 'blobSave : saveAs is not implemented';
+  //   //var blob = new Blob([ "Hello, world!" ], { type: "text/plain;charset=utf-8" });
+  //   return saveAs( blob, name );
+  //
+  // }
+  // else
+  // {
+  //
+  //   throw _.err( 'blobSave : saveAs is not implemented' );
+  //
+  // }
 
 }
 
 //
 
-function textSave( text,name )
+function textSave( text, name )
 {
 
-  var blob = new Blob( [text], {type: "text/plain;charset=utf-8"} );
+  var blob = new Blob( [ text ], { type : 'text/plain;charset=utf-8' } );
   return blobSave( blob, name );
 
 }
@@ -225,16 +227,17 @@ const Extension =
 {
 
   // load
-  loadDialog: loadDialog,
-  uploadFiles: uploadFiles,
+
+  loadDialog,
+  uploadFiles,
 
   // save
-  urlSave: urlSave,
-  blobSave: blobSave,
-  textSave: textSave,
 
+  urlSave,
+  blobSave,
+  textSave,
 
-}
+};
 
 /* _.props.extend */Object.assign( _.dom, Extension );
 
