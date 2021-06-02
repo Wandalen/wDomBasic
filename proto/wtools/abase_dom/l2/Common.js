@@ -7,7 +7,7 @@ const _global = _global_;
 const _ = _global.wTools;
 _.assert( !!_.dom );
 const Parent = _.dom;
-const Self = _.dom.s = _.dom.s || Object.create( Parent );
+_.doms = _.dom.s = _.doms || _.dom.s || Object.create( null );
 
 // --
 //
@@ -57,8 +57,8 @@ let DomsExtension =
   dom : Parent
 }
 
-_.mapExtendDstNotOwn( Self, DomsExtension );
+_.mapExtendDstNotOwn( _.doms, DomsExtension );
 
-Self.Init();
+_.doms.Init();
 
 })();

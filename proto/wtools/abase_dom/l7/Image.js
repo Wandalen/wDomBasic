@@ -6,7 +6,7 @@
 
 const _global = _global_;
 const _ = _global.wTools;
-const Self = _.dom = _.dom || Object.create( null );
+_.dom = _.dom || Object.create( null );
 
 // --
 // svg
@@ -1123,7 +1123,7 @@ function pictureSave( picture )
 // prototype
 // --
 
-const Routines =
+const Extension =
 {
 
   // svg
@@ -1182,6 +1182,6 @@ const Routines =
 
 }
 
-_.props.extend( Self,Routines );
+/* _.props.extend */Object.assign( _.dom, Extension );
 
 })();

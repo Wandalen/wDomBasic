@@ -1374,8 +1374,8 @@ function load( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   // _.assert( _.strIs( o.targetClass ) || o.replacing );
   _.assert( _.strDefined( o.url ), 'Expects {-o.url-}' );
-  _.assert( o.parentDom.length, 'Expects { o.parentDom }' );
-  _.assert( targetDom.length, 'Expects { targetDom }' );
+  _.assert( o.parentDom.length > 0, 'Expects { o.parentDom }' );
+  _.assert( targetDom.length > 0, 'Expects { targetDom }' );
 
   /* */
 
@@ -1419,7 +1419,7 @@ function load( o )
       if( o.after || o.before )
       {
         targetDom = targetDom.find( o.after || o.before );
-        _.assert( targetDom.length, o.after ? 'after' : 'before', 'DOM was not found', o.after || o.before );
+        _.assert( targetDom.length > 0, o.after ? 'after' : 'before', 'DOM was not found', o.after || o.before );
         if( o.after )
         targetDom = targetDom.after( responseData );
         else
@@ -2385,12 +2385,7 @@ function eventFire2( targetDom, event )
 // prototype
 // --
 
-let Fields =
-{
-  _domBaselayer3Loaded : true
-}
-
-let Routines =
+let Extension =
 {
 
   // dom
@@ -2485,11 +2480,12 @@ let Routines =
   eventFire,
   eventFire2,
 
-  // on
+  // fields
+
+  _domBaselayer3Loaded : true
 
 };
 
-_.props.extend( Self, Fields );
-_.props.extend( Self, Routines );
+/* _.props.extend */Object.assign( _.dom, Extension );
 
 })();

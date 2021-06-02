@@ -1,7 +1,7 @@
 ( function() {
 
 const _ = _global_.wTools;
-const Self = _.dom = _.dom || Object.create( null );
+_.dom = _.dom || Object.create( null );
 let fileTextSave;
 let downloadNameSupport = 'download' in document.createElement('a');
 let BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
@@ -106,13 +106,13 @@ else if( !/\bMSIE\b/.test(navigator.userAgent) )
 //
 // --
 
-let Routines =
+let Extension =
 {
 
-  fileTextSave
+  fileTextSave,
 
-};
+}
 
-_.props.extend( Self, Routines );
+/* _.props.extend */Object.assign( _.dom, Extension );
 
 })();

@@ -7,7 +7,7 @@ const _global = _global_;
 const _ = _global.wTools;
 let $ = typeof jQuery === 'undefined' ? null : jQuery;
 // let $ = typeof jQuery !== 'undefined' ? jQuery : null;
-const Self = _.dom = _.dom || Object.create( null );
+_.dom = _.dom || Object.create( null );
 let isApple = navigator.platform.match( /(Mac|iPhone|iPod|iPad)/i );
 
 /*
@@ -636,8 +636,8 @@ function menuable( o )
 
   o.itemsDom = o.menuDom.find( '.wmenu-item' );
 
-  _.assert( o.menuDom.length );
-  _.assert( o.itemsDom.length );
+  _.assert( o.menuDom.length > 0 );
+  _.assert( o.itemsDom.length > 0 );
 
   /* item handler */
 
@@ -1356,8 +1356,8 @@ function copyable( o )
 
   /* */
 
-  _.assert( o.targetDom.length );
-  _.assert( o.containerDom.length );
+  _.assert( o.targetDom.length > 0 );
+  _.assert( o.containerDom.length > 0 );
 
   /* */
 
@@ -1410,8 +1410,8 @@ function copyableHtmlText( o )
 
   /* */
 
-  _.assert( o.targetDom.length );
-  _.assert( o.containerDom.length );
+  _.assert( o.targetDom.length > 0 );
+  _.assert( o.containerDom.length > 0 );
 
   /* */
 
@@ -1733,8 +1733,8 @@ function buttonMake( o )
   let html = o.onHtmlGet( o );
   o.buttonDom = $( html );
 
-  _.assert( o.parentDom.length, 'DOM with selector ".buttons-container" not found' );
-  _.assert( o.buttonDom.length );
+  _.assert( o.parentDom.length > 0, 'DOM with selector ".buttons-container" not found' );
+  _.assert( o.buttonDom.length > 0 );
 
   _.dom.uiInitPopups( o.buttonDom );
   o.buttonDom.appendTo( o.parentDom );
@@ -3214,7 +3214,7 @@ function uiInitGeneric( o )
   o.targetDom = body;
   o.targetDom = $( o.targetDom );
 
-  _.assert( o.targetDom.length );
+  _.assert( o.targetDom.length > 0 );
 
   // if( o.usingTabs )
   // debugger;
@@ -3298,7 +3298,8 @@ function uiShow( o )
   {
     if( e._uiShowVisible === undefined )
     return true;
-    return ( e._uiShowVisible ) ^ !!o.value;
+    return e._uiShowVisible === !o.value;
+    // return ( e._uiShowVisible ) ^ !!o.value;
   });
 
   // if( !( o.targetDom.transition( 'is visible' ) ^ !!o.value ) )
@@ -3356,12 +3357,7 @@ function uiIsShowed( dom )
 // prototype
 // --
 
-let Fields =
-{
-  _domBasel5Loaded : true
-}
-
-let Routines =
+let Extension =
 {
 
   // dom
@@ -3427,10 +3423,10 @@ let Routines =
   uiShow,
   uiIsShowed
 
+  _domBasel5Loaded : true
 
 };
 
-_.props.extend( Self, Fields );
-_.props.extend( Self, Routines );
+/* _.props.extend */Object.assign( _.dom, Extension );
 
 })();

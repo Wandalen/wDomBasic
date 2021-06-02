@@ -3,7 +3,7 @@
 'use strict';
 
 const _ = _global_.wTools;
-const Self = _.dom = _.dom || Object.create( null );
+_.dom = _.dom || Object.create( null );
 
 // --
 // dataurl
@@ -254,7 +254,7 @@ function blobFromBuffer( buffer,mime )
 // prototype
 // --
 
-const Routines =
+const Extension =
 {
 
 
@@ -290,6 +290,6 @@ const Routines =
 
 };
 
-_.props.extend( Self,Routines );
+/* _.props.extend */Object.assign( _.dom, Extension );
 
 })();
