@@ -7,11 +7,26 @@ const _global = _global_;
 const _ = _global.wTools;
 _.assert( !!_.dom );
 const Parent = _.dom;
-_.doms = _.dom.s = _.doms || _.dom.s || Object.create( null );
+_.doms = _.dom.s = _.doms || _.dom.s || Object.create( Parent );
 
 // --
 //
 // --
+
+let OriginalInit = Parent.Init;
+Parent.Init = function Init()
+{
+  let result = OriginalInit.apply( this, arguments );
+
+  _.assert( _.object.isBasic( this.s ) );
+  _.assert( this.s.single !== undefined );
+  this.s = Object.create( this.s );
+  this.s.single = this;
+
+  return result;
+}
+
+//
 
 function _vectorize( routine, select )
 {
@@ -28,33 +43,17 @@ function _vectorize( routine, select )
   });
 }
 
-//
-
-let OriginalInit = Parent.Init;
-Parent.Init = function Init()
-{
-  let result = OriginalInit.apply( this, arguments );
-
-  _.assert( _.object.isBasic( this.s ) );
-  _.assert( this.s.single !== undefined );
-  this.s = Object.create( this.s );
-  this.s.single = this;
-
-  return result;
-}
-
 // --
 // prototype
 // --
 
 let DomsExtension =
 {
-
   _vectorize,
 
   remove : _vectorize( 'remove', Infinity ),
 
-  dom : Parent
+  dom : Parent,
 }
 
 _.mapExtendDstNotOwn( _.doms, DomsExtension );
