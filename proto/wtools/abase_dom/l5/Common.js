@@ -2236,7 +2236,7 @@ function habbitMouseClick( o )
     setTimeout( function()
     {
 
-      _.assert( o.givingDoubleClick );
+      _.assert( !!o.givingDoubleClick );
 
       // console.log( 'after.timeout',o.down,o.up );
 
