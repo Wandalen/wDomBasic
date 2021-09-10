@@ -1514,17 +1514,6 @@ let eventName = ( function eventName()
         else
         _eventMap[ 'click' ] = 'click';
 
-        // if( 'ontouch' in window )
-        // _eventMap[ 'click' ] = 'touch';
-        // else if( !( 'onclick' in window ) )
-        // _eventMap[ 'click' ] = 'click';
-        // else
-        // _eventMap[ 'click' ] = 'touchend';
-
-        //if( !( 'onclick' in window ) )
-        //_eventMap[ 'click' ] = 'touchend'; // xxx
-        //xxx
-
       }
       else
       {
