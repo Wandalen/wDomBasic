@@ -3,8 +3,8 @@ root:
   - wDomBasic.out
 consistency:
   ../will.yml: &ref_0
-    hash: 99dfed47c7a1c70562edc1003d9f9d6c
-    size: 6562
+    hash: 09813e112c8be7b6d12802eec8150fbf
+    size: 6570
 module:
   wDomBasic.out:
     about:
@@ -1457,5 +1457,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 99dfed47c7a1c70562edc1003d9f9d6c
-        size: 6562
+        hash: 09813e112c8be7b6d12802eec8150fbf
+        size: 6570
